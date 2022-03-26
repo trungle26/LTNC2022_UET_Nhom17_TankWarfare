@@ -14,7 +14,7 @@ public:
 	double angle = 0;
 
 
-private:
+//private:
 	double xpos;
 	double ypos;
 	

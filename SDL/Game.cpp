@@ -98,6 +98,7 @@ void Game::handleEvents()
 
 void Game::update()
 {
+	// di chuyen
 	if (states1[right]) player->rePhai();
 	if (states1[left]) player->reTrai();
 	if (states1[up]) player->diThang(2);
@@ -107,6 +108,20 @@ void Game::update()
 	if (states2[up]) player2->diThang(2);
 	if (states2[down]) player2->diThang(-2);
 
+	//neu co va cham
+	
+	SDL_bool collide = SDL_HasIntersection(&player->desRect, &player2->desRect);
+	if (collide)
+	{
+
+		player->xpos+=2;
+		player->ypos += 2;
+		player2->xpos -= 2;
+		player2->ypos -= 2;
+	}
+	
+	
+	
 	player->Update();
 	player2->Update();
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Game.h"
+#include <vector>
 
 class Map
 {
@@ -16,6 +17,8 @@ private:
 	SDL_Texture* dirt;
 	SDL_Texture* grass;
 	SDL_Texture* wall;
+	
+	
 
 	int map[23][39];
 

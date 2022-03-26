@@ -26,6 +26,7 @@ int lvl1[23][39] = {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 };
 
+
 Map::Map()
 {
 	dirt = TextureManager::LoadTexture("assets/dirt.png");
