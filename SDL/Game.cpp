@@ -1,13 +1,15 @@
 ﻿#pragma once
 #include "Game.h"
 #include "TextureManager.h"
-#include "GameObject.h"
+#include "Components.h"
 #include "Map.h"
 
 
 // create characters here
-GameObject* player2 = NULL;
-GameObject* player = NULL;
+Manager manager;
+auto& player(manager.addEntity());
+auto& player2(manager.addEntity());
+
 Map* map = NULL;
 
 SDL_Renderer* Game::renderer = NULL;
@@ -41,8 +43,12 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		}
 		isRunning = true;
 
-		player = new GameObject("assets/tank.png",50,300);
-		player2 = new GameObject("assets/tank2.png",  360, 300);
+		player.addComponent<PositionComponent>();
+		player.addComponent<SpriteComponent>("assets/tank.png");
+		player2.addComponent<PositionComponent>();
+		player.addComponent<SpriteComponent>("assets/tank2.png");
+		//player = new GameObject("assets/tank.png",50,300);
+		//player2 = new GameObject("assets/tank2.png",  360, 300);
 		map = new Map();
 		
 	}
@@ -98,18 +104,20 @@ void Game::handleEvents()
 
 void Game::update()
 {
+	manager.refresh();
+	manager.update();
 	// di chuyen
-	if (states1[right]) player->rePhai();
-	if (states1[left]) player->reTrai();
-	if (states1[up]) player->diThang(2);
-	if (states1[down]) player->diThang(-2);
-	if (states2[right]) player2->rePhai();
-	if (states2[left]) player2->reTrai();
-	if (states2[up]) player2->diThang(2);
-	if (states2[down]) player2->diThang(-2);
+	if (states1[right]) player.getComponent<PositionComponent>().rePhai();
+	if (states1[left]) player.getComponent<PositionComponent>().reTrai();
+	if (states1[up]) player.getComponent<PositionComponent>().diThang(2);
+	if (states1[down]) player.getComponent<PositionComponent>().diThang(-2);
+	if (states2[right]) player2.getComponent<PositionComponent>().rePhai();
+	if (states2[left]) player2.getComponent<PositionComponent>().reTrai();
+	if (states2[up]) player2.getComponent<PositionComponent>().diThang(2);
+	if (states2[down]) player2.getComponent<PositionComponent>().diThang(-2);
 
 	//neu co va cham
-	
+	/*
 	SDL_bool collide = SDL_HasIntersection(&player->desRect, &player2->desRect);
 	if (collide)
 	{
@@ -119,19 +127,17 @@ void Game::update()
 		player2->xpos -= 2;
 		player2->ypos -= 2;
 	}
+	*/
 	
-	
-	
-	player->Update();
-	player2->Update();
 }
 
 void Game::render()
 {
 	SDL_RenderClear(renderer);
 	map->DrawMap();
-	player->Render();
-	player2->Render();
+	manager.draw();
+	//player->Render();
+	//player2->Render();
 	// here we add things to render
 	SDL_RenderPresent(renderer);
 }
