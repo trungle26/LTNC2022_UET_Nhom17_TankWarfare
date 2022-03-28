@@ -5,12 +5,12 @@
 class SpriteComponent : public Component
 {
 private:
-	PositionComponent* position;
+	TransformComponent* transform;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, desRect;
 
 public:
-	SpriteComponent() = default;
+	SpriteComponent();
 	SpriteComponent(const char* path)
 	{
 		setTexture(path);
@@ -23,7 +23,7 @@ public:
 
 	void init() override
 	{
-		position = &entity->getComponent<PositionComponent>();
+		transform = &entity->getComponent<TransformComponent>(); // tao 1 entity bang ecs
 
 		srcRect.x = srcRect.y = 0;
 		srcRect.h = 40;
@@ -34,11 +34,11 @@ public:
 
 	void update() override
 	{
-		desRect.x = position->x();
-		desRect.y = position->y();
+		desRect.x = transform->position.x;
+		desRect.y = transform->position.y;
 	}
 	void draw() override
 	{
-		TextureManager::Draw(texture, srcRect, desRect);
+		TextureManager::DrawTank(texture, srcRect, desRect, transform->angle);
 	}
 };

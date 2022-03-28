@@ -14,3 +14,8 @@ void TextureManager::Draw(SDL_Texture* tex, SDL_Rect src, SDL_Rect dest)
 {
 	SDL_RenderCopy(Game::renderer, tex, &src, &dest);
 }
+
+void TextureManager::DrawTank(SDL_Texture* tex, SDL_Rect src, SDL_Rect dest, double angle)
+{
+	SDL_RenderCopyEx(Game::renderer, tex, &src, &dest, angle, NULL, SDL_FLIP_NONE);
+}

@@ -43,10 +43,10 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		}
 		isRunning = true;
 
-		player.addComponent<PositionComponent>();
+		player.addComponent<TransformComponent>();
 		player.addComponent<SpriteComponent>("assets/tank.png");
-		player2.addComponent<PositionComponent>();
-		player.addComponent<SpriteComponent>("assets/tank2.png");
+		player2.addComponent<TransformComponent>();
+		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		//player = new GameObject("assets/tank.png",50,300);
 		//player2 = new GameObject("assets/tank2.png",  360, 300);
 		map = new Map();
@@ -107,14 +107,14 @@ void Game::update()
 	manager.refresh();
 	manager.update();
 	// di chuyen
-	if (states1[right]) player.getComponent<PositionComponent>().rePhai();
-	if (states1[left]) player.getComponent<PositionComponent>().reTrai();
-	if (states1[up]) player.getComponent<PositionComponent>().diThang(2);
-	if (states1[down]) player.getComponent<PositionComponent>().diThang(-2);
-	if (states2[right]) player2.getComponent<PositionComponent>().rePhai();
-	if (states2[left]) player2.getComponent<PositionComponent>().reTrai();
-	if (states2[up]) player2.getComponent<PositionComponent>().diThang(2);
-	if (states2[down]) player2.getComponent<PositionComponent>().diThang(-2);
+	if (states1[right]) player.getComponent<TransformComponent>().rePhai();
+	if (states1[left]) player.getComponent<TransformComponent>().reTrai();
+	if (states1[up]) player.getComponent<TransformComponent>().diThang(2);
+	if (states1[down]) player.getComponent<TransformComponent>().diThang(-2);
+	if (states2[right]) player2.getComponent<TransformComponent>().rePhai();
+	if (states2[left]) player2.getComponent<TransformComponent>().reTrai();
+	if (states2[up]) player2.getComponent<TransformComponent>().diThang(2);
+	if (states2[down]) player2.getComponent<TransformComponent>().diThang(-2);
 
 	//neu co va cham
 	/*
@@ -136,10 +136,14 @@ void Game::render()
 	SDL_RenderClear(renderer);
 	map->DrawMap();
 	manager.draw();
+	
+
+	
 	//player->Render();
 	//player2->Render();
 	// here we add things to render
 	SDL_RenderPresent(renderer);
+
 }
 
 void Game::close()
