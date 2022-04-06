@@ -20,7 +20,7 @@ int main(int argc,  char* argv[]) {
 		game->update();
 		game->render();
 		frameTime = SDL_GetTicks() - frameStart;
-
+		// delay to only 60 frame rates per second . Source: Lets make game
 		if (frameDelay > frameTime) SDL_Delay(frameDelay - frameTime);
 	}
 

@@ -1,4 +1,4 @@
-//TransformComponent la de xu ly cac di chuyen cua xe tank, vat the, ...
+//TransformComponent la de xu ly cac di chuyen  vat the
 
 #pragma once
 #include "Components.h"
@@ -10,12 +10,12 @@ public:
 	Vector2D position;
 	Vector2D velocity;
 
-	int height = 32;
-	int width = 32;
+	int height = 40;
+	int width = 36;
 	int scale = 1;
-	double angle = 90;
+	double angle = 90;// don vi la do, dung de quay xe tang
 
-	int speed = 2;
+	int speed ;
 
 	bool blocked = false;
 
@@ -57,19 +57,28 @@ public:
 	void rePhai()
 	{
 		angle += 3;
+		std::cout << angle<<std::endl;
 		//if (angle < 0) angle = 360;
 	}
 
 	void reTrai()
 	{
 		angle -= 3;
+		std::cout << angle << std::endl;
 		//if (angle > 359) angle = 0;
 	}
 
-	void diThang(double velocity)
+	void diThang()
 	{
-		double x_movement = cos(0.0174532925 * (angle)) * velocity;
-		double y_movement = sin(0.0174532925 * (angle)) * velocity;
+		double x_movement = cos(0.0174532925 * (angle)) * speed;
+		double y_movement = sin(0.0174532925 * (angle)) * speed;
+		position.x += x_movement;
+		position.y += y_movement;
+	}
+	void diThang(int v)
+	{
+		double x_movement = cos(0.0174532925 * (angle)) * v;
+		double y_movement = sin(0.0174532925 * (angle)) * v;
 		position.x += x_movement;
 		position.y += y_movement;
 	}

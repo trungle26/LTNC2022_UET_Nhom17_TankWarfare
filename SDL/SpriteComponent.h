@@ -1,6 +1,7 @@
 #pragma once
 #include "Components.h"
 #include <SDL.h>
+#include "TextureManager.h"
 
 class SpriteComponent : public Component
 {
@@ -15,6 +16,10 @@ public:
 	{
 		setTexture(path);
 	}
+	~SpriteComponent()
+	{
+		SDL_DestroyTexture(texture);
+	}
 
 	void setTexture(const char* path)
 	{
@@ -26,16 +31,16 @@ public:
 		transform = &entity->getComponent<TransformComponent>(); // tao 1 entity bang ecs
 
 		srcRect.x = srcRect.y = 0;
-		srcRect.h = 40;
-		srcRect.w = 36;
-		desRect.h = srcRect.h;
-		desRect.w = srcRect.w;
+		srcRect.w = transform->width;
+		srcRect.h = transform->height;
 	}
 
 	void update() override
 	{
 		desRect.x = transform->position.x;
 		desRect.y = transform->position.y;
+		desRect.w = transform->width * transform->scale;
+		desRect.h = transform->height * transform->scale;
 	}
 	void draw() override
 	{
