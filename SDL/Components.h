@@ -4,6 +4,7 @@
 #include"SpriteComponent.h"
 #include "InputHandler.h"
 #include "CollisionComponent.h"
+#include "TileComponent.h"
 
 
 

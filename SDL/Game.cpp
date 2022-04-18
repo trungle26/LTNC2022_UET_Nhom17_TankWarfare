@@ -17,6 +17,8 @@ Map* map = NULL;
 SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
 
+std::vector<CollisionComponent*> Game::colliders;
+
 Game::Game()
 {}
 Game::~Game()
@@ -45,6 +47,10 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		}
 		isRunning = true;
 
+		// ecs
+		map = new Map();
+		Map::LoadMap("assets/p16x16.map", 16, 16);
+
 		player.addComponent<TransformComponent>();
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
@@ -53,10 +59,9 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		player2.addComponent<CollisionComponent>("player2");
 		//player = new GameObject("assets/tank.png",50,300);
 		//player2 = new GameObject("assets/tank2.png",  360, 300);
-		wall.addComponent<TransformComponent>(300, 300, 300, 20, 1);
+		wall.addComponent<TransformComponent>(300, 300, 20, 20, 1);
 		wall.addComponent<SpriteComponent>("assets/wall.png");
 		wall.addComponent<CollisionComponent>("wall");
-		map = new Map();
 
 	}
 	else {
@@ -219,4 +224,10 @@ void Game::close()
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	std::cout << "game closed!\n";
+}
+
+void Game::AddTile(int id, int x, int y)
+{
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(x, y, 32, 32, id);
 }
