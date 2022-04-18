@@ -6,18 +6,25 @@
 #include "Collision.h"
 
 
-// create characters here
+// create 
 Manager manager;
 auto& player(manager.addEntity());
 auto& player2(manager.addEntity());
 auto& wall(manager.addEntity());
-
 Map* map = NULL;
 
 SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
 
 std::vector<CollisionComponent*> Game::colliders;
+
+enum groupLabels : std::size_t
+{
+	groupMap,
+	groupPlayers,
+	groupEnemies,
+	groupColliders
+};
 
 Game::Game()
 {}
@@ -57,12 +64,12 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		player2.addComponent<TransformComponent>();
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
-		//player = new GameObject("assets/tank.png",50,300);
-		//player2 = new GameObject("assets/tank2.png",  360, 300);
+		player.addGroup(groupPlayers);
+		player2.addGroup(groupPlayers);
 		wall.addComponent<TransformComponent>(300, 300, 20, 20, 1);
 		wall.addComponent<SpriteComponent>("assets/wall.png");
 		wall.addComponent<CollisionComponent>("wall");
-
+		wall.addGroup(groupMap);
 	}
 	else {
 		isRunning = false;
@@ -203,17 +210,24 @@ void Game::update()
 	//---------------------------------------------------------------------------- va cham
 }
 
+auto& tiles(manager.getGroup(groupMap));// pass in all the tiles into this 
+auto& players(manager.getGroup(groupPlayers));
+auto& enemies(manager.getGroup(groupEnemies));
+
 void Game::render()
 {
 	SDL_RenderClear(renderer);
 	//map->DrawMap();
 	manager.draw();
+	for (auto& t : tiles)
+	{
+		t->draw();
+	}
+	for (auto& p : players)
+	{
+		p->draw();
+	}
 
-
-
-	//player->Render();
-	//player2->Render();
-	// here we add things to render
 	SDL_RenderPresent(renderer);
 
 }
@@ -230,4 +244,5 @@ void Game::AddTile(int id, int x, int y)
 {
 	auto& tile(manager.addEntity());
 	tile.addComponent<TileComponent>(x, y, 32, 32, id);
+	tile.addGroup(groupMap);
 }
