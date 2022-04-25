@@ -10,21 +10,13 @@
 Manager manager;
 auto& player(manager.addEntity());
 auto& player2(manager.addEntity());
-auto& wall(manager.addEntity());
-Map* map = NULL;
+Map* map ;
 
 SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
 
-std::vector<CollisionComponent*> Game::colliders;
 
-enum groupLabels : std::size_t
-{
-	groupMap,
-	groupPlayers,
-	groupEnemies,
-	groupColliders
-};
+
 
 Game::Game()
 {}
@@ -55,26 +47,27 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		isRunning = true;
 
 		// ecs
-		map = new Map();
-		Map::LoadMap("assets/p16x16.map", 16, 16);
+		map = new Map("assets/terrain.png",1,32);// map scale:1, tile size: 32
+		map->LoadMap("assets/map.map", 39, 23);
 
-		player.addComponent<TransformComponent>();
+		player.addComponent<TransformComponent>(34,34);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
-		player2.addComponent<TransformComponent>();
+		player2.addComponent<TransformComponent>(1000,33);
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
 		player.addGroup(groupPlayers);
 		player2.addGroup(groupPlayers);
-		wall.addComponent<TransformComponent>(300, 300, 20, 20, 1);
-		wall.addComponent<SpriteComponent>("assets/wall.png");
-		wall.addComponent<CollisionComponent>("wall");
-		wall.addGroup(groupMap);
+		
 	}
 	else {
 		isRunning = false;
 	}
 }
+
+auto& tiles(manager.getGroup(Game::groupMap));// pass in all the tiles into this 
+auto& players(manager.getGroup(Game::groupPlayers));
+auto& colliders(manager.getGroup(Game::groupColliders));
 
 //chuyen dong cua xe tang---------------------------------
 enum {
@@ -122,20 +115,75 @@ void Game::handleEvents()
 
 void Game::update()
 {
+	SDL_Rect playerCol = player.getComponent<CollisionComponent>().collider;
+	SDL_Rect player2Col = player2.getComponent<CollisionComponent>().collider;
+
 	manager.refresh();
 	manager.update();
+	// neu co va cham
+	
+	for (auto& c : colliders)
+	{
+		SDL_Rect cCol = c->getComponent<CollisionComponent>().collider;
+		if (Collision::AABB(playerCol, cCol))
+		{
+			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
+			/*int gocdo = fmod(player.getComponent<TransformComponent>().angle, 360);
+			std::cout << "hit" << " " << gocdo << std::endl;
+			if (((gocdo > 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)))
+			{
+				player.getComponent<TransformComponent>().angle -= 2;
+			}
+			if (((gocdo > 90) && (gocdo < 180)) || ((gocdo > 270) && (gocdo <= 359)))
+			{
+				player.getComponent<TransformComponent>().angle += 2;
+			}
+			if (((gocdo < 0) && (gocdo > -90)) || ((gocdo < -180) && (gocdo > -270)))
+			{
+				player.getComponent<TransformComponent>().angle += 2;
+			}
+			if (((gocdo < -90) && (gocdo > -180)) || ((gocdo < -270) && (gocdo >= -359)))
+			{
+				player.getComponent<TransformComponent>().angle -= 2;
+			}*/
+		}
+
+		if (Collision::AABB(player2Col, cCol))
+		{
+			player2.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
+			/*int gocdo = fmod(player.getComponent<TransformComponent>().angle, 360);
+			std::cout << "hit" << " " << gocdo << std::endl;
+			if (((gocdo > 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)))
+			{
+				player2.getComponent<TransformComponent>().angle += 12;
+			}
+			if (((gocdo > 90) && (gocdo < 180)) || ((gocdo > 270) && (gocdo <= 359)))
+			{
+				player2.getComponent<TransformComponent>().angle -= 12;
+			}
+			if (((gocdo < 0) && (gocdo > -90)) || ((gocdo < -180) && (gocdo > -270)))
+			{
+				player2.getComponent<TransformComponent>().angle -= 12;
+			}
+			if (((gocdo < -90) && (gocdo > -180)) || ((gocdo < -270) && (gocdo >= -359)))
+			{
+				player2.getComponent<TransformComponent>().angle += 12;
+			}*/
+		}
+	}
+	
 	// di chuyen
 	if (states1[right]) player.getComponent<TransformComponent>().rePhai();
 	if (states1[left]) player.getComponent<TransformComponent>().reTrai();
 	if (states1[up])
 	{
-		player.getComponent<TransformComponent>().speed = 3;
+		player.getComponent<TransformComponent>().speed = 2.5;
 		player.getComponent<TransformComponent>().diThang();
 	}
 	if (states1[down])
 	{
 		{
-			player.getComponent<TransformComponent>().speed = -3;
+			player.getComponent<TransformComponent>().speed = -2.5;
 			player.getComponent<TransformComponent>().diThang();
 		}
 	}
@@ -144,75 +192,20 @@ void Game::update()
 	if (states2[up])
 	{
 		{
-			player2.getComponent<TransformComponent>().speed = 3;
+			player2.getComponent<TransformComponent>().speed = 2;
 			player2.getComponent<TransformComponent>().diThang();
 		}
 	}
 	if (states2[down])
 	{
 		{
-			player2.getComponent<TransformComponent>().speed = -3;
+			player2.getComponent<TransformComponent>().speed = -2;
 			player2.getComponent<TransformComponent>().diThang();
 		}
 	}
 
-	//neu co va cham -----------------------------------------------------------
-	if (Collision::AABB(player.getComponent<CollisionComponent>().collider
-		, wall.getComponent<CollisionComponent>().collider))
-	{
-		
-		player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -3);
-		int gocdo = fmod(player.getComponent<TransformComponent>().angle,360);
-		std::cout << "hit" << " " << gocdo << std::endl;
-		if (( (gocdo> 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)) )
-		{
-			player.getComponent<TransformComponent>().angle += 12;
-		}
-		if (((gocdo > 90) && (gocdo < 180)) || ((gocdo > 270) && (gocdo <= 359)))
-		{
-			player.getComponent<TransformComponent>().angle -= 12;
-		}
-		if (((gocdo < 0) && (gocdo > -90)) || ((gocdo < -180) && (gocdo > -270)))
-		{
-			player.getComponent<TransformComponent>().angle -= 12;
-		}
-		if (((gocdo < -90) && (gocdo > -180)) || ((gocdo < -270) && (gocdo >= -359)))
-		{
-			player.getComponent<TransformComponent>().angle += 12;
-		}
-		
-	}
-	if (Collision::AABB(player2.getComponent<CollisionComponent>().collider
-		, wall.getComponent<CollisionComponent>().collider))
-	{
-
-		player2.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -3);
-		int gocdo = fmod(player.getComponent<TransformComponent>().angle, 360);
-		std::cout << "hit" << " " << gocdo << std::endl;
-		if (((gocdo > 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)))
-		{
-			player2.getComponent<TransformComponent>().angle += 12;
-		}
-		if (((gocdo > 90) && (gocdo < 180)) || ((gocdo > 270) && (gocdo <= 359)))
-		{
-			player2.getComponent<TransformComponent>().angle -= 12;
-		}
-		if (((gocdo < 0) && (gocdo > -90)) || ((gocdo < -180) && (gocdo > -270)))
-		{
-			player2.getComponent<TransformComponent>().angle -= 12;
-		}
-		if (((gocdo < -90) && (gocdo > -180)) || ((gocdo < -270) && (gocdo >= -359)))
-		{
-			player2.getComponent<TransformComponent>().angle += 12;
-		}
-
-	}
-	//---------------------------------------------------------------------------- va cham
 }
 
-auto& tiles(manager.getGroup(groupMap));// pass in all the tiles into this 
-auto& players(manager.getGroup(groupPlayers));
-auto& enemies(manager.getGroup(groupEnemies));
 
 void Game::render()
 {
@@ -223,6 +216,12 @@ void Game::render()
 	{
 		t->draw();
 	}
+
+	for (auto& c : colliders)
+	{
+		c->draw();
+	}
+
 	for (auto& p : players)
 	{
 		p->draw();
@@ -238,11 +237,4 @@ void Game::close()
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	std::cout << "game closed!\n";
-}
-
-void Game::AddTile(int id, int x, int y)
-{
-	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(x, y, 32, 32, id);
-	tile.addGroup(groupMap);
 }

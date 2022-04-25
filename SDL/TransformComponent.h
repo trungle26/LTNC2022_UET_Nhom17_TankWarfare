@@ -15,7 +15,7 @@ public:
 	int scale = 1;
 	double angle = 90;// don vi la do, dung de quay xe tang
 
-	int speed ;
+	double speed ;
 
 	bool blocked = false;
 
@@ -32,7 +32,8 @@ public:
 
 	TransformComponent(float x, float y)
 	{
-		position.Zero();
+		position.x = x;
+		position.y = y;
 	}
 
 	TransformComponent(float x, float y, int h, int w, int sc)
