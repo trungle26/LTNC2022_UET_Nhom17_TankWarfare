@@ -10,7 +10,7 @@
 Manager manager;
 auto& player(manager.addEntity());
 auto& player2(manager.addEntity());
-Map* map ;
+Map* map;
 
 SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
@@ -47,18 +47,18 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		isRunning = true;
 
 		// ecs
-		map = new Map("assets/terrain.png",1,32);// map scale:1, tile size: 32
+		map = new Map("assets/terrain.png", 1, 32);// map scale:1, tile size: 32
 		map->LoadMap("assets/map.map", 39, 23);
 
-		player.addComponent<TransformComponent>(34,34);
+		player.addComponent<TransformComponent>(34, 34);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
-		player2.addComponent<TransformComponent>(1000,33);
+		player2.addComponent<TransformComponent>(1000, 33);
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
 		player.addGroup(groupPlayers);
 		player2.addGroup(groupPlayers);
-		
+
 	}
 	else {
 		isRunning = false;
@@ -121,7 +121,7 @@ void Game::update()
 	manager.refresh();
 	manager.update();
 	// neu co va cham
-	
+
 	for (auto& c : colliders)
 	{
 		SDL_Rect cCol = c->getComponent<CollisionComponent>().collider;
@@ -150,7 +150,7 @@ void Game::update()
 
 		if (Collision::AABB(player2Col, cCol))
 		{
-			player2.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
+			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -2);
 			/*int gocdo = fmod(player.getComponent<TransformComponent>().angle, 360);
 			std::cout << "hit" << " " << gocdo << std::endl;
 			if (((gocdo > 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)))
@@ -171,7 +171,7 @@ void Game::update()
 			}*/
 		}
 	}
-	
+
 	// di chuyen
 	if (states1[right]) player.getComponent<TransformComponent>().rePhai();
 	if (states1[left]) player.getComponent<TransformComponent>().reTrai();

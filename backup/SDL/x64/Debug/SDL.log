@@ -1,0 +1,8 @@
+﻿  Map.cpp
+D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(76,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(77,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(83,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(84,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\SpriteComponent.h(40,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\SpriteComponent.h(41,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  SDL.vcxproj -> D:\lập trình nâng cao\Visual Studio Projects\SDL\x64\Debug\SDL.exe
