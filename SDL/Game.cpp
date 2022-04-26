@@ -127,48 +127,13 @@ void Game::update()
 		SDL_Rect cCol = c->getComponent<CollisionComponent>().collider;
 		if (Collision::AABB(playerCol, cCol))
 		{
-			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
-			/*int gocdo = fmod(player.getComponent<TransformComponent>().angle, 360);
-			std::cout << "hit" << " " << gocdo << std::endl;
-			if (((gocdo > 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)))
-			{
-				player.getComponent<TransformComponent>().angle -= 2;
-			}
-			if (((gocdo > 90) && (gocdo < 180)) || ((gocdo > 270) && (gocdo <= 359)))
-			{
-				player.getComponent<TransformComponent>().angle += 2;
-			}
-			if (((gocdo < 0) && (gocdo > -90)) || ((gocdo < -180) && (gocdo > -270)))
-			{
-				player.getComponent<TransformComponent>().angle += 2;
-			}
-			if (((gocdo < -90) && (gocdo > -180)) || ((gocdo < -270) && (gocdo >= -359)))
-			{
-				player.getComponent<TransformComponent>().angle -= 2;
-			}*/
+			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -1);
+			
 		}
 
 		if (Collision::AABB(player2Col, cCol))
 		{
-			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -2);
-			/*int gocdo = fmod(player.getComponent<TransformComponent>().angle, 360);
-			std::cout << "hit" << " " << gocdo << std::endl;
-			if (((gocdo > 0) && (gocdo < 90)) || ((gocdo > 180) && (gocdo < 270)))
-			{
-				player2.getComponent<TransformComponent>().angle += 12;
-			}
-			if (((gocdo > 90) && (gocdo < 180)) || ((gocdo > 270) && (gocdo <= 359)))
-			{
-				player2.getComponent<TransformComponent>().angle -= 12;
-			}
-			if (((gocdo < 0) && (gocdo > -90)) || ((gocdo < -180) && (gocdo > -270)))
-			{
-				player2.getComponent<TransformComponent>().angle -= 12;
-			}
-			if (((gocdo < -90) && (gocdo > -180)) || ((gocdo < -270) && (gocdo >= -359)))
-			{
-				player2.getComponent<TransformComponent>().angle += 12;
-			}*/
+			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -1);
 		}
 	}
 
@@ -182,26 +147,26 @@ void Game::update()
 	}
 	if (states1[down])
 	{
-		{
-			player.getComponent<TransformComponent>().speed = -2.5;
-			player.getComponent<TransformComponent>().diThang();
-		}
+		
+		player.getComponent<TransformComponent>().speed = -2.5;
+		player.getComponent<TransformComponent>().diThang();
+		
 	}
 	if (states2[right]) player2.getComponent<TransformComponent>().rePhai();
 	if (states2[left]) player2.getComponent<TransformComponent>().reTrai();
 	if (states2[up])
 	{
-		{
-			player2.getComponent<TransformComponent>().speed = 2;
-			player2.getComponent<TransformComponent>().diThang();
-		}
+		
+		player2.getComponent<TransformComponent>().speed = 2;
+		player2.getComponent<TransformComponent>().diThang();
+		
 	}
 	if (states2[down])
 	{
-		{
-			player2.getComponent<TransformComponent>().speed = -2;
-			player2.getComponent<TransformComponent>().diThang();
-		}
+		
+		player2.getComponent<TransformComponent>().speed = -2;
+		player2.getComponent<TransformComponent>().diThang();
+		
 	}
 
 }
