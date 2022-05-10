@@ -74,6 +74,9 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	else {
 		isRunning = false;
 	}
+	if (TTF_Init() < 0) {
+		std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+	}
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));// pass in all the tiles into this 
@@ -96,10 +99,10 @@ bool tank1Hit = false;
 bool tank2Hit = false;
 bool tank1Dead = false;
 bool tank2Dead = false;
-
+bool inGameNow = true;
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
-
+bool needRerenderScoreBoard = false;
 void Game::handleEvents()
 {
 	SDL_PollEvent(&event);
@@ -203,7 +206,7 @@ void Game::update()
 		
 		// CHECK COLLISION OF PROJECTILES WITH COLLIDER tank 2
 		//remember: Allah mode allow projectile to bypass colliders
-		if (!player.getComponent<ShootComponent>().allahMode) {
+		if (!player2.getComponent<ShootComponent>().allahMode) {
 			for (int iter = 0; iter < ammoManager->projectilesPlayer2.size(); iter++) {
 				SDL_Rect tempToCheck;
 				tempToCheck.x = ammoManager->projectilesPlayer2[iter].x;
@@ -406,26 +409,82 @@ void Game::render()
 	{
 		p->draw();
 	}
-	//NOT YET DONE: render projectiles of player 1
-	/*
+	
+	//Render projectiles player1
 	for (int i = 0; i < ammoManager->projectilesPlayer1.size(); i++) {
 		SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
+		std::cout << "Get load texture" << std::endl;
 		SDL_Rect tempToRenderProjectile;
 		tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
-		tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
-		tempToRenderProjectile.w = 32;
-		tempToRenderProjectile.h = 32;
-		TextureManager::Draw(loadProjectiles, tempToRenderProjectile, tempToRenderProjectile);
+		tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
+		std::cout << "Get SDL_REct x and y" << std::endl;
+		tempToRenderProjectile.w = 32; //Projectiles size
+		tempToRenderProjectile.h = 32; //Projectiles size
+		SDL_Rect sourceRect;
+		sourceRect.x = 0;
+		sourceRect.y = 0;
+		sourceRect.w = sourceRect.h = 32;
+		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 	}
-	*/
+	//Render projectiles player2
+	for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
+		SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
+		std::cout << "Get load texture" << std::endl;
+		SDL_Rect tempToRenderProjectile;
+		tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
+		tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
+		std::cout << "Get SDL_REct x and y" << std::endl;
+		tempToRenderProjectile.w = 32; //Projectiles size
+		tempToRenderProjectile.h = 32; //Projectiles size
+		SDL_Rect sourceRect;
+		sourceRect.x = 0;
+		sourceRect.y = 0;
+		sourceRect.w = sourceRect.h = 32;
+		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
+	}
+	//SCOREBOARD
+	TTF_Font* font = NULL;
+	SDL_Surface* text;
+	SDL_Texture* text_texture;
+
+		std::string scoreBoard = "Player1: Bullet: " + std::to_string(player.getComponent<ShootComponent>().currentBullet)
+			+ " Health: " + std::to_string(player.getComponent<ShootComponent>().currentHealth);
+		std::string scoreBoardPlayer2 = " Player2: Bullet: "
+			+ std::to_string(player2.getComponent<ShootComponent>().currentBullet) + " Health: "
+			+ std::to_string(player2.getComponent<ShootComponent>().currentHealth);
+		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
+		if (!font)std::cout << "Can't load font" << std::endl;
+		SDL_Color color = { 255,255,255 }; //white color
+		text = TTF_RenderText_Solid(font, scoreBoard.c_str(), color);
+		if (!text)std::cout << "Can't load text" << std::endl;
+		text_texture = SDL_CreateTextureFromSurface(renderer, text);
+		SDL_Rect textDest = { 0,0,text->w,text->h };
+		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
+		SDL_DestroyTexture(text_texture);
+		SDL_FreeSurface(text);
+		//player2 part
+		text = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
+		text_texture = SDL_CreateTextureFromSurface(renderer, text);
+		textDest = { 1248 / 2 ,0,text->w,text->h };
+		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
+		SDL_DestroyTexture(text_texture);
+		SDL_FreeSurface(text);
+		//------------end testing
+	
+	
 	SDL_RenderPresent(renderer);
 
+
+	SDL_DestroyTexture(text_texture);
+	
+	
 }
 
 void Game::close()
 {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	
 	SDL_Quit();
 	std::cout << "game closed!\n";
 }

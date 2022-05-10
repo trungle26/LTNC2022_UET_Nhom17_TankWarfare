@@ -68,6 +68,7 @@ void AmmoManager::checkBulletForPlayer1() {
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect2)) { //if hit
+			needToRerenderScoreBoard_ = true;
 			tank2->currentHealth -= tank1->damagePerShot;
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
@@ -102,6 +103,7 @@ void AmmoManager::checkBulletForPlayer2() {
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect1)) { //if hit
+			needToRerenderScoreBoard_ = true;
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
 			tank1->currentHealth -= tank2->damagePerShot;
@@ -120,7 +122,16 @@ void AmmoManager::checkBulletForPlayer2() {
 	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
 }
-
+bool AmmoManager::needToRerenderScoreBoard() {
+	if (needToRerenderScoreBoard_) {
+		needToRerenderScoreBoard_ = false;
+		return !needToRerenderScoreBoard_;
+	}
+	else {
+		return needToRerenderScoreBoard_;
+	}
+	
+}
 
 /*
 std::vector<Projectile> projectiles = player->projectiles;
