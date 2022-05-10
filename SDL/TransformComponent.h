@@ -15,7 +15,7 @@ public:
 	int scale = 1;
 	double angle = 90;// don vi la do, dung de quay xe tang
 
-	int speed ;
+	double speed ;
 
 	bool blocked = false;
 
@@ -32,7 +32,8 @@ public:
 
 	TransformComponent(float x, float y)
 	{
-		position.Zero();
+		position.x = x;
+		position.y = y;
 	}
 
 	TransformComponent(float x, float y, int h, int w, int sc)
@@ -70,16 +71,22 @@ public:
 
 	void diThang()
 	{
-		double x_movement = cos(0.0174532925 * (angle)) * speed;
-		double y_movement = sin(0.0174532925 * (angle)) * speed;
+		double x_movement = cos(0.01745329252 * (angle)) * speed;
+		double y_movement = sin(0.01745329252 * (angle)) * speed;
 		position.x += x_movement;
 		position.y += y_movement;
 	}
 	void diThang(int v)
 	{
-		double x_movement = cos(0.0174532925 * (angle)) * v;
-		double y_movement = sin(0.0174532925 * (angle)) * v;
+		double x_movement = cos(0.01745329252 * (angle)) * v;
+		double y_movement = sin(0.01745329252 * (angle)) * v;
 		position.x += x_movement;
 		position.y += y_movement;
+	}
+	void vaChamManHinh() {
+		double x_movement = cos(0.0174532925 * (angle)) * speed;
+		double y_movement = sin(0.0174532925 * (angle)) * speed;
+		position.x -= x_movement;
+		position.y -= y_movement;
 	}
 };

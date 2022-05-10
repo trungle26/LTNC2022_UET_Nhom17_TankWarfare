@@ -29,7 +29,6 @@ public:
 	void init() override
 	{
 		transform = &entity->getComponent<TransformComponent>(); // tao 1 entity bang ecs
-
 		srcRect.x = srcRect.y = 0;
 		srcRect.w = transform->width;
 		srcRect.h = transform->height;
