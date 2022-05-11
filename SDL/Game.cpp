@@ -57,7 +57,9 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		player.addComponent<TransformComponent>(34, 34);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
+
 		player.addComponent<ShootComponent>(); //default option
+
 		player2.addComponent<TransformComponent>(1000, 33);
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
@@ -69,7 +71,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		ammoManager->addTankShootComponent(test1, test2);
 		player.addGroup(groupPlayers);
 		player2.addGroup(groupPlayers);
-		
+
 	}
 	else {
 		isRunning = false;
@@ -173,6 +175,7 @@ void Game::update()
 {
 	clock_t currentTimeForShootingPurpose = clock();
 	clock_t currentTimeShootingPlayer2 = clock();
+
 	SDL_Rect playerCol = player.getComponent<CollisionComponent>().collider;
 	SDL_Rect player2Col = player2.getComponent<CollisionComponent>().collider;
 
@@ -228,6 +231,7 @@ void Game::update()
 		}
 		
 		
+
 	}
 
 	// di chuyen
@@ -320,10 +324,10 @@ void Game::update()
 			//SET TIME TO LIMIT SHOOT PER SECOND
 			prevTimeForShootingPurpose = currentTimeForShootingPurpose;
 		}
-		
+
 
 	}
-	
+
 
 	//When reloading
 	if (states4[1]) {
@@ -400,6 +404,7 @@ void Game::update()
 	//CHECK MINUSHEALTH OF PLAYER 2 IN ALLAH MODE
 	if (player2.getComponent<ShootComponent>().allahMode)player2.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
 
+
 }
 
 
@@ -416,7 +421,9 @@ void Game::render()
 	for (auto& c : colliders)
 	{
 		c->draw();
-	}
+  }
+
+
 	for (auto& p : players)
 	{
 		p->draw();
