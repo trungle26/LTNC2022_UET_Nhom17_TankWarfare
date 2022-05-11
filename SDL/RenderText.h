@@ -11,29 +11,15 @@ const int SCREEN_HEIGHT = 736;
 class LTexture {
 public:
 	LTexture();
-	~LTexture();
-	bool loadFromFile(const char* path);
-	bool loadFromRenderedText(std::string textureText, SDL_Color textColor);
-	void free();
-	void setColor(Uint8 red, Uint8 green, Uint8 blue);
-	void setBlendMode(SDL_BlendMode blending);
-	void setAlpha(Uint8 alpha);
-	void render(int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
-	void getWindowAndRenderer(SDL_Window* window_, SDL_Renderer* renderer_);
-	//Get image dimensions
-	int getWidth();
-	int getHeight();
-	//init and load media
-	bool init();
-	bool loadMedia();
-	//attribute below
-	SDL_Texture* mTexture;
-	//image dimensions
-	int mWidth;
-	int mHeight;
-	TTF_Font* gFont = NULL;
+	TTF_Font* font = NULL;
+	
 	SDL_Window* gWindow = NULL;
 	SDL_Renderer* gRenderer = NULL;
+	std::string scoreBoardPlayer1;
+	std::string scoreBoardPlayer2;
+	SDL_Color color = { 255,255,255 };
+	void renderScoreBoardPlayer1(SDL_Renderer* renderer, int currentBullet, int currentHealth);
+	void renderScoreBoardPlayer2(SDL_Renderer* renderer, int currentBullet, int currentHealth);
 
 };
 

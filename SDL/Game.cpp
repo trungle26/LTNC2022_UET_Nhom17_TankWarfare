@@ -4,7 +4,7 @@
 #include "Components.h"
 #include "Map.h"
 #include "Collision.h"
-
+#include "RenderText.h"
 
 // create 
 Manager manager;
@@ -16,7 +16,7 @@ Map* map;
 AmmoManager* ammoManager = new AmmoManager(); //testing
 SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
-
+LTexture* ltexture = new LTexture();
 
 
 
@@ -103,6 +103,12 @@ bool inGameNow = true;
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
 bool needRerenderScoreBoard = false;
+//testing
+TTF_Font* font = NULL;
+SDL_Surface* text;
+SDL_Surface* text2;
+SDL_Texture* text_texture;
+SDL_Texture* text_texture2;
 void Game::handleEvents()
 {
 	SDL_PollEvent(&event);
@@ -443,10 +449,13 @@ void Game::render()
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 	}
 	//SCOREBOARD
-	TTF_Font* font = NULL;
-	SDL_Surface* text;
-	SDL_Texture* text_texture;
+	//ltexture->renderScoreBoardPlayer1(renderer, player.getComponent<ShootComponent>().currentBullet, player.getComponent<ShootComponent>().currentHealth);
+	//ltexture->renderScoreBoardPlayer2(renderer, player2.getComponent<ShootComponent>().currentBullet, player2.getComponent<ShootComponent>().currentHealth);
 
+		
+	if (ammoManager->needToRerenderScoreBoard()) {
+		SDL_DestroyTexture(text_texture);
+		SDL_FreeSurface(text);
 		std::string scoreBoard = "Player1: Bullet: " + std::to_string(player.getComponent<ShootComponent>().currentBullet)
 			+ " Health: " + std::to_string(player.getComponent<ShootComponent>().currentHealth);
 		std::string scoreBoardPlayer2 = " Player2: Bullet: "
@@ -460,22 +469,27 @@ void Game::render()
 		text_texture = SDL_CreateTextureFromSurface(renderer, text);
 		SDL_Rect textDest = { 0,0,text->w,text->h };
 		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
-		SDL_DestroyTexture(text_texture);
-		SDL_FreeSurface(text);
 		//player2 part
-		text = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
-		text_texture = SDL_CreateTextureFromSurface(renderer, text);
-		textDest = { 1248 / 2 ,0,text->w,text->h };
-		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
-		SDL_DestroyTexture(text_texture);
-		SDL_FreeSurface(text);
+		text2 = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
+		text_texture2 = SDL_CreateTextureFromSurface(renderer, text2);
+		textDest = { 1248 / 2 ,0,text2->w,text2->h };
+		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 		//------------end testing
+	}
+	else {
+		SDL_Rect textDest = { 0,0,text->w,text->h };
+		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
+		textDest = { 1248/2,0,text2->w,text2->h };
+		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
+	}
+	
+		
 	
 	
 	SDL_RenderPresent(renderer);
 
 
-	SDL_DestroyTexture(text_texture);
+	//SDL_DestroyTexture(text_texture);
 	
 	
 }
