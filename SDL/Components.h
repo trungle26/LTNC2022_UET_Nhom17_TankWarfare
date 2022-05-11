@@ -5,7 +5,8 @@
 #include "InputHandler.h"
 #include "CollisionComponent.h"
 #include "TileComponent.h"
-
+#include "TankStatusFunction.h"
+#include "AmmoManager.h"
 
 
 

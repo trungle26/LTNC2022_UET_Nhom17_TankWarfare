@@ -83,4 +83,10 @@ public:
 		position.x += x_movement;
 		position.y += y_movement;
 	}
+	void vaChamManHinh() {
+		double x_movement = cos(0.0174532925 * (angle)) * speed;
+		double y_movement = sin(0.0174532925 * (angle)) * speed;
+		position.x -= x_movement;
+		position.y -= y_movement;
+	}
 };
