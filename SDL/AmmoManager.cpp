@@ -41,6 +41,7 @@ void AmmoManager::addAngleOfProjectile(double angle, int player) {
 	else {
 		projectilesAnglesPlayer2.push_back(angle);
 	}
+	needToRerenderScoreBoard_ = true;
 //	std::cout << "Completely added angle. Current projectile angle of player 1: " <<projectilesAnglesPlayer1[projectilesAnglesPlayer1.size() - 1] << std::endl;
 
 }
@@ -68,7 +69,7 @@ void AmmoManager::checkBulletForPlayer1() {
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect2)) { //if hit
-			needToRerenderScoreBoard_ = true;
+			
 			tank2->currentHealth -= tank1->damagePerShot;
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
@@ -103,7 +104,7 @@ void AmmoManager::checkBulletForPlayer2() {
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect1)) { //if hit
-			needToRerenderScoreBoard_ = true;
+			//needToRerenderScoreBoard_ = true;
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
 			tank1->currentHealth -= tank2->damagePerShot;

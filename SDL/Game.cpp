@@ -328,18 +328,21 @@ void Game::update()
 	//When reloading
 	if (states4[1]) {
 		player.getComponent<ShootComponent>().reloading();
+		ammoManager->needToRerenderScoreBoard_ = true;
 	//	std::cout << "Current bullet after reloading: " << player.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
 	// When healing
 	if (states4[2]) {
 	//	std::cout << "Current health before healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
 		player.getComponent<ShootComponent>().healing();
+		ammoManager->needToRerenderScoreBoard_ = true;
 	//	std::cout << "Current health after healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 
 	//When tank enable allahMode
 	if (states4[3]) {
 		player.getComponent<ShootComponent>().allahStyle();
+		ammoManager->needToRerenderScoreBoard_ = true;
 	}
 
 	// Tank2 functions goes here
@@ -372,15 +375,18 @@ void Game::update()
 	if (states3[1]) {
 	//	std::cout << "Current bullet before reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
 		player2.getComponent<ShootComponent>().reloading();
+		ammoManager->needToRerenderScoreBoard_ = true;
 	//	std::cout << "Current bullet after reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
 	if (states3[2]) {
 		//std::cout << "Current health before healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
 		player2.getComponent<ShootComponent>().healing();
+		ammoManager->needToRerenderScoreBoard_ = true;
 	//	std::cout << "Current health after healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 	if (states3[3]) {
 		player2.getComponent<ShootComponent>().allahStyle();
+		ammoManager->needToRerenderScoreBoard_ = true;
 	}
 	//----------end added functions
 

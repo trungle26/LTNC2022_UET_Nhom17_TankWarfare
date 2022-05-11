@@ -49,6 +49,7 @@ public:
 	int delayReloading = 200;
 	clock_t prevHealing = clock();
 	clock_t prevReloading = clock();
+	//bool notResponding = false;
 	//default option
 	ShootComponent() {
 
