@@ -1,20 +1,10 @@
-﻿  Game.cpp
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(76,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(77,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(83,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\TransformComponent.h(84,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\SpriteComponent.h(40,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\SpriteComponent.h(41,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\Game.cpp(130,102): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\Game.cpp(136,104): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\ECS.h(93,33): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
-          with
-          [
-              _Ty=int
-          ]
-D:\lập trình nâng cao\Visual Studio Projects\SDL\SDL\Game.cpp(53): message : see reference to function template instantiation 'T &Entity::addComponent<TransformComponent,int,int>(int &&,int &&)' being compiled
-          with
-          [
-              T=TransformComponent
-          ]
-  SDL.vcxproj -> D:\lập trình nâng cao\Visual Studio Projects\SDL\x64\Debug\SDL.exe
+﻿  Map.cpp
+C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(76,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(77,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(83,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(84,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(89,17): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(90,17): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\SpriteComponent.h(39,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\SpriteComponent.h(40,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  SDL.vcxproj -> C:\Users\hoang\Documents\CurrentBigProject\x64\Debug\SDL.exe
