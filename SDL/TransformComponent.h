@@ -89,4 +89,9 @@ public:
 		position.x -= x_movement;
 		position.y -= y_movement;
 	}
+	void dungDotNgot() {
+		position.x = position.x;
+		position.y = position.y;
+		speed = 0.0;
+	}
 };

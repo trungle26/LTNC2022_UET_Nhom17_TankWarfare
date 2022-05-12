@@ -77,7 +77,7 @@ void ShootComponent::reloading() {
 	
 	animatedReload = true;
 	//notResponding = true;
-	ShootComponent::delay(delayTimeReload);
+	//ShootComponent::delay(delayTimeReload);
 	
 	currentBullet = maxBullet;
 	animatedReload = false;

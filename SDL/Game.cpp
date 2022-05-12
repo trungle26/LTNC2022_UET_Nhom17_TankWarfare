@@ -18,7 +18,8 @@ SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
 LTexture* ltexture = new LTexture();
 
-
+//for reloading and healing purposes
+std::vector<int> player1Functions;
 
 Game::Game()
 {}
@@ -77,6 +78,10 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	if (TTF_Init() < 0) {
 		std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
 	}
+	//things to reload and healing
+	player1Functions.push_back(clock()); 
+	player1Functions.push_back(clock());
+
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));// pass in all the tiles into this 
@@ -99,69 +104,92 @@ bool tank1Hit = false;
 bool tank2Hit = false;
 bool tank1Dead = false;
 bool tank2Dead = false;
-bool inGameNow = true;
+
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
+
+
+//for render scoreboard
 bool needRerenderScoreBoard = false;
-//testing
+
+//for render text
 TTF_Font* font = NULL;
 SDL_Surface* text;
 SDL_Surface* text2;
 SDL_Texture* text_texture;
 SDL_Texture* text_texture2;
+//for lock keydown events
+bool lockKeyDownPlayer1 = false;
+bool lockKeyDownPlayer2 = false;
 void Game::handleEvents()
 {
 	SDL_PollEvent(&event);
+
+
 	switch (event.type)
 	{
 	case SDL_QUIT:
 		isRunning = false;
 		break;
 	case SDL_KEYDOWN:
-		if (Game::event.key.keysym.sym == SDLK_LEFT) states2[left] = true;
-		if (Game::event.key.keysym.sym == SDLK_RIGHT) states2[right] = true;
-		if (Game::event.key.keysym.sym == SDLK_UP) states2[up] = true;
-		if (Game::event.key.keysym.sym == SDLK_DOWN) states2[down] = true;
-		if (Game::event.key.keysym.sym == SDLK_a) states1[left] = true;
-		if (Game::event.key.keysym.sym == SDLK_d) states1[right] = true;
-		if (Game::event.key.keysym.sym == SDLK_w) states1[up] = true;
-		if (Game::event.key.keysym.sym == SDLK_s) states1[down] = true;
-		//for new shoot function
-		//tank1 shoot function
-		if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = true;
-		if (Game::event.key.keysym.sym == SDLK_r) states4[1] = true;
-		if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
-		if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
-		//tank2 shoot function (missing)
-		if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
-		if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
-		if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
-		if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
-		//NOT YET DONE: TWO TANK CHEAT CODES 
+		//player 2
+		if (!lockKeyDownPlayer2) {
+			if (Game::event.key.keysym.sym == SDLK_LEFT) states2[left] = true;
+			if (Game::event.key.keysym.sym == SDLK_RIGHT) states2[right] = true;
+			if (Game::event.key.keysym.sym == SDLK_UP) states2[up] = true;
+			if (Game::event.key.keysym.sym == SDLK_DOWN) states2[down] = true;
+		}
+		
 
+		//player1
+		if (!lockKeyDownPlayer1) {
+			if (Game::event.key.keysym.sym == SDLK_a) states1[left] = true;
+			if (Game::event.key.keysym.sym == SDLK_d) states1[right] = true;
+			if (Game::event.key.keysym.sym == SDLK_w) states1[up] = true;
+			if (Game::event.key.keysym.sym == SDLK_s) states1[down] = true;
+			//for new shoot function
+		//tank1 shoot function
+			if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = true;
+			if (Game::event.key.keysym.sym == SDLK_r) states4[1] = true;
+			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
+		}
+		
+		if (!lockKeyDownPlayer2) {
+			//tank2 shoot function 
+			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
+			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
+			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
+			//NOT YET DONE: TWO TANK CHEAT CODES 
+		}
 
 		break;
 	case SDL_KEYUP:
-		if (Game::event.key.keysym.sym == SDLK_LEFT) states2[left] = false;
-		if (Game::event.key.keysym.sym == SDLK_RIGHT) states2[right] = false;
-		if (Game::event.key.keysym.sym == SDLK_UP) states2[up] = false;
-		if (Game::event.key.keysym.sym == SDLK_DOWN) states2[down] = false;
-		if (Game::event.key.keysym.sym == SDLK_a) states1[left] = false;
-		if (Game::event.key.keysym.sym == SDLK_d) states1[right] = false;
-		if (Game::event.key.keysym.sym == SDLK_w) states1[up] = false;
-		if (Game::event.key.keysym.sym == SDLK_s) states1[down] = false;
-		//for new shoot function
-		if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = false;
-		if (Game::event.key.keysym.sym == SDLK_r) states4[1] = false;
-		if (Game::event.key.keysym.sym == SDLK_q) states4[2] = false;
-		if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = false;
-		// tank2 shoot function
-		if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = false;
-		if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = false;
-		if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = false;
-		if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = false;
-		//NOT YET DONE: TWO TANK CHEAT CODES (FOR TESTING PURPOSES)
-
+		
+		if (!lockKeyDownPlayer1) {
+			if (Game::event.key.keysym.sym == SDLK_a) states1[left] = false;
+			if (Game::event.key.keysym.sym == SDLK_d) states1[right] = false;
+			if (Game::event.key.keysym.sym == SDLK_w) states1[up] = false;
+			if (Game::event.key.keysym.sym == SDLK_s) states1[down] = false;
+			//for new shoot function
+			if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = false;
+			if (Game::event.key.keysym.sym == SDLK_r) states4[1] = false;
+			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = false;
+			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = false;
+		}
+		if (!lockKeyDownPlayer2) {
+			if (Game::event.key.keysym.sym == SDLK_LEFT) states2[left] = false;
+			if (Game::event.key.keysym.sym == SDLK_RIGHT) states2[right] = false;
+			if (Game::event.key.keysym.sym == SDLK_UP) states2[up] = false;
+			if (Game::event.key.keysym.sym == SDLK_DOWN) states2[down] = false;
+			// tank2 shoot function
+			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = false;
+			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = false;
+			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = false;
+			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = false;
+			//NOT YET DONE: TWO TANK CHEAT CODES (FOR TESTING PURPOSES)
+		}
 
 		break;
 	}
@@ -173,6 +201,8 @@ void Game::update()
 {
 	clock_t currentTimeForShootingPurpose = clock();
 	clock_t currentTimeShootingPlayer2 = clock();
+
+
 	SDL_Rect playerCol = player.getComponent<CollisionComponent>().collider;
 	SDL_Rect player2Col = player2.getComponent<CollisionComponent>().collider;
 
@@ -312,27 +342,35 @@ void Game::update()
 			ammoManager->addToSDLRect1(directionInState4.x, directionInState4.y);
 
 			ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
-
-
-			//add ammo infor -> push_back angle and projectile -> 
-			//transfer to ammo manager -> do sth elsE
-
 			//SET TIME TO LIMIT SHOOT PER SECOND
 			prevTimeForShootingPurpose = currentTimeForShootingPurpose;
 		}
-		
-
 	}
-	
-
 	//When reloading
 	if (states4[1]) {
-		player.getComponent<ShootComponent>().reloading();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		if (!lockKeyDownPlayer1) {
+			clock_t tempClock = clock();
+			player1Functions[0] = tempClock;
+		}
+		lockKeyDownPlayer1 = true;
+		clock_t compareClock = clock();
+		player.getComponent<TransformComponent>().dungDotNgot();
+		if (compareClock - player1Functions[0] <= player.getComponent<ShootComponent>().delayTimeReload*1000) {
+			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
+			states4[1] = true;
+		}
+		else {
+			player.getComponent<ShootComponent>().reloading();
+			ammoManager->needToRerenderScoreBoard_ = true;
+			lockKeyDownPlayer1 = false;
+			states4[1] = false;
+		}
+		
 	//	std::cout << "Current bullet after reloading: " << player.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
 	// When healing
 	if (states4[2]) {
+		lockKeyDownPlayer1 = true;
 	//	std::cout << "Current health before healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
 		player.getComponent<ShootComponent>().healing();
 		ammoManager->needToRerenderScoreBoard_ = true;
