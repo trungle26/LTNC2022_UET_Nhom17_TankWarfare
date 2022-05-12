@@ -80,11 +80,13 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	if (TTF_Init() < 0) {
 		std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
 	}
-	//things to reload and healing
+	//things to reload and healing AND ALLAH MODE
 	player1Functions.push_back(clock()); 
 	player1Functions.push_back(clock());
 	player2Functions.push_back(clock());
 	player2Functions.push_back(clock());
+	player2Functions.push_back(clock());
+	player1Functions.push_back(clock());
 
 }
 
@@ -104,10 +106,7 @@ bool states1[] = { false, false , false, false };//tank 1
 bool states2[] = { false, false, false ,false };//tank 2
 bool states3[] = { false,false,false,false };//shoot, reload, healing, allahMode for player of tank 2 
 bool states4[] = { false, false, false, false };//tank 1
-bool tank1Hit = false;
-bool tank2Hit = false;
-bool tank1Dead = false;
-bool tank2Dead = false;
+
 
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
@@ -556,12 +555,13 @@ void Game::render()
 		tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
 		tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
 		std::cout << "Get SDL_REct x and y" << std::endl;
-		tempToRenderProjectile.w = 32; //Projectiles size
+		tempToRenderProjectile.w = 128; //Projectiles size
 		tempToRenderProjectile.h = 32; //Projectiles size
 		SDL_Rect sourceRect;
 		sourceRect.x = 0;
 		sourceRect.y = 0;
-		sourceRect.w = sourceRect.h = 32;
+		sourceRect.w = 128;
+			sourceRect.h = 32;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 	}
 	//SCOREBOARD
