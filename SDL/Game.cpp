@@ -20,7 +20,7 @@ LTexture* ltexture = new LTexture();
 
 //for reloading and healing purposes
 std::vector<int> player1Functions;
-
+std::vector<int> player2Functions;
 Game::Game()
 {}
 Game::~Game()
@@ -83,6 +83,8 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	//things to reload and healing
 	player1Functions.push_back(clock()); 
 	player1Functions.push_back(clock());
+	player2Functions.push_back(clock());
+	player2Functions.push_back(clock());
 
 }
 
@@ -361,7 +363,7 @@ void Game::update()
 		states1[down] = false;
 		states1[left] = false;
 		states1[right] = false;
-		player.getComponent<TransformComponent>().dungDotNgot();
+		//player.getComponent<TransformComponent>().dungDotNgot();
 		if (compareClock - player1Functions[0] <= player.getComponent<ShootComponent>().delayTimeReload*1000) {
 			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
 			states4[1] = true;
@@ -377,10 +379,27 @@ void Game::update()
 	}
 	// When healing
 	if (states4[2]) {
+		if (!lockKeyDownPlayer1) {
+			clock_t tempClock = clock();
+			player1Functions[1] = tempClock;
+		}
 		lockKeyDownPlayer1 = true;
-	//	std::cout << "Current health before healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
-		player.getComponent<ShootComponent>().healing();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		clock_t compareClock = clock();
+		states1[up] = false;
+		states1[down] = false;
+		states1[left] = false;
+		states1[right] = false;
+		//player.getComponent<TransformComponent>().dungDotNgot();
+		if (compareClock - player1Functions[1] <= player.getComponent<ShootComponent>().delayTimeReload * 1000) {
+			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
+			states4[2] = true;
+		}
+		else {
+			player.getComponent<ShootComponent>().healing();
+			ammoManager->needToRerenderScoreBoard_ = true;
+			lockKeyDownPlayer1 = false;
+			states4[2] = false;
+		}
 	//	std::cout << "Current health after healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 
@@ -418,15 +437,51 @@ void Game::update()
 		}
 	}
 	if (states3[1]) {
-	//	std::cout << "Current bullet before reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
-		player2.getComponent<ShootComponent>().reloading();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		if (!lockKeyDownPlayer2) {
+			clock_t tempClock = clock();
+			player2Functions[0] = tempClock;
+		}
+		lockKeyDownPlayer2 = true;
+		clock_t compareClock = clock();
+		states2[up] = false;
+		states2[down] = false;
+		states2[left] = false;
+		states2[right] = false;
+		//player.getComponent<TransformComponent>().dungDotNgot();
+		if (compareClock - player2Functions[0] <= player2.getComponent<ShootComponent>().delayTimeReload * 1000) {
+			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
+			states3[1] = true;
+		}
+		else {
+			player2.getComponent<ShootComponent>().reloading();
+			ammoManager->needToRerenderScoreBoard_ = true;
+			lockKeyDownPlayer2 = false;
+			states3[1] = false;
+		}
 	//	std::cout << "Current bullet after reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
 	if (states3[2]) {
-		//std::cout << "Current health before healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
-		player2.getComponent<ShootComponent>().healing();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		if (!lockKeyDownPlayer2) {
+			clock_t tempClock = clock();
+			player2Functions[1] = tempClock;
+		}
+		lockKeyDownPlayer2 = true;
+		clock_t compareClock = clock();
+		states2[up] = false;
+		states2[down] = false;
+		states2[left] = false;
+		states2[right] = false;
+		//player.getComponent<TransformComponent>().dungDotNgot();
+		if (compareClock - player2Functions[1] <= player2.getComponent<ShootComponent>().delayTimeReload * 1000) {
+			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
+			states3[2] = true;
+		}
+		else {
+			player2.getComponent<ShootComponent>().healing();
+			ammoManager->needToRerenderScoreBoard_ = true;
+			lockKeyDownPlayer2 = false;
+			states3[2] = false;
+		}
 	//	std::cout << "Current health after healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 	if (states3[3]) {
@@ -441,10 +496,17 @@ void Game::update()
 	ammoManager->checkBulletForPlayer1();
 	ammoManager->checkBulletForPlayer2();
 	//CHECK MINUSHEALTH OF PLAYER 1 IN ALLAH MODE
-	if (player.getComponent<ShootComponent>().allahMode)player.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
+	if (player.getComponent<ShootComponent>().allahMode) {
+		player.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
+		ammoManager->needToRerenderScoreBoard_ = true;
+	}
+		
+		
 	//CHECK MINUSHEALTH OF PLAYER 2 IN ALLAH MODE
-	if (player2.getComponent<ShootComponent>().allahMode)player2.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
-
+	if (player2.getComponent<ShootComponent>().allahMode) {
+		player2.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
+		ammoManager->needToRerenderScoreBoard_ = true;
+	}
 
 }
 
