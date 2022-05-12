@@ -1,6 +1,6 @@
 // Vector2D Class la de xu ly vi tri x,y cua cac vat the
 #pragma once
-
+#pragma once
 #include <iostream>
 
 class Vector2D
