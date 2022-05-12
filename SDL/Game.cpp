@@ -357,6 +357,10 @@ void Game::update()
 		}
 		lockKeyDownPlayer1 = true;
 		clock_t compareClock = clock();
+		states1[up] = false;
+		states1[down] = false;
+		states1[left] = false;
+		states1[right] = false;
 		player.getComponent<TransformComponent>().dungDotNgot();
 		if (compareClock - player1Functions[0] <= player.getComponent<ShootComponent>().delayTimeReload*1000) {
 			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
