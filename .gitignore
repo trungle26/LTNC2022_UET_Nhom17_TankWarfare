@@ -1,3 +1,7 @@
+backup
+x64
+
+
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db
@@ -997,7 +1001,6 @@ _deps
 
 # Linker output
 *.ilk
-*.map
 *.exp
 
 # Precompiled Headers
