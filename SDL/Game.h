@@ -2,8 +2,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <vector>
-#include<SDL_image.h>
-#include <SDL_ttf.h>
+
 class CollisionComponent;
 
 class Game
