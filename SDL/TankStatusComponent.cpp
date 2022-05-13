@@ -115,11 +115,12 @@ void ShootComponent::addAngleOfThisShoot(double angle_) {
 }
 void ShootComponent::autoMinusHealthOfAllahStyle() {
 	clock_t currentTime = clock();
-	if (currentTime - prevTime >= (delayTimeReload*2+1)*1000) {
+	if (currentTime - prevTime >= (delayTimeReload * 2 + 1) * 1000) {
 		currentHealth -= minusHealth;
 		std::cout << "Go go bro. Current health: " << currentHealth << std::endl;
 		prevTime = currentTime;
-	} 
+		updateScoreBoard = true;
+	}
 	
 	//delay(delayTimeReload * 2 + 1);
 }
@@ -151,6 +152,14 @@ void ShootComponent::projectileInit(Vector2D pos, double bulletSpeed) { //CHANGE
 	std::cout << "Projectile init successful" << std::endl;
 	std::cout << "Size of projectiles: " << projectiles.size() << std::endl;
 }
-
+bool ShootComponent::needUpdateScoreBoard() {
+	if (updateScoreBoard) {
+		updateScoreBoard = false;
+		return !updateScoreBoard;
+	}
+	else {
+		return updateScoreBoard;
+	}
+}
 
 //Add Ammo Information -> projectileInit (ALREADY IN TANKSTATUS COMPONENT) -> shoot function -> AmmoManager file.

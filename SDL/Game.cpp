@@ -485,7 +485,7 @@ void Game::update()
 	}
 	if (states3[3]) {
 		player2.getComponent<ShootComponent>().allahStyle();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		//ammoManager->needToRerenderScoreBoard_ = true;
 	}
 	//----------end added functions
 
@@ -497,14 +497,19 @@ void Game::update()
 	//CHECK MINUSHEALTH OF PLAYER 1 IN ALLAH MODE
 	if (player.getComponent<ShootComponent>().allahMode) {
 		player.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		if (player.getComponent<ShootComponent>().needUpdateScoreBoard()) {
+			ammoManager->needToRerenderScoreBoard_ = true;
+		}
+		
 	}
 		
 		
 	//CHECK MINUSHEALTH OF PLAYER 2 IN ALLAH MODE
 	if (player2.getComponent<ShootComponent>().allahMode) {
 		player2.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		if (player2.getComponent<ShootComponent>().needUpdateScoreBoard()) {
+			ammoManager->needToRerenderScoreBoard_ = true;
+		}
 	}
 
 }

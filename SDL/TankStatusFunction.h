@@ -49,6 +49,7 @@ public:
 	int delayReloading = 200;
 	clock_t prevHealing = clock();
 	clock_t prevReloading = clock();
+	bool updateScoreBoard = false;
 	//bool notResponding = false;
 	//default option
 	ShootComponent() {
@@ -62,7 +63,6 @@ public:
 	//god option
 	ShootComponent(bool godMode,  int player);
 	void shoot();
-	//function from GeekForGeeks
 	void delay(int number_of_seconds);
 	void reloading();
 	void projectileInit(Vector2D pos, double bulletSpeed);
@@ -72,6 +72,7 @@ public:
 	void addAmmoInformation(Vector2D position);
 	void addAngleOfThisShoot(double angle_);
 	void autoMinusHealthOfAllahStyle();
+	bool needUpdateScoreBoard();
 	~ShootComponent();
 	
 
