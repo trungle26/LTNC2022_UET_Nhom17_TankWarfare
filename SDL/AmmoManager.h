@@ -33,6 +33,7 @@ public:
 	void checkBulletForPlayer1();
 	void checkBulletForPlayer2();
 	void getProjectilesVector1();
+	void getProjectilesVector2();
 	void addAngleOfProjectile(double angle, int player);
 	void getTank1();
 	void getTank2();

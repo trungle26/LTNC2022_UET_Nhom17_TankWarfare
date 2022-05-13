@@ -218,8 +218,6 @@ void Game::update()
 {
 	clock_t currentTimeForShootingPurpose = clock();
 	clock_t currentTimeShootingPlayer2 = clock();
-
-
 	SDL_Rect playerCol = player.getComponent<CollisionComponent>().collider;
 	SDL_Rect player2Col = player2.getComponent<CollisionComponent>().collider;
 
@@ -344,7 +342,8 @@ void Game::update()
 	//When shooting
 	//tank 1 shooting
 	if (states4[0]) {
-		if (currentTimeForShootingPurpose - prevTimeForShootingPurpose >= player.getComponent<ShootComponent>().delayBetweenProjectiles){//HAVE TO MODIFIED
+		if (currentTimeForShootingPurpose - prevTimeForShootingPurpose > player.getComponent<ShootComponent>().delayBetweenProjectiles
+			&&player.getComponent<ShootComponent>().currentBullet>0){//HAVE TO MODIFIED
 			Vector2D directionInState4;
 			directionInState4.x = player.getComponent<TransformComponent>().position.x; //LEGACY
 			directionInState4.y = player.getComponent<TransformComponent>().position.y; ///LEGACY
@@ -354,7 +353,7 @@ void Game::update()
 			player.getComponent<ShootComponent>().addAmmoInformation(player.getComponent<TransformComponent>().position);
 			std::cout << "addAmmoIn4 finished" << std::endl;
 			player.getComponent<ShootComponent>().shoot();
-
+			
 			ammoManager->getProjectilesVector1(); //ACTUALY BOTH PROJECTTILES
 			ammoManager->addAngleOfProjectile(player.getComponent<TransformComponent>().angle, 1);
 			ammoManager->addToSDLRect1(directionInState4.x, directionInState4.y);
@@ -428,7 +427,8 @@ void Game::update()
 
 	// Tank2 functions goes here
 	if (states3[0]) {
-		if (currentTimeShootingPlayer2 - prevTimeShootingPlayer2 >= player2.getComponent<ShootComponent>().delayBetweenProjectiles) {
+		if (currentTimeShootingPlayer2 - prevTimeShootingPlayer2 >= player2.getComponent<ShootComponent>().delayBetweenProjectiles
+			&& player2.getComponent<ShootComponent>().currentBullet > 0) {
 			Vector2D directionInState3;
 			directionInState3.x = player2.getComponent<TransformComponent>().position.x; //LEGACY
 			directionInState3.y = player2.getComponent<TransformComponent>().position.y; ///LEGACY
@@ -439,7 +439,7 @@ void Game::update()
 			std::cout << "addAmmoIn4 finished" << std::endl;
 			player2.getComponent<ShootComponent>().shoot();
 
-			ammoManager->getProjectilesVector1(); //ACTUALY BOTH PROJECTTILES
+			ammoManager->getProjectilesVector2(); //ACTUALY BOTH PROJECTTILES
 			ammoManager->addAngleOfProjectile(player2.getComponent<TransformComponent>().angle, 2);
 			ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
 			ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
@@ -656,7 +656,7 @@ void Game::render()
 		
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
-			SDL_Color color = { 255,255,255 };
+			SDL_Color color = { 255,255,255 };//white
 			surfaceTextPlayer2 = TTF_RenderText_Solid(font, textPlayer2.c_str(), color);
 			if (!surfaceTextPlayer2)std::cout << "Can't load text" << std::endl;
 			textureTextPlayer2 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer2);

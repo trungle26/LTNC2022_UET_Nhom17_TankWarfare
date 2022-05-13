@@ -30,9 +30,15 @@ void AmmoManager::addTankShootComponent(ShootComponent* tank1_, ShootComponent* 
 //IF POSSIBLE TRY TO USE STATIC VARIABLE (NOT NOW)
 void AmmoManager::getProjectilesVector1() {
 	this->projectilesPlayer1 = tank1->projectiles;
-	this->projectilesPlayer2 = tank2->projectiles;
 	
-	std::cout << "Successful get Projectiles of both tanks" << std::endl;
+	
+	std::cout << "Successful get Projectiles of tank 1" << std::endl;
+}
+void AmmoManager::getProjectilesVector2() {
+
+	this->projectilesPlayer2 = tank2->projectiles;
+
+	std::cout << "Successful get Projectiles of tank 1" << std::endl;
 }
 void AmmoManager::addAngleOfProjectile(double angle, int player) {
 	if (player == 1) {
@@ -89,6 +95,8 @@ void AmmoManager::checkBulletForPlayer1() {
 	//std::cout << "finished checking checkBulletForPlayer1" << std::endl;
 	tank1->projectiles = projectilesPlayer1; //return back projectiles vector
 	tank1->angles = projectilesAnglesPlayer1;
+	std::cout << "1 P: " << projectilesPlayer1.size() << " A: " << projectilesAnglesPlayer1.size() << std::endl;
+
 }
 void AmmoManager::checkBulletForPlayer2() {
 	//std::cout << "currently checking checkBulletForPlayer2" << std::endl;
@@ -125,6 +133,7 @@ void AmmoManager::checkBulletForPlayer2() {
 	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
 	tank2->angles = projectilesAnglesPlayer2;
+	std::cout << "2 P: " << projectilesPlayer2.size() << " A: " << projectilesAnglesPlayer2.size() << std::endl;
 }
 //use 2 separate funtions to avoid redundant reload times
 bool AmmoManager::needToRerenderScoreBoard() {
@@ -137,20 +146,10 @@ bool AmmoManager::needToRerenderScoreBoard() {
 	}
 }
 bool AmmoManager::needToRerenderTextStatusPlayer1() {
-	//if (renderTextStatusPlayer1) {
-//		renderTextStatusPlayer1 = false;
-//		return !renderTextStatusPlayer1;
-//	}
-	//else {
+
 		return renderTextStatusPlayer1;
-//	}
 }
 bool AmmoManager::needToRerenderTextStatusPlayer2() {
-	//if (renderTextStatusPlayer2) {
-//		renderTextStatusPlayer2 = false;
-//		return !renderTextStatusPlayer2;
-//	}
-	//else {
+
 		return renderTextStatusPlayer2;
-//	}
 }
