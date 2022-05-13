@@ -1,6 +1,10 @@
 backup
 x64
-
+.sln
+.vs
+.vcxproj
+.vcxproj.filters
+.vcxproj.user
 
 ##### Windows
 # Windows thumbnail cache files
