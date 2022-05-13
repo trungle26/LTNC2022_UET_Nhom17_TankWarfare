@@ -50,7 +50,10 @@ public:
 	clock_t prevHealing = clock();
 	clock_t prevReloading = clock();
 	bool updateScoreBoard = false;
-	//bool notResponding = false;
+	//new variable for new mode in option in UI
+	bool ableToHealing = true;
+	bool showProjectiles = true;
+	double scaleTank = 1.0;
 	//default option
 	ShootComponent() {
 

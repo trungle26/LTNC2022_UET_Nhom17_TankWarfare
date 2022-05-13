@@ -123,6 +123,7 @@ void AmmoManager::checkBulletForPlayer2() {
 	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
 }
+//use 2 separate funtions to avoid redundant reload times
 bool AmmoManager::needToRerenderScoreBoard() {
 	if (needToRerenderScoreBoard_) {
 		needToRerenderScoreBoard_ = false;
@@ -131,18 +132,22 @@ bool AmmoManager::needToRerenderScoreBoard() {
 	else {
 		return needToRerenderScoreBoard_;
 	}
-	
 }
-
-/*
-std::vector<Projectile> projectiles = player->projectiles;
-	for (int i = 0; i < projectiles.size(); i++) {
-		projectiles[i].Update();
-		if (collision->CollisionWithWalls(Vector2(projectiles[i].x, projectiles[i].y))) {
-			projectiles.erase(projectiles.begin() + i);
-		}
-		else if (projectiles[i].frames >= 600) {
-			projectiles.erase(projectiles.begin() + i);
-		}
+bool AmmoManager::needToRerenderTextStatusPlayer1() {
+	if (renderTextStatusPlayer1) {
+		renderTextStatusPlayer1 = false;
+		return !renderTextStatusPlayer1;
 	}
-	player->projectiles = projectiles;*/
+	else {
+		return renderTextStatusPlayer1;
+	}
+}
+bool AmmoManager::needToRerenderTextStatusPlayer2() {
+	if (renderTextStatusPlayer2) {
+		renderTextStatusPlayer2 = false;
+		return !renderTextStatusPlayer2;
+	}
+	else {
+		return renderTextStatusPlayer2;
+	}
+}

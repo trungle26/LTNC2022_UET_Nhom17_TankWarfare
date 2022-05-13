@@ -16,11 +16,15 @@ Map* map;
 AmmoManager* ammoManager = new AmmoManager(); //testing
 SDL_Renderer* Game::renderer = NULL;
 SDL_Event Game::event;
-LTexture* ltexture = new LTexture();
+//LTexture* ltexture = new LTexture();
 
 //for reloading and healing purposes
 std::vector<int> player1Functions;
 std::vector<int> player2Functions;
+
+//for render text
+
+
 Game::Game()
 {}
 Game::~Game()
@@ -72,7 +76,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		ammoManager->addTankShootComponent(test1, test2);
 		player.addGroup(groupPlayers);
 		player2.addGroup(groupPlayers);
-
+		
 	}
 	else {
 		isRunning = false;
@@ -114,13 +118,19 @@ clock_t prevTimeShootingPlayer2 = clock();
 
 //for render scoreboard
 bool needRerenderScoreBoard = false;
-
-//for render text
-TTF_Font* font = NULL;
 SDL_Surface* text;
 SDL_Surface* text2;
 SDL_Texture* text_texture;
 SDL_Texture* text_texture2;
+//for render text showing status
+SDL_Surface* surfaceTextPlayer1;
+SDL_Surface* surfaceTextPlayer2;
+SDL_Texture* textureTextPlayer1;
+SDL_Texture* textureTextPlayer2;
+std::string textPlayer1;
+std::string textPlayer2;
+ //white color
+
 //for lock keydown events
 bool lockKeyDownPlayer1 = false;
 bool lockKeyDownPlayer2 = false;
@@ -355,6 +365,7 @@ void Game::update()
 		if (!lockKeyDownPlayer1) {
 			clock_t tempClock = clock();
 			player1Functions[0] = tempClock;
+			ammoManager->renderTextStatusPlayer1 = true;
 		}
 		lockKeyDownPlayer1 = true;
 		clock_t compareClock = clock();
@@ -372,6 +383,7 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 			lockKeyDownPlayer1 = false;
 			states4[1] = false;
+			ammoManager->renderTextStatusPlayer1 = false;
 		}
 		
 	//	std::cout << "Current bullet after reloading: " << player.getComponent<ShootComponent>().currentBullet << std::endl;
@@ -381,6 +393,7 @@ void Game::update()
 		if (!lockKeyDownPlayer1) {
 			clock_t tempClock = clock();
 			player1Functions[1] = tempClock;
+			ammoManager->renderTextStatusPlayer1 = true;
 		}
 		lockKeyDownPlayer1 = true;
 		clock_t compareClock = clock();
@@ -398,6 +411,7 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 			lockKeyDownPlayer1 = false;
 			states4[2] = false;
+			ammoManager->renderTextStatusPlayer1 = false;
 		}
 	//	std::cout << "Current health after healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
@@ -405,7 +419,7 @@ void Game::update()
 	//When tank enable allahMode
 	if (states4[3]) {
 		player.getComponent<ShootComponent>().allahStyle();
-		ammoManager->needToRerenderScoreBoard_ = true;
+		states4[3] = false;
 	}
 
 	// Tank2 functions goes here
@@ -424,7 +438,6 @@ void Game::update()
 			ammoManager->getProjectilesVector1(); //ACTUALY BOTH PROJECTTILES
 			ammoManager->addAngleOfProjectile(player2.getComponent<TransformComponent>().angle, 2);
 			ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
-
 			ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
 
 
@@ -439,6 +452,7 @@ void Game::update()
 		if (!lockKeyDownPlayer2) {
 			clock_t tempClock = clock();
 			player2Functions[0] = tempClock;
+			ammoManager->renderTextStatusPlayer2 = true;
 		}
 		lockKeyDownPlayer2 = true;
 		clock_t compareClock = clock();
@@ -456,6 +470,7 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 			lockKeyDownPlayer2 = false;
 			states3[1] = false;
+			ammoManager->renderTextStatusPlayer2 = false;
 		}
 	//	std::cout << "Current bullet after reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
@@ -463,6 +478,7 @@ void Game::update()
 		if (!lockKeyDownPlayer2) {
 			clock_t tempClock = clock();
 			player2Functions[1] = tempClock;
+			ammoManager->renderTextStatusPlayer2 = true;
 		}
 		lockKeyDownPlayer2 = true;
 		clock_t compareClock = clock();
@@ -480,11 +496,13 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 			lockKeyDownPlayer2 = false;
 			states3[2] = false;
+			ammoManager->renderTextStatusPlayer2 = false;
 		}
 	//	std::cout << "Current health after healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 	if (states3[3]) {
 		player2.getComponent<ShootComponent>().allahStyle();
+		states4[3] = false;
 		//ammoManager->needToRerenderScoreBoard_ = true;
 	}
 	//----------end added functions
@@ -502,8 +520,6 @@ void Game::update()
 		}
 		
 	}
-		
-		
 	//CHECK MINUSHEALTH OF PLAYER 2 IN ALLAH MODE
 	if (player2.getComponent<ShootComponent>().allahMode) {
 		player2.getComponent<ShootComponent>().autoMinusHealthOfAllahStyle();
@@ -511,10 +527,7 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 		}
 	}
-
 }
-
-
 void Game::render()
 {
 	SDL_RenderClear(renderer);
@@ -524,18 +537,14 @@ void Game::render()
 	{
 		t->draw();
 	}
-
 	for (auto& c : colliders)
 	{
 		c->draw();
   }
-
-
 	for (auto& p : players)
 	{
 		p->draw();
 	}
-	
 	//Render projectiles player1
 	for (int i = 0; i < ammoManager->projectilesPlayer1.size(); i++) {
 		SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
@@ -570,10 +579,6 @@ void Game::render()
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 	}
 	//SCOREBOARD
-	//ltexture->renderScoreBoardPlayer1(renderer, player.getComponent<ShootComponent>().currentBullet, player.getComponent<ShootComponent>().currentHealth);
-	//ltexture->renderScoreBoardPlayer2(renderer, player2.getComponent<ShootComponent>().currentBullet, player2.getComponent<ShootComponent>().currentHealth);
-
-		
 	if (ammoManager->needToRerenderScoreBoard()) {
 		SDL_DestroyTexture(text_texture);
 		SDL_FreeSurface(text);
@@ -582,9 +587,13 @@ void Game::render()
 		std::string scoreBoardPlayer2 = " Player2: Bullet: "
 			+ std::to_string(player2.getComponent<ShootComponent>().currentBullet) + " Health: "
 			+ std::to_string(player2.getComponent<ShootComponent>().currentHealth);
+		if (player.getComponent<ShootComponent>().allahMode)scoreBoard += " Allah Mode Enabled";
+		if (player2.getComponent<ShootComponent>().allahMode)scoreBoardPlayer2 += " Allah Mode Enabled";
+		TTF_Font* font = NULL;
+		//initalize font
 		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 		if (!font)std::cout << "Can't load font" << std::endl;
-		SDL_Color color = { 255,255,255 }; //white color
+		SDL_Color color = { 255,255,255 };
 		text = TTF_RenderText_Solid(font, scoreBoard.c_str(), color);
 		if (!text)std::cout << "Can't load text" << std::endl;
 		text_texture = SDL_CreateTextureFromSurface(renderer, text);
@@ -603,23 +612,28 @@ void Game::render()
 		textDest = { 1248/2,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 	}
-	
+	if(ammoManager->needToRerenderTextStatusPlayer1()){
+		SDL_DestroyTexture(textureTextPlayer1);
+		SDL_FreeSurface(surfaceTextPlayer1);
+		textPlayer1 = "Tank 1 is functioning. Please wait...";
 		
+	}
+	if (ammoManager->needToRerenderTextStatusPlayer2()) {
+		SDL_DestroyTexture(textureTextPlayer2);
+		SDL_FreeSurface(surfaceTextPlayer2);
+		textPlayer2 = "Tank 2 is functioning. Please wait...";
+
+	}
 	
 	
 	SDL_RenderPresent(renderer);
-
-
 	//SDL_DestroyTexture(text_texture);
-	
-	
 }
 
 void Game::close()
 {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	
 	SDL_Quit();
 	std::cout << "game closed!\n";
 }
