@@ -24,8 +24,8 @@ public:
 	std::vector<double>projectilesAnglesPlayer1;
 	std::vector<double>projectilesAnglesPlayer2;
 	bool needToRerenderScoreBoard_ = true;
-	bool renderTextStatusPlayer1 = true;
-	bool renderTextStatusPlayer2 = true;
+	bool renderTextStatusPlayer1 = false;
+	bool renderTextStatusPlayer2 = false;
 	AmmoManager();
 	void addToSDLRect1(float x, float y);
 	void addToSDLRect2(float x, float y);

@@ -562,6 +562,7 @@ void Game::render()
 		sourceRect.y = 0;
 		sourceRect.w = sourceRect.h = 32;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
+		std::cout << "Successful render projetiles player 1" << std::endl;
 	}
 	//Render projectiles player2
 	for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
@@ -592,7 +593,6 @@ void Game::render()
 		if (player.getComponent<ShootComponent>().allahMode)scoreBoard += " Allah Mode Enabled";
 		if (player2.getComponent<ShootComponent>().allahMode)scoreBoardPlayer2 += " Allah Mode Enabled";
 		//initalize font
-		
 		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 		if (!font)std::cout << "Can't load font" << std::endl;
 		SDL_Color color = {255,255,255};
@@ -607,6 +607,7 @@ void Game::render()
 		text_texture2 = SDL_CreateTextureFromSurface(renderer, text2);
 		textDest = { 1248 / 2 ,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
+		std::cout << "Successful render scoreboard update of player 1." << std::endl;
 		//------------end testing
 	}
 	else {
@@ -615,62 +616,68 @@ void Game::render()
 		textDest = { 1248/2,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 	}
-	/*
+	
 	if(ammoManager->needToRerenderTextStatusPlayer1()){
 		if (!keepTextPlayer1) {
 			textPlayer1 = "Tank 1 is functioning. Please wait...";
 			//initalize font
-			TTF_Font* font = NULL;
+	
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };
 			surfaceTextPlayer1 = TTF_RenderText_Solid(font, textPlayer1.c_str(), color);
 			if (!surfaceTextPlayer1)std::cout << "Can't load text" << std::endl;
-			textureTextPlayer1 = SDL_CreateTextureFromSurface(renderer, text);
-			SDL_Rect testDest = { 0,720, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
+			textureTextPlayer1 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer1);
+			SDL_Rect testDest = { 0,700, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
 			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
 			keepTextPlayer1 = true;
+			std::cout << "First time render success" << std::endl;
 		}
 		else {
-			SDL_Rect testDest = { 0,720, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
+			SDL_Rect testDest = { 0,700, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
 			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
+			std::cout << "NExt time render success" << std::endl;
 		}
 		
 	}
 	else {
+		if (keepTextPlayer1) {
+			SDL_DestroyTexture(textureTextPlayer1);
+			SDL_FreeSurface(surfaceTextPlayer1);
+		}
 		keepTextPlayer1 = false;
-		SDL_DestroyTexture(textureTextPlayer1);
-		SDL_FreeSurface(surfaceTextPlayer1);
 	}
 	
 
-	
 	if (ammoManager->needToRerenderTextStatusPlayer2()) {
 		if (!keepTextPlayer2) {
 			textPlayer2 = "Tank 2 is functioning. Please wait...";
 			//initalize font
-			TTF_Font* font = NULL;
+		
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };
 			surfaceTextPlayer2 = TTF_RenderText_Solid(font, textPlayer2.c_str(), color);
 			if (!surfaceTextPlayer2)std::cout << "Can't load text" << std::endl;
-			textureTextPlayer2 = SDL_CreateTextureFromSurface(renderer, text);
-			SDL_Rect testDest = { 1248/2,720, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
+			textureTextPlayer2 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer2);
+			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
 			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
 			keepTextPlayer2 = true;
 		}
 		else {
-			SDL_Rect testDest = { 0,720, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
+			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
 			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
 		}
 	}
 	else {
+		if (keepTextPlayer2) {
+			SDL_DestroyTexture(textureTextPlayer2);
+			SDL_FreeSurface(surfaceTextPlayer2);
+		}
 		keepTextPlayer2 = false;
-		SDL_DestroyTexture(textureTextPlayer2);
-		SDL_FreeSurface(surfaceTextPlayer2);
+		
 	}
-	*/
+	
 	
 	SDL_RenderPresent(renderer);
 	//SDL_DestroyTexture(text_texture);

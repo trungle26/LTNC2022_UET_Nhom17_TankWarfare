@@ -136,20 +136,20 @@ bool AmmoManager::needToRerenderScoreBoard() {
 	}
 }
 bool AmmoManager::needToRerenderTextStatusPlayer1() {
-	if (renderTextStatusPlayer1) {
-		renderTextStatusPlayer1 = false;
-		return !renderTextStatusPlayer1;
-	}
-	else {
+	//if (renderTextStatusPlayer1) {
+//		renderTextStatusPlayer1 = false;
+//		return !renderTextStatusPlayer1;
+//	}
+	//else {
 		return renderTextStatusPlayer1;
-	}
+//	}
 }
 bool AmmoManager::needToRerenderTextStatusPlayer2() {
-	if (renderTextStatusPlayer2) {
-		renderTextStatusPlayer2 = false;
-		return !renderTextStatusPlayer2;
-	}
-	else {
+	//if (renderTextStatusPlayer2) {
+//		renderTextStatusPlayer2 = false;
+//		return !renderTextStatusPlayer2;
+//	}
+	//else {
 		return renderTextStatusPlayer2;
-	}
+//	}
 }
