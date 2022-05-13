@@ -423,6 +423,7 @@ void Game::update()
 	if (states4[3]) {
 		player.getComponent<ShootComponent>().allahStyle();
 		states4[3] = false;
+		ammoManager->needToRerenderScoreBoard_ = true;
 	}
 
 	// Tank2 functions goes here
@@ -505,7 +506,7 @@ void Game::update()
 	if (states3[3]) {
 		player2.getComponent<ShootComponent>().allahStyle();
 		states4[3] = false;
-		//ammoManager->needToRerenderScoreBoard_ = true;
+		ammoManager->needToRerenderScoreBoard_ = true;
 	}
 	//----------end added functions
 
