@@ -88,7 +88,7 @@ void AmmoManager::checkBulletForPlayer1() {
 	}
 	//std::cout << "finished checking checkBulletForPlayer1" << std::endl;
 	tank1->projectiles = projectilesPlayer1; //return back projectiles vector
-
+	tank1->angles = projectilesAnglesPlayer1;
 }
 void AmmoManager::checkBulletForPlayer2() {
 	//std::cout << "currently checking checkBulletForPlayer2" << std::endl;
@@ -124,6 +124,7 @@ void AmmoManager::checkBulletForPlayer2() {
 	}
 	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
+	tank2->angles = projectilesAnglesPlayer2;
 }
 //use 2 separate funtions to avoid redundant reload times
 bool AmmoManager::needToRerenderScoreBoard() {
