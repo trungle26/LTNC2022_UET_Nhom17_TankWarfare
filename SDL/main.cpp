@@ -1,10 +1,16 @@
 #pragma once
 #include "Game.h"
-
+#include "Menu.h"
 
 Game* game = NULL;
 
+Menu* menu = NULL;
 int main(int argc,  char* argv[]) {
+	menu->init("game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1248, 736);
+	Menu::handleOptionsMedia();
+	Menu::loadMenuMedia();
+	Menu::loadSoundMedia();
+
 	const int FPS = 60;
 	const int frameDelay = 1000 / 60;
 	Uint32 frameStart;
@@ -13,7 +19,7 @@ int main(int argc,  char* argv[]) {
 	game = new Game();
 
 	game->init("game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1248, 736, false);
-
+	menu->handleMenuEvent();
 	while (game->running()) {
 		frameStart = SDL_GetTicks();
 		game->handleEvents();

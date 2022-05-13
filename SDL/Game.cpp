@@ -4,7 +4,7 @@
 #include "Components.h"
 #include "Map.h"
 #include "Collision.h"
-
+#include "Menu.h"
 
 // create 
 Manager manager;
@@ -33,11 +33,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	{
 		std::cout << "SDL initialized! \n";
 
-		window = SDL_CreateWindow(title, x, y, width, height, flags);
-		if (window)
-		{
-			std::cout << "created window!\n";
-		}
+		window = Menu::window;
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
@@ -97,6 +93,10 @@ void Game::handleEvents()
 		if (Game::event.key.keysym.sym == SDLK_d) states2[right] = true;
 		if (Game::event.key.keysym.sym == SDLK_w) states2[up] = true;
 		if (Game::event.key.keysym.sym == SDLK_s) states2[down] = true;
+		if (Game::event.key.keysym.sym == SDLK_ESCAPE)
+		{
+			Menu::handleMenuEvent();
+		}
 		break;
 	case SDL_KEYUP:
 		if (Game::event.key.keysym.sym == SDLK_LEFT) states1[left] = false;
