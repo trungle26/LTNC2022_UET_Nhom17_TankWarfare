@@ -89,7 +89,7 @@ void ShootComponent::healing() {
 	clock_t currentTime = clock();
 	if (currentTime - prevHealing <= delayHealing)return;
 	animatedReload = true;
-	ShootComponent::delay(delayTimeReload);
+	//ShootComponent::delay(delayTimeReload);
 	currentHealth += amountPerHealing;
 	if (currentHealth > maxHealth)currentHealth = maxHealth;
 	animatedReload = false;

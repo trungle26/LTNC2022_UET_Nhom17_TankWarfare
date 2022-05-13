@@ -75,6 +75,7 @@ void AmmoManager::checkBulletForPlayer1() {
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
 			std::cout << "Projectile hit tank 2. Current tank 2 health: " << tank2->currentHealth << std::endl;
 			std::cout << "Damage per shot of tank 1: " << tank1->damagePerShot << std::endl;
+			needToRerenderScoreBoard_ = true;
 			if (tank2->currentHealth <= 0) {
 				std::cout << "tank 2 dead." << std::endl;
 				//UI part goes here
@@ -110,6 +111,7 @@ void AmmoManager::checkBulletForPlayer2() {
 			tank1->currentHealth -= tank2->damagePerShot;
 			std::cout << "Projectile hit tank 1. Current tank 1 health: " << tank1->currentHealth << std::endl;
 			std::cout << "Damage per shot of tank 2: " << tank2->damagePerShot << std::endl;
+			needToRerenderScoreBoard_ = true;
 			if (tank1->currentHealth <= 0) {
 				std::cout << "tank 1 dead." << std::endl;
 				//UI part goes here

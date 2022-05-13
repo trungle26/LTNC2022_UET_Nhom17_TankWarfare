@@ -22,7 +22,6 @@ SDL_Event Game::event;
 std::vector<int> player1Functions;
 std::vector<int> player2Functions;
 
-//for render text
 
 
 Game::Game()
@@ -118,17 +117,22 @@ clock_t prevTimeShootingPlayer2 = clock();
 
 //for render scoreboard
 bool needRerenderScoreBoard = false;
+
+//for render text showing status
+//for render text
 SDL_Surface* text;
 SDL_Surface* text2;
 SDL_Texture* text_texture;
 SDL_Texture* text_texture2;
-//for render text showing status
 SDL_Surface* surfaceTextPlayer1;
 SDL_Surface* surfaceTextPlayer2;
 SDL_Texture* textureTextPlayer1;
 SDL_Texture* textureTextPlayer2;
 std::string textPlayer1;
 std::string textPlayer2;
+TTF_Font* font;
+bool keepTextPlayer1 = false;
+bool keepTextPlayer2 = false;
  //white color
 
 //for lock keydown events
@@ -439,8 +443,6 @@ void Game::update()
 			ammoManager->addAngleOfProjectile(player2.getComponent<TransformComponent>().angle, 2);
 			ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
 			ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
-
-
 			//add ammo infor -> push_back angle and projectile -> 
 			//transfer to ammo manager -> do sth elsE
 
@@ -575,7 +577,7 @@ void Game::render()
 		sourceRect.x = 0;
 		sourceRect.y = 0;
 		sourceRect.w = 128;
-			sourceRect.h = 32;
+		sourceRect.h = 32;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 	}
 	//SCOREBOARD
@@ -589,11 +591,12 @@ void Game::render()
 			+ std::to_string(player2.getComponent<ShootComponent>().currentHealth);
 		if (player.getComponent<ShootComponent>().allahMode)scoreBoard += " Allah Mode Enabled";
 		if (player2.getComponent<ShootComponent>().allahMode)scoreBoardPlayer2 += " Allah Mode Enabled";
-		TTF_Font* font = NULL;
 		//initalize font
+		
 		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 		if (!font)std::cout << "Can't load font" << std::endl;
-		SDL_Color color = { 255,255,255 };
+		SDL_Color color = {255,255,255};
+		
 		text = TTF_RenderText_Solid(font, scoreBoard.c_str(), color);
 		if (!text)std::cout << "Can't load text" << std::endl;
 		text_texture = SDL_CreateTextureFromSurface(renderer, text);
@@ -612,19 +615,62 @@ void Game::render()
 		textDest = { 1248/2,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 	}
+	/*
 	if(ammoManager->needToRerenderTextStatusPlayer1()){
-		SDL_DestroyTexture(textureTextPlayer1);
-		SDL_FreeSurface(surfaceTextPlayer1);
-		textPlayer1 = "Tank 1 is functioning. Please wait...";
+		if (!keepTextPlayer1) {
+			textPlayer1 = "Tank 1 is functioning. Please wait...";
+			//initalize font
+			TTF_Font* font = NULL;
+			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
+			if (!font)std::cout << "Can't load font" << std::endl;
+			SDL_Color color = { 255,255,255 };
+			surfaceTextPlayer1 = TTF_RenderText_Solid(font, textPlayer1.c_str(), color);
+			if (!surfaceTextPlayer1)std::cout << "Can't load text" << std::endl;
+			textureTextPlayer1 = SDL_CreateTextureFromSurface(renderer, text);
+			SDL_Rect testDest = { 0,720, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
+			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
+			keepTextPlayer1 = true;
+		}
+		else {
+			SDL_Rect testDest = { 0,720, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
+			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
+		}
 		
 	}
-	if (ammoManager->needToRerenderTextStatusPlayer2()) {
-		SDL_DestroyTexture(textureTextPlayer2);
-		SDL_FreeSurface(surfaceTextPlayer2);
-		textPlayer2 = "Tank 2 is functioning. Please wait...";
-
+	else {
+		keepTextPlayer1 = false;
+		SDL_DestroyTexture(textureTextPlayer1);
+		SDL_FreeSurface(surfaceTextPlayer1);
 	}
 	
+
+	
+	if (ammoManager->needToRerenderTextStatusPlayer2()) {
+		if (!keepTextPlayer2) {
+			textPlayer2 = "Tank 2 is functioning. Please wait...";
+			//initalize font
+			TTF_Font* font = NULL;
+			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
+			if (!font)std::cout << "Can't load font" << std::endl;
+			SDL_Color color = { 255,255,255 };
+			surfaceTextPlayer2 = TTF_RenderText_Solid(font, textPlayer2.c_str(), color);
+			if (!surfaceTextPlayer2)std::cout << "Can't load text" << std::endl;
+			textureTextPlayer2 = SDL_CreateTextureFromSurface(renderer, text);
+			SDL_Rect testDest = { 1248/2,720, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
+			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
+			keepTextPlayer2 = true;
+		}
+		else {
+			SDL_Rect testDest = { 0,720, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
+			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
+		}
+	}
+	else {
+		keepTextPlayer2 = false;
+		SDL_DestroyTexture(textureTextPlayer2);
+		SDL_FreeSurface(surfaceTextPlayer2);
+	}
+	*/
 	
 	SDL_RenderPresent(renderer);
 	//SDL_DestroyTexture(text_texture);
