@@ -121,6 +121,9 @@ void ShootComponent::autoMinusHealthOfAllahStyle() {
 		prevTime = currentTime;
 		updateScoreBoard = true;
 	}
+	else {
+		return;
+	}
 	
 	//delay(delayTimeReload * 2 + 1);
 }

@@ -354,7 +354,7 @@ void Game::update()
 			std::cout << "addAmmoIn4 finished" << std::endl;
 			player.getComponent<ShootComponent>().shoot();
 			
-			ammoManager->getProjectilesVector1(); //ACTUALY BOTH PROJECTTILES
+			ammoManager->getProjectilesVector1(); 
 			ammoManager->addAngleOfProjectile(player.getComponent<TransformComponent>().angle, 1);
 			//ammoManager->addToSDLRect1(directionInState4.x, directionInState4.y);
 
@@ -568,6 +568,7 @@ void Game::render()
 		sourceRect.w = sourceRect.h = 32;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 		std::cout << "Successful render projetiles player 1" << std::endl;
+		SDL_DestroyTexture(loadProjectiles);
 	}
 	//Render projectiles player2
 	for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
@@ -585,6 +586,7 @@ void Game::render()
 		sourceRect.w = 128;
 		sourceRect.h = 32;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
+		SDL_DestroyTexture(loadProjectiles);
 	}
 	//SCOREBOARD
 	if (ammoManager->needToRerenderScoreBoard()) {

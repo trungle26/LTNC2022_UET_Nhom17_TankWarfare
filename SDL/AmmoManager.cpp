@@ -38,7 +38,7 @@ void AmmoManager::getProjectilesVector2() {
 
 	this->projectilesPlayer2 = tank2->projectiles;
 
-	std::cout << "Successful get Projectiles of tank 1" << std::endl;
+	std::cout << "Successful get Projectiles of tank 2" << std::endl;
 }
 void AmmoManager::addAngleOfProjectile(double angle, int player) {
 	if (player == 1) {
@@ -67,8 +67,8 @@ void AmmoManager::checkBulletForPlayer1() {
 		tempToCheck.w = 32;
 		tempToCheck.h = 32;
 
-		SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
-		TextureManager::Draw(loadProjectiles, tempToCheck, tempToCheck);
+		//SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
+		//TextureManager::Draw(loadProjectiles, tempToCheck, tempToCheck);
 
 
 		//IMPORTANT: CHANGE W AND H RIGHT IF CHECKED FUNCTIONALLY.
@@ -90,6 +90,9 @@ void AmmoManager::checkBulletForPlayer1() {
 		else if (projectilesPlayer1[i].frames >= 200) {
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
+		}
+		else {
+			continue;
 		}
 	}
 	//std::cout << "finished checking checkBulletForPlayer1" << std::endl;
@@ -128,6 +131,8 @@ void AmmoManager::checkBulletForPlayer2() {
 		else if (projectilesPlayer2[i].frames >= 200) {
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
+		}else {
+			continue;
 		}
 	}
 	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
