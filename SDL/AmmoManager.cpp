@@ -87,7 +87,7 @@ void AmmoManager::checkBulletForPlayer1() {
 				//UI part goes here
 			}
 		}
-		else if (projectilesPlayer1[i].frames >= 300) {
+		else if (projectilesPlayer1[i].frames >= 200) {
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
 		}
@@ -125,7 +125,7 @@ void AmmoManager::checkBulletForPlayer2() {
 				//UI part goes here
 			}
 		}
-		else if (projectilesPlayer2[i].frames >= 300) {
+		else if (projectilesPlayer2[i].frames >= 200) {
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
 		}

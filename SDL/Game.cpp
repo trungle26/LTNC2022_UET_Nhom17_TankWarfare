@@ -356,9 +356,9 @@ void Game::update()
 			
 			ammoManager->getProjectilesVector1(); //ACTUALY BOTH PROJECTTILES
 			ammoManager->addAngleOfProjectile(player.getComponent<TransformComponent>().angle, 1);
-			ammoManager->addToSDLRect1(directionInState4.x, directionInState4.y);
+			//ammoManager->addToSDLRect1(directionInState4.x, directionInState4.y);
 
-			ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
+			//ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
 			//SET TIME TO LIMIT SHOOT PER SECOND
 			prevTimeForShootingPurpose = currentTimeForShootingPurpose;
 		}
@@ -442,8 +442,9 @@ void Game::update()
 
 			ammoManager->getProjectilesVector2(); //ACTUALY BOTH PROJECTTILES
 			ammoManager->addAngleOfProjectile(player2.getComponent<TransformComponent>().angle, 2);
-			ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
-			ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
+			//ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
+			//ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
+			
 			//add ammo infor -> push_back angle and projectile -> 
 			//transfer to ammo manager -> do sth elsE
 
@@ -513,6 +514,9 @@ void Game::update()
 
 	//THINGS HAVE TO CHECK EVERY FRAME
 	//CHECK BULLET 
+	ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
+	ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
+
 	ammoManager->checkBulletForPlayer1();
 	ammoManager->checkBulletForPlayer2();
 	//CHECK MINUSHEALTH OF PLAYER 1 IN ALLAH MODE

@@ -144,7 +144,7 @@ void Projectile::update(double angle) {
 	
 	this->frames++;
 }
-void ShootComponent::projectileInit(Vector2D pos, double bulletSpeed) { //CHANGE THIS CODE SINCE IT'S DELAYED THE TANK
+void ShootComponent::projectileInit(Vector2D pos, double bulletSpeed) { 
 	Projectile sample(pos, bulletSpeed);
 
 	projectiles.push_back(sample);
