@@ -1,0 +1,13 @@
+﻿ở đây class và tên file từ LTexture -> MenuTexture để không trùng với phần của Hoàng 
+đổi tên font ->MenuFont
+đã thêm tính năng ẩn đường đạn- có thể thay đôi trong lúc chơi game
+mặc định đường đạn hiện hay không là false - dùng qua biến checkshowbullet trong game.cpp phần render
+
+
+các phím dùng lúc chơi game(vẽ vào hơ to play luôn)
+phím o:option
+phím t: tank size
+phím m: music
+phím b:show bullet
+
+thay đổi mặc định bật nhạc hay không ở soundevent
