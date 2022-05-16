@@ -2,7 +2,8 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-
+const int TANK_SIZE_HEIGHT = 36;
+const int TANK_SIZE_WIDTH = 40;
 enum TankSize
 {
 	small,
@@ -203,6 +204,32 @@ int MenuTexture::getHeight()
 {
 	return mHeight;
 }
+SDL_Texture* MenuTexture::loadTexture(std::string path)
+{
+	//The final texture
+	SDL_Texture* newTexture = NULL;
+
+	//Load image at specified path
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (loadedSurface == NULL)
+	{
+		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+	}
+	else
+	{
+		//Create texture from surface pixels
+		newTexture = SDL_CreateTextureFromSurface(MenuTexture::renderer, loadedSurface);
+		if (newTexture == NULL)
+		{
+			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+		}
+
+		//Get rid of old loaded surface
+		SDL_FreeSurface(loadedSurface);
+	}
+
+	return newTexture;
+}
 
 bool MenuTexture::loadMedia()
 {
@@ -215,19 +242,20 @@ bool MenuTexture::loadMedia()
 	}
 	else
 	{
-		if (textTexture[small].loadFromFile("assets/tank.png"))
+		if (textTexture[small].loadTexture("assets/tank.png"))
 		{
 			std::cout << "load duoc anh tank roi" << std::endl;
-		}
-		else
-		{
-			std::cout << "yup ko load duoc" << std::endl;
+			textTexture[small].destR.x = 20;
+			textTexture[small].destR.y = 100;
+			textTexture[small].destR.h = TANK_SIZE_HEIGHT/2;
+			textTexture[small].destR.w = TANK_SIZE_WIDTH/2;
 		}
 		textTexture[small].SetColor(BLACK_TEXT);
 		if (!textTexture[small].loadFromRenderedText("CHanged tanks size to 20*18", textTexture[small].GetColour()))
 		{
 			printf("Failed to render text texture!\n");
 			success = false;
+			textTexture->destR;
 		}
 
 		textTexture[medium].SetColor(RED_TEXT);
@@ -237,7 +265,6 @@ bool MenuTexture::loadMedia()
 			success = false;
 		}
 		textTexture[large].SetColor(BLACK_TEXT);
-		//textTexture[large].
 		if (!textTexture[large].loadFromRenderedText("Changed tanks size to 80*72", textTexture[large].GetColour()))
 		{
 			printf("Failed to render text texture!\n");
@@ -256,6 +283,7 @@ void MenuTexture::Render()
 	int y = (SCREEN_HEIGHT - textTexture[small].getHeight()) / 2;
 	this->render(0, 0);
 
+	SDL_RenderCopy(renderer, textTexture[small].loadTexture("assets/tank.png"), NULL, &destR);
 	//Update screen
 	SDL_RenderPresent(renderer);
 	SDL_Delay(1000);

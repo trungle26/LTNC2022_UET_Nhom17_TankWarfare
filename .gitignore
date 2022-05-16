@@ -27,8 +27,6 @@ $RECYCLE.BIN/
 *.md
 # Windows shortcuts
 *.lnk
-*.h
-
 ##### Linux
 *~
 

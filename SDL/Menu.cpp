@@ -36,7 +36,7 @@ bool exitMenu;
 Menu::Menu() {
 
 }
-//Menu::~Menu() {}
+Menu::~Menu() {}
 
 bool Menu::init(const char* title, int x, int y, int width, int height)
 {
@@ -207,7 +207,7 @@ void Menu::handleMenuEvent()
 	std::cout << "Went into menu func" << std::endl;
 	if (firstTime)
 	{
-		Mix_PlayMusic(sound, 0);
+		//Mix_PlayMusic(sound, 0);
 		firstTime = !firstTime;
 	}
 	bool quit = false;

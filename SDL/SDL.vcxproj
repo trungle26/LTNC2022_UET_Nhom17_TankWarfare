@@ -57,6 +57,7 @@
   <ItemGroup>
     <Text Include="note.txt" />
     <Text Include="TankCharacters.txt" />
+    <Text Include="trash.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

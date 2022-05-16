@@ -72,7 +72,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MenuTexture.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +118,9 @@
       <Filter>Header Files</Filter>
     </Text>
     <Text Include="note.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="trash.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
