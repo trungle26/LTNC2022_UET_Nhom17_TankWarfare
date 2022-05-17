@@ -331,35 +331,13 @@ void Game::update()
 	}
 	//-----------het bo sung khi tank di tran man hinh
 
-	//---------------------------------------------------------------------------- va cham
-
-	/*
-	Tank1 shooting ok, other not yet
-	Tank 2 not yet all functions
-	*/
-	
-	
+	//---------------------------------------------------------------------------- va cham	
 	//When shooting
 	//tank 1 shooting
 	if (states4[0]) {
 		if (currentTimeForShootingPurpose - prevTimeForShootingPurpose > player.getComponent<ShootComponent>().delayBetweenProjectiles
 			&&player.getComponent<ShootComponent>().currentBullet>0){//HAVE TO MODIFIED
-			Vector2D directionInState4;
-			directionInState4.x = player.getComponent<TransformComponent>().position.x; //LEGACY
-			directionInState4.y = player.getComponent<TransformComponent>().position.y; ///LEGACY
-			//LEGACY BUT DOESN'T MEAN REMOVE IT.
-			std::cout << "DirectionInstate4 created" << std::endl;
-
-			player.getComponent<ShootComponent>().addAmmoInformation(player.getComponent<TransformComponent>().position);
-			std::cout << "addAmmoIn4 finished" << std::endl;
-			player.getComponent<ShootComponent>().shoot();
-			
-			ammoManager->getProjectilesVector1(); 
-			ammoManager->addAngleOfProjectile(player.getComponent<TransformComponent>().angle, 1);
-			//ammoManager->addToSDLRect1(directionInState4.x, directionInState4.y);
-
-			//ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
-			//SET TIME TO LIMIT SHOOT PER SECOND
+			ammoManager->tankShoot(player.getComponent<TransformComponent>().position, player.getComponent<TransformComponent>().angle, 1);
 			prevTimeForShootingPurpose = currentTimeForShootingPurpose;
 		}
 	}
@@ -430,25 +408,7 @@ void Game::update()
 	if (states3[0]) {
 		if (currentTimeShootingPlayer2 - prevTimeShootingPlayer2 >= player2.getComponent<ShootComponent>().delayBetweenProjectiles
 			&& player2.getComponent<ShootComponent>().currentBullet > 0) {
-			Vector2D directionInState3;
-			directionInState3.x = player2.getComponent<TransformComponent>().position.x; //LEGACY
-			directionInState3.y = player2.getComponent<TransformComponent>().position.y; ///LEGACY
-			//LEGACY BUT DOESN'T MEAN REMOVE IT.
-			std::cout << "DirectionInstate3 created" << std::endl;
-
-			player2.getComponent<ShootComponent>().addAmmoInformation(player2.getComponent<TransformComponent>().position);
-			std::cout << "addAmmoIn4 finished" << std::endl;
-			player2.getComponent<ShootComponent>().shoot();
-
-			ammoManager->getProjectilesVector2(); //ACTUALY BOTH PROJECTTILES
-			ammoManager->addAngleOfProjectile(player2.getComponent<TransformComponent>().angle, 2);
-			//ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
-			//ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
-			
-			//add ammo infor -> push_back angle and projectile -> 
-			//transfer to ammo manager -> do sth elsE
-
-			//SET TIME TO LIMIT SHOOT PER SECOND
+			ammoManager->tankShoot(player2.getComponent<TransformComponent>().position, player2.getComponent<TransformComponent>().angle, 2);
 			prevTimeShootingPlayer2 = currentTimeShootingPlayer2;
 		}
 	}
@@ -513,10 +473,10 @@ void Game::update()
 
 
 	//THINGS HAVE TO CHECK EVERY FRAME
-	//CHECK BULLET 
+	//ADD TANK RECT
 	ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
 	ammoManager->addToSDLRect2(player2.getComponent<TransformComponent>().position.x, player2.getComponent<TransformComponent>().position.y);
-
+	//CHECK BULLET 
 	ammoManager->checkBulletForPlayer1();
 	ammoManager->checkBulletForPlayer2();
 	//CHECK MINUSHEALTH OF PLAYER 1 IN ALLAH MODE
@@ -639,6 +599,7 @@ void Game::render()
 			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
 			keepTextPlayer1 = true;
 			std::cout << "First time render success" << std::endl;
+			
 		}
 		else {
 			SDL_Rect testDest = { 0,700, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
@@ -660,7 +621,6 @@ void Game::render()
 		if (!keepTextPlayer2) {
 			textPlayer2 = "Tank 2 is functioning. Please wait...";
 			//initalize font
-		
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };//white
@@ -670,6 +630,7 @@ void Game::render()
 			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
 			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
 			keepTextPlayer2 = true;
+			
 		}
 		else {
 			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };

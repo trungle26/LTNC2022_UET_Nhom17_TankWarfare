@@ -140,7 +140,7 @@ void AmmoManager::checkBulletForPlayer2() {
 	tank2->angles = projectilesAnglesPlayer2;
 	std::cout << "2 P: " << projectilesPlayer2.size() << " A: " << projectilesAnglesPlayer2.size() << std::endl;
 }
-//use 2 separate funtions to avoid redundant reload times
+//use 2 separate functions to avoid redundant reload times
 bool AmmoManager::needToRerenderScoreBoard() {
 	if (needToRerenderScoreBoard_) {
 		needToRerenderScoreBoard_ = false;
@@ -157,4 +157,23 @@ bool AmmoManager::needToRerenderTextStatusPlayer1() {
 bool AmmoManager::needToRerenderTextStatusPlayer2() {
 
 		return renderTextStatusPlayer2;
+}
+
+void AmmoManager::tankShoot(Vector2D position, double angle, int player) {
+	if (player == 1) {	
+		std::cout << "DirectionInstate4 created" << std::endl;
+		tank1->addAmmoInformation(position);
+		std::cout << "addAmmoIn4 finished" << std::endl;
+		tank1->shoot();
+		getProjectilesVector1();
+		addAngleOfProjectile(angle,1);
+	}
+	else {
+		std::cout << "DirectionInstate4 created" << std::endl;
+		tank2->addAmmoInformation(position);
+		std::cout << "addAmmoIn4 finished" << std::endl;
+		tank2->shoot();
+		getProjectilesVector2();
+		addAngleOfProjectile(angle,2);
+	}
 }

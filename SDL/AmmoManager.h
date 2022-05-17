@@ -42,6 +42,7 @@ public:
 	bool needToRerenderTextStatusPlayer1();
 	bool needToRerenderTextStatusPlayer2();
 	//void getProjectilesVector2(std::vector<Projectile> projectiles);
+	void tankShoot(Vector2D position, double angle, int player);
 	~AmmoManager();
 };
 
