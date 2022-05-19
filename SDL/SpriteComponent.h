@@ -2,7 +2,7 @@
 #include "Components.h"
 #include <SDL.h>
 #include "TextureManager.h"
-
+#include "Menu.h"
 class SpriteComponent : public Component
 {
 private:
@@ -36,6 +36,7 @@ public:
 
 	void update() override
 	{
+		transform->scale = Menu::GetScale;
 		desRect.x = transform->position.x;
 		desRect.y = transform->position.y;
 		desRect.w = transform->width * transform->scale;

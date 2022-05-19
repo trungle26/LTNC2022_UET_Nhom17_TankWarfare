@@ -36,7 +36,7 @@ public:
 		}
 		transform = &entity->getComponent<TransformComponent>();
 		
-		tex = TextureManager::LoadTexture("assets/coltex.png");
+		//tex = TextureManager::LoadTexture("assets/coltex.png");
 		srcR = { 0,0,32,32 };
 		destR = { collider.x, collider.y, collider.w, collider.h };
 		
@@ -60,6 +60,6 @@ public:
 
 	void draw() override
 	{
-		TextureManager::Draw(tex, srcR, destR);
+		//TextureManager::Draw(tex, srcR, destR);
 	}
 };

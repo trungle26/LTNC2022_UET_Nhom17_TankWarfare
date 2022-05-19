@@ -57,14 +57,14 @@ public:
 
 	void rePhai()
 	{
-		angle += 3;
+		angle += 2;
 		std::cout << angle<<std::endl;
 		//if (angle < 0) angle = 360;
 	}
 
 	void reTrai()
 	{
-		angle -= 3;
+		angle -= 2;
 		std::cout << angle << std::endl;
 		//if (angle > 359) angle = 0;
 	}

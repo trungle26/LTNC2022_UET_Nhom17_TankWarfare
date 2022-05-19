@@ -23,7 +23,7 @@ public:
 	SDL_Rect tankRect2;
 	std::vector<Projectile> projectilesPlayer1;
 	std::vector<Projectile> projectilesPlayer2;
-	
+
 	std::vector<double>projectilesAnglesPlayer1;
 	std::vector<double>projectilesAnglesPlayer2;
 	bool needToRerenderScoreBoard_ = true;
@@ -32,7 +32,7 @@ public:
 	AmmoManager();
 	void addToSDLRect1(float x, float y);
 	void addToSDLRect2(float x, float y);
-	void addTankShootComponent(ShootComponent *tank1_, ShootComponent *tank2_);
+	void addTankShootComponent(ShootComponent* tank1_, ShootComponent* tank2_);
 	void checkBulletForPlayer1();
 	void checkBulletForPlayer2();
 	void getProjectilesVector1();
@@ -47,7 +47,7 @@ public:
 	bool needToRerenderTextStatusPlayer2();
 	//void getProjectilesVector2(std::vector<Projectile> projectiles);
 	void tankShoot(Vector2D position, double angle, int player);
-	
+
 	~AmmoManager();
 };
 

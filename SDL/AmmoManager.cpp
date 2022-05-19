@@ -32,7 +32,7 @@ void AmmoManager::addToSDLRect2(float x, float y) {
 	std::cout << "Successful addtoSDLRect2" << std::endl;
 }
 void AmmoManager::addTankShootComponent(ShootComponent* tank1_, ShootComponent* tank2_) {
-	
+
 	std::cout << "Tank1 address: " << tank1 << std::endl;
 	std::cout << "Tank2 address: " << tank2 << std::endl;
 	tank1 = tank1_;
@@ -42,8 +42,8 @@ void AmmoManager::addTankShootComponent(ShootComponent* tank1_, ShootComponent* 
 //IF POSSIBLE TRY TO USE STATIC VARIABLE (NOT NOW)
 void AmmoManager::getProjectilesVector1() {
 	this->projectilesPlayer1 = tank1->projectiles;
-	
-	
+
+
 	std::cout << "Successful get Projectiles of tank 1" << std::endl;
 }
 void AmmoManager::getProjectilesVector2() {
@@ -60,7 +60,7 @@ void AmmoManager::addAngleOfProjectile(double angle, int player) {
 		projectilesAnglesPlayer2.push_back(angle);
 	}
 	needToRerenderScoreBoard_ = true;
-//	std::cout << "Completely added angle. Current projectile angle of player 1: " <<projectilesAnglesPlayer1[projectilesAnglesPlayer1.size() - 1] << std::endl;
+	//	std::cout << "Completely added angle. Current projectile angle of player 1: " <<projectilesAnglesPlayer1[projectilesAnglesPlayer1.size() - 1] << std::endl;
 
 }
 
@@ -87,7 +87,7 @@ void AmmoManager::checkBulletForPlayer1() {
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect2)) { //if hit
-			
+
 			tank2->currentHealth -= tank1->damagePerShot;
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
@@ -123,7 +123,7 @@ void AmmoManager::checkBulletForPlayer2() {
 		tempToCheck.w = PROJECTILE_SIZE_WIDTH;
 		tempToCheck.h = PROJECTILE_SIZE_HEIGHT;
 
-		
+
 		//IMPORTANT: CHANGE W AND H RIGHT IF CHECKED FUNCTIONALLY.
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
@@ -143,7 +143,8 @@ void AmmoManager::checkBulletForPlayer2() {
 		else if (projectilesPlayer2[i].frames >= maxFrameUpdated) {
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
-		}else {
+		}
+		else {
 			continue;
 		}
 	}
@@ -164,37 +165,37 @@ bool AmmoManager::needToRerenderScoreBoard() {
 }
 bool AmmoManager::needToRerenderTextStatusPlayer1() {
 
-		return renderTextStatusPlayer1;
+	return renderTextStatusPlayer1;
 }
 bool AmmoManager::needToRerenderTextStatusPlayer2() {
 
-		return renderTextStatusPlayer2;
+	return renderTextStatusPlayer2;
 }
 
 void AmmoManager::tankShoot(Vector2D position, double angle, int player) {
-	if (player == 1) {	
+	if (player == 1) {
 		std::cout << "DirectionInstate4 created" << std::endl;
 		//Modified position of projectile
-		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH)/2;
+		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH) / 2;
 		position.y += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH) / 2;
 		//untested
 		tank1->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;
 		tank1->shoot();
 		getProjectilesVector1();
-		addAngleOfProjectile(angle,1);
+		addAngleOfProjectile(angle, 1);
 	}
 	else {
 		std::cout << "DirectionInstate4 created" << std::endl;
 		//Modified position of projectile
-		
-		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH)/2;
+
+		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH) / 2;
 		position.y += (TANK_SIZE_HEIGHT - PROJECTILE_SIZE_HEIGHT) / 2;
 		//untested
 		tank2->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;
 		tank2->shoot();
 		getProjectilesVector2();
-		addAngleOfProjectile(angle,2);
+		addAngleOfProjectile(angle, 2);
 	}
 }

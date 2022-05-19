@@ -5,7 +5,7 @@
 #include "Map.h"
 #include "Collision.h"
 #include "RenderText.h"
-
+#include "Menu.h"
 // create 
 Manager manager;
 auto& player(manager.addEntity());
@@ -41,7 +41,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	{
 		std::cout << "SDL initialized! \n";
 
-		window = SDL_CreateWindow(title, x, y, width, height, flags);
+		window = Menu::window;
 		if (window)
 		{
 			std::cout << "created window!\n";
@@ -58,13 +58,13 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		map = new Map("assets/terrain.png", 1, 32);// map scale:1, tile size: 32
 		map->LoadMap("assets/map.map", 39, 23);
 
-		player.addComponent<TransformComponent>(34, 34);
+		player.addComponent<TransformComponent>(90, 90);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
 
 		player.addComponent<ShootComponent>(); //default option
 
-		player2.addComponent<TransformComponent>(1000, 33);
+		player2.addComponent<TransformComponent>(1000, 90);
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
 		player2.addComponent<ShootComponent>(); //default option
@@ -113,14 +113,13 @@ bool states4[] = { false, false, false, false };//tank 1
 
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
-//healing-able?
-bool canHealing = true;
+
 
 //for render scoreboard
 bool needRerenderScoreBoard = false;
 
 //for render text showing status
-SDL_Texture* backgroundScoreboard;
+//for render text
 SDL_Surface* text;
 SDL_Surface* text2;
 SDL_Texture* text_texture;
@@ -169,9 +168,7 @@ void Game::handleEvents()
 		//tank1 shoot function
 			if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_r) states4[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_q) {
-				if(canHealing)states4[2] = true;
-			} 
+			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
 			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
 		}
 		
@@ -179,13 +176,35 @@ void Game::handleEvents()
 			//tank2 shoot function 
 			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_KP_1) {
-				if (canHealing)states3[2] = true;
-			}
+			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
 			//NOT YET DONE: TWO TANK CHEAT CODES 
 		}
 
+
+		//access Menu
+		if (Game::event.key.keysym.sym == SDLK_o)
+		{
+			Menu::handleOptionsEvent();
+		}
+		if (Game::event.key.keysym.sym == SDLK_ESCAPE)
+		{
+			Menu::handleMenuEvent();
+		}
+		if (Game::event.key.keysym.sym == SDLK_t)
+		{
+			Menu::handleTankSizeEvent();
+		}
+		if (Game::event.key.keysym.sym == SDLK_m)
+		{
+			Menu::checkAccessSoundFromGame = true;
+			Menu::handleSoundEvent();
+		}
+		if (Game::event.key.keysym.sym == SDLK_b)
+		{
+			Menu::checkAccessShowBulletFromGame = true;
+			Menu::handleShowBullet();
+		}
 		break;
 	case SDL_KEYUP:
 		
@@ -235,13 +254,13 @@ void Game::update()
 		SDL_Rect cCol = c->getComponent<CollisionComponent>().collider;
 		if (Collision::AABB(playerCol, cCol))
 		{
-			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -1);
+			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
 			
 		}
 
 		if (Collision::AABB(player2Col, cCol))
 		{
-			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -1);
+			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -2);
 		}
 		//CHECK COLLISION OF PROJECTILES WITH COLLIDER tank 1
 		//remember: Allah mode allow projectile to bypass colliders
@@ -250,8 +269,8 @@ void Game::update()
 				SDL_Rect tempToCheck;
 				tempToCheck.x = ammoManager->projectilesPlayer1[iter].x;
 				tempToCheck.y = ammoManager->projectilesPlayer1[iter].y;
-				tempToCheck.w = 32;
-				tempToCheck.h = 32;
+				tempToCheck.w = 34;
+				tempToCheck.h = 10;
 				if (Collision::AABB(tempToCheck, cCol)) {
 					std::cout << "Detect collision with collider. Position: " << tempToCheck.x << " " << tempToCheck.y << std::endl;
 					ammoManager->projectilesPlayer1.erase(ammoManager->projectilesPlayer1.begin() + iter);
@@ -267,8 +286,8 @@ void Game::update()
 				SDL_Rect tempToCheck;
 				tempToCheck.x = ammoManager->projectilesPlayer2[iter].x;
 				tempToCheck.y = ammoManager->projectilesPlayer2[iter].y;
-				tempToCheck.w = 32;
-				tempToCheck.h = 32;
+				tempToCheck.w = 34;
+				tempToCheck.h = 10;
 				if (Collision::AABB(tempToCheck, cCol)) {
 					std::cout << "Detect collision with collider. Position: " << tempToCheck.x << " " << tempToCheck.y << std::endl;
 					ammoManager->projectilesPlayer2.erase(ammoManager->projectilesPlayer2.begin() + iter);
@@ -286,13 +305,13 @@ void Game::update()
 	if (states1[left]) player.getComponent<TransformComponent>().reTrai();
 	if (states1[up])
 	{
-		player.getComponent<TransformComponent>().speed = 2.5;
+		player.getComponent<TransformComponent>().speed = 2;
 		player.getComponent<TransformComponent>().diThang();
 	}
 	if (states1[down])
 	{
 		
-		player.getComponent<TransformComponent>().speed = -2.5;
+		player.getComponent<TransformComponent>().speed = -2;
 		player.getComponent<TransformComponent>().diThang();
 		
 	}
@@ -517,51 +536,47 @@ void Game::render()
 	{
 		p->draw();
 	}
+	std::cout << "render basic complete" << std::endl;
 	//Render projectiles player1
-	for (int i = 0; i < ammoManager->projectilesPlayer1.size(); i++) {
-		SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
-		std::cout << "Get load texture" << std::endl;
-		SDL_Rect tempToRenderProjectile;
-		tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
-		tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
-		std::cout << "Get SDL_REct x and y" << std::endl;
-		tempToRenderProjectile.w = ammoManager->PROJECTILE_SIZE_WIDTH; //Projectiles size
-		tempToRenderProjectile.h = ammoManager->PROJECTILE_SIZE_HEIGHT; //Projectiles size
-		SDL_Rect sourceRect;
-		sourceRect.x = 0;
-		sourceRect.y = 0;
-		sourceRect.w = ammoManager->PROJECTILE_SIZE_WIDTH;
-		sourceRect.h = ammoManager->PROJECTILE_SIZE_HEIGHT;
-		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
-		std::cout << "Successful render projetiles player 1" << std::endl;
-		SDL_DestroyTexture(loadProjectiles);
+	if (Menu::checkShowBullet)
+	{
+		for (int i = 0; i < ammoManager->projectilesPlayer1.size(); i++) {
+			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
+			std::cout << "Get load texture" << std::endl;
+			SDL_Rect tempToRenderProjectile;
+			tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
+			tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
+			std::cout << "Get SDL_REct x and y" << std::endl;
+			tempToRenderProjectile.w = 34; //Projectiles size
+			tempToRenderProjectile.h = 10; //Projectiles size
+			SDL_Rect sourceRect;
+			sourceRect.x = 0;
+			sourceRect.y = 0;
+			sourceRect.w = 89;
+			sourceRect.h = 26;
+			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer1[i]);
+			SDL_DestroyTexture(loadProjectiles);
+		}
+		//Render projectiles player2
+		for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
+			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
+			std::cout << "Get load texture" << std::endl;
+			SDL_Rect tempToRenderProjectile;
+			tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
+			tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
+			std::cout << "Get SDL_REct x and y" << std::endl;
+			tempToRenderProjectile.w = 34; //Projectiles size
+			tempToRenderProjectile.h = 10; //Projectiles size
+			SDL_Rect sourceRect;
+			sourceRect.x = 0;
+			sourceRect.y = 0;
+			sourceRect.w = 89;
+			sourceRect.h = 26;
+			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer1[i]);
+			SDL_DestroyTexture(loadProjectiles);
+		}
 	}
-	//Render projectiles player2
-	for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
-		SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
-		std::cout << "Get load texture" << std::endl;
-		SDL_Rect tempToRenderProjectile;
-		tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
-		tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
-		std::cout << "Get SDL_REct x and y" << std::endl;
-		tempToRenderProjectile.w = ammoManager->PROJECTILE_SIZE_WIDTH; //Projectiles size
-		tempToRenderProjectile.h = ammoManager->PROJECTILE_SIZE_HEIGHT; //Projectiles size
-		SDL_Rect sourceRect;
-		sourceRect.x = 0;
-		sourceRect.y = 0;
-		sourceRect.w = ammoManager->PROJECTILE_SIZE_WIDTH;
-		sourceRect.h = ammoManager->PROJECTILE_SIZE_HEIGHT;
-		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
-		SDL_DestroyTexture(loadProjectiles);
-	}
-	//Background scoreboard
-	
-	backgroundScoreboard = TextureManager::LoadTexture("assets/backgroundScoreboard.png");
-	SDL_Rect sourceBS = { 0,0,1248,30 };
-	SDL_Rect destBS = { 0,0,1248,30 };
-	TextureManager::Draw(backgroundScoreboard, sourceBS, destBS);
-	SDL_DestroyTexture(backgroundScoreboard);
-
+	std::cout << "render projectiles complete" << std::endl;
 	//SCOREBOARD
 	if (ammoManager->needToRerenderScoreBoard()) {
 		SDL_DestroyTexture(text_texture);
@@ -574,7 +589,7 @@ void Game::render()
 		if (player.getComponent<ShootComponent>().allahMode)scoreBoard += " Allah Mode Enabled";
 		if (player2.getComponent<ShootComponent>().allahMode)scoreBoardPlayer2 += " Allah Mode Enabled";
 		//initalize font
-		font = TTF_OpenFont("assets/SF Atarian System Extended Bold.ttf", 24);
+		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 		if (!font)std::cout << "Can't load font" << std::endl;
 		SDL_Color color = {255,255,255};
 		
@@ -584,7 +599,7 @@ void Game::render()
 		SDL_Rect textDest = { 0,0,text->w,text->h };
 		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
 		//player2 part
-		text2 = TTF_RenderText_Blended(font, scoreBoardPlayer2.c_str(), color);
+		text2 = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
 		text_texture2 = SDL_CreateTextureFromSurface(renderer, text2);
 		textDest = { 1248 / 2 ,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
@@ -597,7 +612,7 @@ void Game::render()
 		textDest = { 1248/2,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 	}
-	
+	std::cout << "render scoreboard complete" << std::endl;
 	if(ammoManager->needToRerenderTextStatusPlayer1()){
 		if (!keepTextPlayer1) {
 			textPlayer1 = "Tank 1 is functioning. Please wait...";
@@ -630,7 +645,7 @@ void Game::render()
 		keepTextPlayer1 = false;
 	}
 	
-
+	std::cout << "render functioning player1 complete" << std::endl;
 	if (ammoManager->needToRerenderTextStatusPlayer2()) {
 		if (!keepTextPlayer2) {
 			textPlayer2 = "Tank 2 is functioning. Please wait...";
