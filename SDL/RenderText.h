@@ -7,7 +7,7 @@
 
 const int SCREEN_WIDTH = 1248;
 const int SCREEN_HEIGHT = 736;
-//idea based on Lazyfoo; however, I trully understand what I'm typing.
+
 class LTexture {
 public:
 	LTexture();

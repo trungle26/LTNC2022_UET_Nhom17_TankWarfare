@@ -5,18 +5,30 @@ AmmoManager::AmmoManager() {
 	tank1 = new ShootComponent(10, 1, 3, 1);
 	tank2 = new ShootComponent(10, 1, 3, 2);
 }
+//we assume that 2 tank have same scale. Will update if have time
+void AmmoManager::setSizeTank(int width, int height) {
+	this->TANK_SIZE_WIDTH = width;
+	this->TANK_SIZE_HEIGHT = height;
+}
+void AmmoManager::setSizeProjectiles(int width, int height) {
+	this->PROJECTILE_SIZE_WIDTH = width;
+	this->PROJECTILE_SIZE_HEIGHT = height;
+}
+void AmmoManager::setMaxFrame(int duyCatCanDepTrai) {
+	this->maxFrameUpdated = duyCatCanDepTrai;
+}
 void AmmoManager::addToSDLRect1(float x, float y) {
 	tankRect1.x = (int)x;
 	tankRect1.y = (int)y;
-	tankRect1.w = 32;
-	tankRect1.h = 32;
+	tankRect1.w = TANK_SIZE_WIDTH;
+	tankRect1.h = TANK_SIZE_HEIGHT;
 	std::cout << "Successful addtoSDLRect1" << std::endl;
 }
 void AmmoManager::addToSDLRect2(float x, float y) {
 	tankRect2.x = (int)x;
 	tankRect2.y = (int)y;
-	tankRect2.w = 32;
-	tankRect2.h = 32;
+	tankRect2.w = TANK_SIZE_WIDTH;
+	tankRect2.h = TANK_SIZE_HEIGHT;
 	std::cout << "Successful addtoSDLRect2" << std::endl;
 }
 void AmmoManager::addTankShootComponent(ShootComponent* tank1_, ShootComponent* tank2_) {
@@ -64,8 +76,8 @@ void AmmoManager::checkBulletForPlayer1() {
 		SDL_Rect tempToCheck;
 		tempToCheck.x = projectilesPlayer1[i].x;
 		tempToCheck.y = projectilesPlayer1[i].y;
-		tempToCheck.w = 32;
-		tempToCheck.h = 32;
+		tempToCheck.w = PROJECTILE_SIZE_WIDTH;
+		tempToCheck.h = PROJECTILE_SIZE_HEIGHT;
 
 		//SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
 		//TextureManager::Draw(loadProjectiles, tempToCheck, tempToCheck);
@@ -87,7 +99,7 @@ void AmmoManager::checkBulletForPlayer1() {
 				//UI part goes here
 			}
 		}
-		else if (projectilesPlayer1[i].frames >= 200) {
+		else if (projectilesPlayer1[i].frames >= maxFrameUpdated) {
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
 		}
@@ -98,7 +110,7 @@ void AmmoManager::checkBulletForPlayer1() {
 	//std::cout << "finished checking checkBulletForPlayer1" << std::endl;
 	tank1->projectiles = projectilesPlayer1; //return back projectiles vector
 	tank1->angles = projectilesAnglesPlayer1;
-	std::cout << "1 P: " << projectilesPlayer1.size() << " A: " << projectilesAnglesPlayer1.size() << std::endl;
+	//std::cout << "1 P: " << projectilesPlayer1.size() << " A: " << projectilesAnglesPlayer1.size() << std::endl;
 
 }
 void AmmoManager::checkBulletForPlayer2() {
@@ -108,8 +120,8 @@ void AmmoManager::checkBulletForPlayer2() {
 		SDL_Rect tempToCheck;
 		tempToCheck.x = projectilesPlayer2[i].x;
 		tempToCheck.y = projectilesPlayer2[i].y;
-		tempToCheck.w = 32;
-		tempToCheck.h = 32;
+		tempToCheck.w = PROJECTILE_SIZE_WIDTH;
+		tempToCheck.h = PROJECTILE_SIZE_HEIGHT;
 
 		
 		//IMPORTANT: CHANGE W AND H RIGHT IF CHECKED FUNCTIONALLY.
@@ -128,7 +140,7 @@ void AmmoManager::checkBulletForPlayer2() {
 				//UI part goes here
 			}
 		}
-		else if (projectilesPlayer2[i].frames >= 200) {
+		else if (projectilesPlayer2[i].frames >= maxFrameUpdated) {
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
 		}else {
@@ -138,7 +150,7 @@ void AmmoManager::checkBulletForPlayer2() {
 	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
 	tank2->angles = projectilesAnglesPlayer2;
-	std::cout << "2 P: " << projectilesPlayer2.size() << " A: " << projectilesAnglesPlayer2.size() << std::endl;
+	//std::cout << "2 P: " << projectilesPlayer2.size() << " A: " << projectilesAnglesPlayer2.size() << std::endl;
 }
 //use 2 separate functions to avoid redundant reload times
 bool AmmoManager::needToRerenderScoreBoard() {
@@ -162,6 +174,10 @@ bool AmmoManager::needToRerenderTextStatusPlayer2() {
 void AmmoManager::tankShoot(Vector2D position, double angle, int player) {
 	if (player == 1) {	
 		std::cout << "DirectionInstate4 created" << std::endl;
+		//Modified position of projectile
+		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH)/2;
+		position.y += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH) / 2;
+		//untested
 		tank1->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;
 		tank1->shoot();
@@ -170,6 +186,11 @@ void AmmoManager::tankShoot(Vector2D position, double angle, int player) {
 	}
 	else {
 		std::cout << "DirectionInstate4 created" << std::endl;
+		//Modified position of projectile
+		
+		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH)/2;
+		position.y += (TANK_SIZE_HEIGHT - PROJECTILE_SIZE_HEIGHT) / 2;
+		//untested
 		tank2->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;
 		tank2->shoot();

@@ -113,13 +113,14 @@ bool states4[] = { false, false, false, false };//tank 1
 
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
-
+//healing-able?
+bool canHealing = true;
 
 //for render scoreboard
 bool needRerenderScoreBoard = false;
 
 //for render text showing status
-//for render text
+SDL_Texture* backgroundScoreboard;
 SDL_Surface* text;
 SDL_Surface* text2;
 SDL_Texture* text_texture;
@@ -168,7 +169,9 @@ void Game::handleEvents()
 		//tank1 shoot function
 			if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_r) states4[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_q) {
+				if(canHealing)states4[2] = true;
+			} 
 			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
 		}
 		
@@ -176,7 +179,9 @@ void Game::handleEvents()
 			//tank2 shoot function 
 			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_KP_1) {
+				if (canHealing)states3[2] = true;
+			}
 			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
 			//NOT YET DONE: TWO TANK CHEAT CODES 
 		}
@@ -520,12 +525,13 @@ void Game::render()
 		tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
 		tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
 		std::cout << "Get SDL_REct x and y" << std::endl;
-		tempToRenderProjectile.w = 32; //Projectiles size
-		tempToRenderProjectile.h = 32; //Projectiles size
+		tempToRenderProjectile.w = ammoManager->PROJECTILE_SIZE_WIDTH; //Projectiles size
+		tempToRenderProjectile.h = ammoManager->PROJECTILE_SIZE_HEIGHT; //Projectiles size
 		SDL_Rect sourceRect;
 		sourceRect.x = 0;
 		sourceRect.y = 0;
-		sourceRect.w = sourceRect.h = 32;
+		sourceRect.w = ammoManager->PROJECTILE_SIZE_WIDTH;
+		sourceRect.h = ammoManager->PROJECTILE_SIZE_HEIGHT;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 		std::cout << "Successful render projetiles player 1" << std::endl;
 		SDL_DestroyTexture(loadProjectiles);
@@ -538,16 +544,24 @@ void Game::render()
 		tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
 		tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
 		std::cout << "Get SDL_REct x and y" << std::endl;
-		tempToRenderProjectile.w = 128; //Projectiles size
-		tempToRenderProjectile.h = 32; //Projectiles size
+		tempToRenderProjectile.w = ammoManager->PROJECTILE_SIZE_WIDTH; //Projectiles size
+		tempToRenderProjectile.h = ammoManager->PROJECTILE_SIZE_HEIGHT; //Projectiles size
 		SDL_Rect sourceRect;
 		sourceRect.x = 0;
 		sourceRect.y = 0;
-		sourceRect.w = 128;
-		sourceRect.h = 32;
+		sourceRect.w = ammoManager->PROJECTILE_SIZE_WIDTH;
+		sourceRect.h = ammoManager->PROJECTILE_SIZE_HEIGHT;
 		TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
 		SDL_DestroyTexture(loadProjectiles);
 	}
+	//Background scoreboard
+	
+	backgroundScoreboard = TextureManager::LoadTexture("assets/backgroundScoreboard.png");
+	SDL_Rect sourceBS = { 0,0,1248,30 };
+	SDL_Rect destBS = { 0,0,1248,30 };
+	TextureManager::Draw(backgroundScoreboard, sourceBS, destBS);
+	SDL_DestroyTexture(backgroundScoreboard);
+
 	//SCOREBOARD
 	if (ammoManager->needToRerenderScoreBoard()) {
 		SDL_DestroyTexture(text_texture);
@@ -560,17 +574,17 @@ void Game::render()
 		if (player.getComponent<ShootComponent>().allahMode)scoreBoard += " Allah Mode Enabled";
 		if (player2.getComponent<ShootComponent>().allahMode)scoreBoardPlayer2 += " Allah Mode Enabled";
 		//initalize font
-		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
+		font = TTF_OpenFont("assets/SF Atarian System Extended Bold.ttf", 24);
 		if (!font)std::cout << "Can't load font" << std::endl;
 		SDL_Color color = {255,255,255};
 		
-		text = TTF_RenderText_Solid(font, scoreBoard.c_str(), color);
+		text = TTF_RenderText_Blended(font, scoreBoard.c_str(), color);
 		if (!text)std::cout << "Can't load text" << std::endl;
 		text_texture = SDL_CreateTextureFromSurface(renderer, text);
 		SDL_Rect textDest = { 0,0,text->w,text->h };
 		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
 		//player2 part
-		text2 = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
+		text2 = TTF_RenderText_Blended(font, scoreBoardPlayer2.c_str(), color);
 		text_texture2 = SDL_CreateTextureFromSurface(renderer, text2);
 		textDest = { 1248 / 2 ,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
@@ -592,7 +606,7 @@ void Game::render()
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };
-			surfaceTextPlayer1 = TTF_RenderText_Solid(font, textPlayer1.c_str(), color);
+			surfaceTextPlayer1 = TTF_RenderText_Blended(font, textPlayer1.c_str(), color);
 			if (!surfaceTextPlayer1)std::cout << "Can't load text" << std::endl;
 			textureTextPlayer1 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer1);
 			SDL_Rect testDest = { 0,700, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
@@ -624,7 +638,7 @@ void Game::render()
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };//white
-			surfaceTextPlayer2 = TTF_RenderText_Solid(font, textPlayer2.c_str(), color);
+			surfaceTextPlayer2 = TTF_RenderText_Blended(font, textPlayer2.c_str(), color);
 			if (!surfaceTextPlayer2)std::cout << "Can't load text" << std::endl;
 			textureTextPlayer2 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer2);
 			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
