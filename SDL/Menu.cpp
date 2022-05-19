@@ -30,6 +30,9 @@ SDL_Surface* OptionSurface[11];
 SDL_Surface* SoundSurface[11];
 Mix_Music* Menu::sound = NULL; // tắt
 bool exitMenu;
+bool Menu::needToChangeTankSize = false;
+int Menu::newTankWidth = 32;
+int Menu::newTankHeight = 32;
 Menu::Menu() {}
 Menu::~Menu() {}
 
@@ -37,7 +40,7 @@ void Menu::close()
 {
 	MenuTexture::close();
 	SDL_DestroyWindow(window);
-	window = NULL;
+	//window = NULL;
 	SDL_FreeSurface(PNGSurface);
 	SDL_FreeSurface(screenSurface);
 	//PNGSurface = NULL;
@@ -50,11 +53,11 @@ void Menu::close()
 	for (int i = 0; i < 10; i++)
 	{
 		SDL_FreeSurface(MenuSurface[i]);
-		MenuSurface[i] = NULL;
+		//MenuSurface[i] = NULL;
 		SDL_FreeSurface(OptionSurface[i]);
-		OptionSurface[i] = NULL;
+		//OptionSurface[i] = NULL;
 		SDL_FreeSurface(SoundSurface[i]);
-		SoundSurface[i] = NULL;
+		//SoundSurface[i] = NULL;
 	}
 	std::cout << "Menu closed! " << std::endl;
 }
@@ -514,12 +517,18 @@ void Menu::ShowTextWindowWhileSelectingTank(SDL_Event e)
 	{
 		textTexture[small].loadMedia(e);
 		textTexture[small].Render(e);
+		needToChangeTankSize = true;
+		newTankWidth = 20;
+		newTankHeight = 18;
 		return;
 	}
 	else if (e.key.keysym.sym == SDLK_2)
 	{
 		textTexture[medium].loadMedia(e);
 		textTexture[medium].Render(e);
+		needToChangeTankSize = true;
+		newTankWidth = 40;
+		newTankHeight = 36;
 		return;
 	}
 	else if (e.key.keysym.sym == SDLK_3)
@@ -527,6 +536,9 @@ void Menu::ShowTextWindowWhileSelectingTank(SDL_Event e)
 		//textTexture->loadMedia(e);
 		textTexture[large].loadMedia(e);
 		textTexture[large].Render(e);
+		needToChangeTankSize = true;
+		newTankWidth = 80;
+		newTankHeight = 72;
 		return;
 	}
 }

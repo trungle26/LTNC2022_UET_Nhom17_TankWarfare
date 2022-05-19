@@ -11,16 +11,16 @@ C:\Users\hoang\Documents\CurrentBigProject\SDL\SpriteComponent.h(42,32): warning
 C:\Users\hoang\Documents\CurrentBigProject\SDL\SpriteComponent.h(43,33): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\CollisionComponent.h(50,34): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\CollisionComponent.h(52,35): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(257,102): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(263,104): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(270,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(271,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(287,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(288,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(547,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(548,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(565,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(566,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(261,102): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(267,104): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(274,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(275,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(291,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(292,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(551,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(552,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(570,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(571,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\ECS.h(93,33): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [

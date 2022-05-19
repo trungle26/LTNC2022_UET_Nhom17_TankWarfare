@@ -107,7 +107,7 @@ void AmmoManager::checkBulletForPlayer1() {
 			continue;
 		}
 	}
-	//std::cout << "finished checking checkBulletForPlayer1" << std::endl;
+	std::cout << "finished checking checkBulletForPlayer1" << std::endl;
 	tank1->projectiles = projectilesPlayer1; //return back projectiles vector
 	tank1->angles = projectilesAnglesPlayer1;
 	//std::cout << "1 P: " << projectilesPlayer1.size() << " A: " << projectilesAnglesPlayer1.size() << std::endl;
@@ -148,7 +148,7 @@ void AmmoManager::checkBulletForPlayer2() {
 			continue;
 		}
 	}
-	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
+	std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
 	tank2->angles = projectilesAnglesPlayer2;
 	//std::cout << "2 P: " << projectilesPlayer2.size() << " A: " << projectilesAnglesPlayer2.size() << std::endl;

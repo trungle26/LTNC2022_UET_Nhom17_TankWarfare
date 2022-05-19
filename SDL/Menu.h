@@ -42,12 +42,16 @@ public:
 	static SDL_Window* window;//???
 	static Mix_Music* sound;
 	static SDL_Renderer* renderer;
+	static bool needToChangeTankSize;
+	static int newTankWidth;
+	static int newTankHeight;
 
 
 protected:
 	static SDL_Event event;
 	static SDL_Surface* PNGSurface;// source surface
 	static SDL_Surface* screenSurface; // dest surface
+	
 };
 extern bool exitMenu;
 //extern bool showBullet;

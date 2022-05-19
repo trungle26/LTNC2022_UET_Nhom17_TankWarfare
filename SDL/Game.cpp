@@ -240,6 +240,10 @@ void Game::handleEvents()
 
 void Game::update()
 {
+	if (Menu::needToChangeTankSize) {
+		ammoManager->setSizeTank(Menu::newTankWidth, Menu::newTankHeight);
+		Menu::needToChangeTankSize = false;
+	}
 	clock_t currentTimeForShootingPurpose = clock();
 	clock_t currentTimeShootingPlayer2 = clock();
 	SDL_Rect playerCol = player.getComponent<CollisionComponent>().collider;
@@ -558,6 +562,7 @@ void Game::render()
 			SDL_DestroyTexture(loadProjectiles);
 		}
 		//Render projectiles player2
+		std::cout << "Size pP2: " << ammoManager->projectilesPlayer2.size() << std::endl;
 		for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
 			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
 			std::cout << "Get load texture" << std::endl;
@@ -572,7 +577,7 @@ void Game::render()
 			sourceRect.y = 0;
 			sourceRect.w = 89;
 			sourceRect.h = 26;
-			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer1[i]);
+			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer2[i]);
 			SDL_DestroyTexture(loadProjectiles);
 		}
 	}
@@ -599,7 +604,7 @@ void Game::render()
 		SDL_Rect textDest = { 0,0,text->w,text->h };
 		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
 		//player2 part
-		text2 = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
+		text2 = TTF_RenderText_Blended(font, scoreBoardPlayer2.c_str(), color);
 		text_texture2 = SDL_CreateTextureFromSurface(renderer, text2);
 		textDest = { 1248 / 2 ,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
