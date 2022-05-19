@@ -55,7 +55,7 @@ ShootComponent::~ShootComponent() {
 void ShootComponent::shoot() {
 	if (this->currentBullet > 0) {
 		this->currentBullet--;
-		projectileInit(positionProjectile, 5);
+		projectileInit(positionProjectile, 25);
 	}
 	
 }

@@ -1,6 +1,6 @@
 backup
 x64
-moinhat.sln
+*.sln
 
 ##### Windows
 # Windows thumbnail cache files

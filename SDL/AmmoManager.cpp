@@ -64,8 +64,8 @@ void AmmoManager::checkBulletForPlayer1() {
 		SDL_Rect tempToCheck;
 		tempToCheck.x = projectilesPlayer1[i].x;
 		tempToCheck.y = projectilesPlayer1[i].y;
-		tempToCheck.w = 32;
-		tempToCheck.h = 32;
+		tempToCheck.w = 34;
+		tempToCheck.h = 10;
 
 		//SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
 		//TextureManager::Draw(loadProjectiles, tempToCheck, tempToCheck);
@@ -108,8 +108,8 @@ void AmmoManager::checkBulletForPlayer2() {
 		SDL_Rect tempToCheck;
 		tempToCheck.x = projectilesPlayer2[i].x;
 		tempToCheck.y = projectilesPlayer2[i].y;
-		tempToCheck.w = 32;
-		tempToCheck.h = 32;
+		tempToCheck.w = 34;
+		tempToCheck.h = 10;
 
 		
 		//IMPORTANT: CHANGE W AND H RIGHT IF CHECKED FUNCTIONALLY.

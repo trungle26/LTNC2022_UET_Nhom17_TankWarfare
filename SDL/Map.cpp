@@ -28,12 +28,12 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 		{
 			mapFile.get(c);
 			srcY = atoi(&c) * tileSize;
-			//mapFile.get(c);
+			mapFile.get(c);
 			srcX = atoi(&c) * tileSize;
 			AddTile(srcX, srcY, x * scaledSize, y * scaledSize);
 			mapFile.ignore();
-
 		}
+		mapFile.ignore();
 	}
 
 	mapFile.ignore();
@@ -52,7 +52,7 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 			mapFile.ignore();
 
 		}
-		//mapFile.ignore();
+		mapFile.ignore();
 	}
 
 	mapFile.ignore();

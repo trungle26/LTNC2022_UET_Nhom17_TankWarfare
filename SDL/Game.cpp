@@ -58,13 +58,13 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		map = new Map("assets/terrain.png", 1, 32);// map scale:1, tile size: 32
 		map->LoadMap("assets/map.map", 39, 23);
 
-		player.addComponent<TransformComponent>(34, 34);
+		player.addComponent<TransformComponent>(90, 90);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
 
 		player.addComponent<ShootComponent>(); //default option
 
-		player2.addComponent<TransformComponent>(1000, 33);
+		player2.addComponent<TransformComponent>(1000, 90);
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
 		player2.addComponent<ShootComponent>(); //default option
@@ -254,13 +254,13 @@ void Game::update()
 		SDL_Rect cCol = c->getComponent<CollisionComponent>().collider;
 		if (Collision::AABB(playerCol, cCol))
 		{
-			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -1);
+			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
 			
 		}
 
 		if (Collision::AABB(player2Col, cCol))
 		{
-			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -1);
+			player2.getComponent<TransformComponent>().diThang(player2.getComponent<TransformComponent>().speed * -2);
 		}
 		//CHECK COLLISION OF PROJECTILES WITH COLLIDER tank 1
 		//remember: Allah mode allow projectile to bypass colliders
@@ -269,8 +269,8 @@ void Game::update()
 				SDL_Rect tempToCheck;
 				tempToCheck.x = ammoManager->projectilesPlayer1[iter].x;
 				tempToCheck.y = ammoManager->projectilesPlayer1[iter].y;
-				tempToCheck.w = 32;
-				tempToCheck.h = 32;
+				tempToCheck.w = 34;
+				tempToCheck.h = 10;
 				if (Collision::AABB(tempToCheck, cCol)) {
 					std::cout << "Detect collision with collider. Position: " << tempToCheck.x << " " << tempToCheck.y << std::endl;
 					ammoManager->projectilesPlayer1.erase(ammoManager->projectilesPlayer1.begin() + iter);
@@ -286,8 +286,8 @@ void Game::update()
 				SDL_Rect tempToCheck;
 				tempToCheck.x = ammoManager->projectilesPlayer2[iter].x;
 				tempToCheck.y = ammoManager->projectilesPlayer2[iter].y;
-				tempToCheck.w = 32;
-				tempToCheck.h = 32;
+				tempToCheck.w = 34;
+				tempToCheck.h = 10;
 				if (Collision::AABB(tempToCheck, cCol)) {
 					std::cout << "Detect collision with collider. Position: " << tempToCheck.x << " " << tempToCheck.y << std::endl;
 					ammoManager->projectilesPlayer2.erase(ammoManager->projectilesPlayer2.begin() + iter);
@@ -305,13 +305,13 @@ void Game::update()
 	if (states1[left]) player.getComponent<TransformComponent>().reTrai();
 	if (states1[up])
 	{
-		player.getComponent<TransformComponent>().speed = 2.5;
+		player.getComponent<TransformComponent>().speed = 2;
 		player.getComponent<TransformComponent>().diThang();
 	}
 	if (states1[down])
 	{
 		
-		player.getComponent<TransformComponent>().speed = -2.5;
+		player.getComponent<TransformComponent>().speed = -2;
 		player.getComponent<TransformComponent>().diThang();
 		
 	}
@@ -546,14 +546,14 @@ void Game::render()
 			tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
 			tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
 			std::cout << "Get SDL_REct x and y" << std::endl;
-			tempToRenderProjectile.w = 32; //Projectiles size
-			tempToRenderProjectile.h = 32; //Projectiles size
+			tempToRenderProjectile.w = 34; //Projectiles size
+			tempToRenderProjectile.h = 10; //Projectiles size
 			SDL_Rect sourceRect;
 			sourceRect.x = 0;
 			sourceRect.y = 0;
-			sourceRect.w = sourceRect.h = 32;
-			TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
-			std::cout << "Successful render projetiles player 1" << std::endl;
+			sourceRect.w = 89;
+			sourceRect.h = 26;
+			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer1[i]);
 			SDL_DestroyTexture(loadProjectiles);
 		}
 		//Render projectiles player2
@@ -564,14 +564,14 @@ void Game::render()
 			tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
 			tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
 			std::cout << "Get SDL_REct x and y" << std::endl;
-			tempToRenderProjectile.w = 128; //Projectiles size
-			tempToRenderProjectile.h = 32; //Projectiles size
+			tempToRenderProjectile.w = 34; //Projectiles size
+			tempToRenderProjectile.h = 10; //Projectiles size
 			SDL_Rect sourceRect;
 			sourceRect.x = 0;
 			sourceRect.y = 0;
-			sourceRect.w = 128;
-			sourceRect.h = 32;
-			TextureManager::Draw(loadProjectiles, sourceRect, tempToRenderProjectile);
+			sourceRect.w = 89;
+			sourceRect.h = 26;
+			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer1[i]);
 			SDL_DestroyTexture(loadProjectiles);
 		}
 	}
