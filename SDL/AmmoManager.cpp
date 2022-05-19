@@ -177,7 +177,7 @@ void AmmoManager::tankShoot(Vector2D position, double angle, int player) {
 		std::cout << "DirectionInstate4 created" << std::endl;
 		//Modified position of projectile
 		position.x += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH) / 2;
-		position.y += (TANK_SIZE_WIDTH - PROJECTILE_SIZE_WIDTH) / 2;
+		position.y += (TANK_SIZE_HEIGHT - PROJECTILE_SIZE_HEIGHT) / 2;
 		//untested
 		tank1->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;

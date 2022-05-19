@@ -91,6 +91,9 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	player2Functions.push_back(clock());
 	player1Functions.push_back(clock());
 
+	//SET PROJECTILES SIZE
+	ammoManager->setSizeProjectiles(34, 10);
+
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));// pass in all the tiles into this 
@@ -529,6 +532,32 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 		}
 	}
+	//New: What happen if tank out of screen already?
+	if (player.getComponent<TransformComponent>().position.x < 0 ||
+		player.getComponent<TransformComponent>().position.x > 1248 - player.getComponent<TransformComponent>().width * player.getComponent<TransformComponent>().scale ||
+		player.getComponent<TransformComponent>().position.y > 736 - player.getComponent<TransformComponent>().height * player.getComponent<TransformComponent>().scale ||
+		player.getComponent<TransformComponent>().position.y < 0
+		) {
+		player.getComponent<TransformComponent>().position.x = 90;
+		player.getComponent<TransformComponent>().position.y = 90;
+		states1[up] = false;
+		states1[down] = false;
+		states1[left] = false;
+		states1[right] = false;
+	}
+	if (player2.getComponent<TransformComponent>().position.x < 0 ||
+		player2.getComponent<TransformComponent>().position.x > 1248 - player2.getComponent<TransformComponent>().width * player2.getComponent<TransformComponent>().scale ||
+		player2.getComponent<TransformComponent>().position.y > 736 - player2.getComponent<TransformComponent>().height * player2.getComponent<TransformComponent>().scale ||
+		player2.getComponent<TransformComponent>().position.y < 0
+		) {
+		player2.getComponent<TransformComponent>().position.x = 1000;
+		player2.getComponent<TransformComponent>().position.y = 90;
+		states2[up] = false;
+		states2[down] = false;
+		states2[left] = false;
+		states2[right] = false;
+	}
+	//untested
 }
 void Game::render()
 {

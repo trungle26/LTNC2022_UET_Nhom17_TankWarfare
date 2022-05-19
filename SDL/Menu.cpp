@@ -46,7 +46,7 @@ void Menu::close()
 	SDL_FreeSurface(screenSurface);
 	//PNGSurface = NULL;
 
-	SDL_DestroyRenderer(renderer);
+	//SDL_DestroyRenderer(renderer);
 	
 	Mix_FreeMusic(sound);
 
