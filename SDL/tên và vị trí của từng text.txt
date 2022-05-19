@@ -1,0 +1,4 @@
+how to play 500, 50
+urdl 700 170
+scrool this 950 110
+move tank 2 950 190

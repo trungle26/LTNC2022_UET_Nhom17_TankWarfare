@@ -1,6 +1,6 @@
 #include "MenuTexture.h"
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 200;
+const int SCREEN_HEIGHT = 150;
 
 const int TANK_SIZE_HEIGHT = 36;
 const int TANK_SIZE_WIDTH = 40;
@@ -18,11 +18,13 @@ enum TextColour
 };
 SDL_Window* MenuTexture::window = NULL;
 TTF_Font* MenuTexture::MenuFont = NULL;
-MenuTexture textTexture[10];
 SDL_Renderer* MenuTexture::renderer = NULL;
+
 
 //SDL_Surface* MenuTexture::screenSurface = NULL;
 //SDL_Surface* MenuTexture::PNGSurface = NULL;
+MenuTexture textTexture[3];
+MenuTexture tankTexture[2];
 
 MenuTexture::MenuTexture()
 {
@@ -47,7 +49,7 @@ void MenuTexture::init(const char* title)
 	{
 		std::cout << "SDL initialized! \n";
 
-		window = SDL_CreateWindow("nofTankSize", 0, 0, 400, 400, false);
+		window = SDL_CreateWindow("nofTankSize", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, false);
 		if (!window)
 		{
 			std::cout << "create window for text failed" << std::endl;
@@ -151,6 +153,22 @@ void MenuTexture::free()
 		mHeight = 0;
 	}
 }
+void MenuTexture::close()
+{
+	for (int i = 0; i < 3; i++)
+	{
+		textTexture[i].free();
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		tankTexture[i].free();
+	}
+	TTF_CloseFont(MenuFont);
+	MenuFont = NULL;
+	window = NULL;
+	renderer = NULL;
+}
+
 void MenuTexture::SetColor(int type) {
 	if (type == RED_TEXT) {
 		SDL_Color color = { 255, 0, 0 };
@@ -183,14 +201,6 @@ void MenuTexture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* 
 	std::cout << "went to render func" << std::endl;
 	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-
-	//Set clip rendering dimensions
-	if (clip != NULL)
-	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}
-
 	//Render to screen
 	SDL_RenderCopyEx(renderer, mTexture, clip, &renderQuad, angle, center, flip);
 }
@@ -218,7 +228,7 @@ SDL_Texture* MenuTexture::loadTexture(std::string path)
 	else
 	{
 		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(MenuTexture::renderer, loadedSurface);
+		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		if (newTexture == NULL)
 		{
 			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
@@ -231,60 +241,60 @@ SDL_Texture* MenuTexture::loadTexture(std::string path)
 	return newTexture;
 }
 
-bool MenuTexture::loadMedia()
+void MenuTexture::getDest(SDL_Rect& dest, int x, int y, int w, int h)
 {
-	bool success = true;
-	MenuFont = TTF_OpenFont("assets/font/JetBrainsMono-Bold.ttf", 20);
+	dest.x = x;
+	dest.y = y;
+	dest.w = w;
+	dest.h = h;
+}
+void MenuTexture::loadMedia(SDL_Event e)
+{
+	MenuFont = TTF_OpenFont("assets/font/Candarab.ttf", 20);
 	if (MenuFont == NULL)
 	{
 		printf("Failed to load jetbrain font! SDL_ttf Error: %s\n", TTF_GetError());
-		success = false;
 	}
 	else
 	{
-		if (textTexture[small].loadTexture("assets/tank.png"))
+		textTexture[0].SetColor(BLACK_TEXT);
+		textTexture[0].loadFromRenderedText("Change tanks size to", textTexture[0].GetColour());
+		textTexture[1].loadFromRenderedText("20*18", textTexture[1].GetColour());
+		textTexture[1].SetColor(RED_TEXT);
+		if (e.key.keysym.sym == SDLK_1)
 		{
-			std::cout << "load duoc anh tank roi" << std::endl;
-			textTexture[small].destR.x = 20;
-			textTexture[small].destR.y = 100;
-			textTexture[small].destR.h = TANK_SIZE_HEIGHT/2;
-			textTexture[small].destR.w = TANK_SIZE_WIDTH/2;
-		}
-		textTexture[small].SetColor(BLACK_TEXT);
-		if (!textTexture[small].loadFromRenderedText("CHanged tanks size to 20*18", textTexture[small].GetColour()))
-		{
-			printf("Failed to render text texture!\n");
-			success = false;
-			textTexture->destR;
-		}
+			
+			textTexture[1].loadFromRenderedText("20*18", textTexture[1].GetColour());
+			
+			getDest(rect1, 20, 40, 20, 18);
+			getDest(rect2, 135, 40, 20, 18);
 
-		textTexture[medium].SetColor(RED_TEXT);
-		if (!textTexture[medium].loadFromRenderedText("Changed tanks size to 40*36", textTexture[medium].GetColour()))
-		{
-			printf("Failed to render text texture!\n");
-			success = false;
 		}
-		textTexture[large].SetColor(BLACK_TEXT);
-		if (!textTexture[large].loadFromRenderedText("Changed tanks size to 80*72", textTexture[large].GetColour()))
+		else if (e.key.keysym.sym == SDLK_2) {
+			textTexture[1].loadFromRenderedText("40*36", textTexture[1].GetColour());
+
+			getDest(rect1, 20, 40, 40, 36);
+			getDest(rect2, 135, 40, 40, 36);
+		}
+		else if (e.key.keysym.sym == SDLK_3)
 		{
-			printf("Failed to render text texture!\n");
-			success = false;
+			textTexture[1].loadFromRenderedText("80*72", textTexture[1].GetColour());
+
+			getDest(rect1, 20, 40, 80, 72);
+			getDest(rect2, 110, 40, 80, 72);
 		}
 	}
-	return success;
 }
 
 
-void MenuTexture::Render()
+void MenuTexture::Render(SDL_Event e)
 {
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(renderer);
-	//Render current frame
-	int x = (SCREEN_WIDTH - textTexture[small].getWidth()) / 2;
-	int y = (SCREEN_HEIGHT - textTexture[small].getHeight()) / 2;
-	this->render(0, 0);
-
-	SDL_RenderCopy(renderer, textTexture[small].loadTexture("assets/tank.png"), NULL, &destR);
-	//Update screen
+	textTexture[0].render(0, 0);
+	textTexture[1].render(75, 20);
+	SDL_RenderCopy(renderer, tankTexture[0].loadTexture("assets/tank.png"), NULL, &rect1);
+	SDL_RenderCopy(renderer, tankTexture[1].loadTexture("assets/tank2.png"), NULL, &rect2);
 	SDL_RenderPresent(renderer);
 	SDL_Delay(1000);
 	SDL_DestroyWindow(window);

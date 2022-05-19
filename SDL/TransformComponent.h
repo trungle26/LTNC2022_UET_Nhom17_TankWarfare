@@ -12,7 +12,7 @@ public:
 
 	int height = 40;
 	int width = 36;
-	int scale = 1;
+	double scale = 1;
 	double angle = 90;// don vi la do, dung de quay xe tang
 
 	double speed ;

@@ -1,6 +1,7 @@
 backup
 x64
-
+SDL.vcxproj
+SDL.vcxproj.filters
 
 ##### Windows
 # Windows thumbnail cache files

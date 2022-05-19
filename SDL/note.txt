@@ -11,3 +11,37 @@ phím m: music
 phím b:show bullet
 
 thay đổi mặc định bật nhạc hay không ở soundevent
+
+
+// cac bien bool kết nối phần menu và code game
+1. checkAccessShowBulletFromGame: gọi là static
+xử lý trong hàm handleShowBullet();
+nếu là gọi từ lúc đầu thì có thể chuyển qua lại giữa các func: handleShowBullet với handleOPtionsEvent()
+nếu gọi từ trong game thì chỉ hiện hàm handleShowBullet tắtt hay mở thôi
+
+
+
+2. checkShowBullet:
+coi là static và xử lý trong hàm handleShowBullet
+nneeus đúng thì dòng 452 bên game.cpp sẽ execute // Hoàng gọi là render projectile player1
+
+
+3. có 2 class cùng render text
+do Hoàng dùng hàm renderText trùng 1 số với của mình nên phần text của mình tên là MenuTexture
+class LTexture là của Hoàng còn mình là MenuTexture
+
+4. mặc định đường đạn là false
+
+5. getScale là 1 thuộc tính của MenuTexture
+thay đổi bằng việc dùng handleTankSizeEvent
+-> gọi trong SpriteComponent để thay đổi scale của tank
+
+6. 1 số hàm trong game.cpp 
+với các key o t m b để access các hàm trong menu
+
+7. ko dùng extern bool showBullet
+
+8. 
+
+9. 
+exit 

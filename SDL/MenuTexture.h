@@ -27,7 +27,7 @@ public:
 
 	//Creates image from font string
 	bool loadFromRenderedText(std::string textureText, SDL_Color textColor);
-	
+
 	// load texture
 	SDL_Texture* loadTexture(std::string path);
 
@@ -45,26 +45,30 @@ public:
 	//Gets image dimensions
 	int getWidth();
 	int getHeight();
-	/*static SDL_Window* window;
-	static TTF_Font* MenuFont;
-	static SDL_Renderer* renderer;*/
+	void getDest(SDL_Rect& dest, int x, int y, int w, int h);
+
 	static SDL_Window* window;
 	static TTF_Font* MenuFont;
 	static SDL_Renderer* renderer;
 	//std::vector <MenuTexture> textTexture;
-	bool loadMedia();
+	void loadMedia(SDL_Event e);
 	void init(const char* title);
-	void Render();
+	void Render(SDL_Event e);
+	static void close();
+
 private:
 	//The actual hardware texture
 	SDL_Texture* mTexture;
-
+	SDL_Rect rect1;
+	SDL_Rect rect2;
 	//Image dimensions
-	int mWidth;
+	int mWidth ;
 	int mHeight;
 
 	SDL_Color text_color;
-	SDL_Rect destR;
+	SDL_Rect destR1;
+	SDL_Rect destR2;
 };
-extern MenuTexture textTexture[];
+ MenuTexture textTexture[];
+ MenuTexture tankTexture[];
 #endif

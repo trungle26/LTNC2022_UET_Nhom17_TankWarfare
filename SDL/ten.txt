@@ -1,0 +1,21 @@
+How To Play
+Buttons:
+Move tank 1
+Scroll this
+Move tank 2
+(player 1)
+(player 2)
+shoot a bullet from a tank's gun
+Reload your tank's health
+Heal tank health
+Enable Allah Mode
+Open menu
+Stop game 
+Music on/off
+Tank size
+Open options
+tex
+
+
+
+

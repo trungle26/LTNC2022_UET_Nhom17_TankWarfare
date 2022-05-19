@@ -63,5 +63,5 @@ protected:
 
 };
 extern bool exitMenu;
-extern bool showBullet;
+//extern bool showBullet;
 #endif

@@ -1,13 +1,9 @@
 ﻿#include "Menu.h"
 //tao texture tu anh de co the ve duoc
 //Screen dimension constants
-double Menu::GetScale = 1;
+double Menu::GetScale = 0.5;
 bool Menu::checkShowBullet = false;
 bool Menu::checkAccessShowBulletFromGame = false;
-SDL_Surface* TextSurface = NULL;
-SDL_Texture* TextTexture = NULL;
-TTF_Font* fontMenu;
-MenuTexture* text = NULL;
 
 enum KeyPressMenuSurfaces
 {
@@ -38,6 +34,33 @@ Menu::Menu() {
 }
 Menu::~Menu() {}
 
+void Menu::close()
+{
+	MenuTexture::close();
+	SDL_DestroyWindow(window);
+	window = NULL;
+	SDL_FreeSurface(PNGSurface);
+	SDL_FreeSurface(screenSurface);
+	PNGSurface = NULL;
+	screenSurface = NULL;
+	SDL_DestroyRenderer(renderer);
+	renderer = NULL;
+	Mix_FreeMusic(sound);
+	sound = NULL;
+
+	for (int i = 0; i < 10; i++)
+	{
+		SDL_FreeSurface(MenuSurface[i]);
+		MenuSurface[i] = NULL;
+		SDL_FreeSurface(OptionSurface[i]);
+		OptionSurface[i] = NULL;
+		SDL_FreeSurface(SoundSurface[i]);
+		SoundSurface[i] = NULL;
+	}
+
+
+	std::cout << "Menu closed! " << std::endl;
+}
 bool Menu::init(const char* title, int x, int y, int width, int height)
 {
 	bool success = true;
@@ -77,7 +100,6 @@ bool Menu::init(const char* title, int x, int y, int width, int height)
 		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 		//success = false;
 	}
-
 	return success;
 }
 SDL_Surface* Menu::loadSurface(std::string path)
@@ -140,13 +162,6 @@ bool Menu::loadMenuMedia()
 bool Menu::handleOptionsMedia()
 {
 	bool success = true;
-	fontMenu = TTF_OpenFont("assets/font/JetBrainsMono-Bold.ttf", 39);
-	if (fontMenu == NULL)
-	{
-		printf("Failed to load jetbrain fontMenu! SDL_ttf Error: %s\n", TTF_GetError());
-		success = false;
-	}
-
 	OptionSurface[KEY_Menu] = loadSurface("assets/Menu.png");// da co
 	if (!OptionSurface[KEY_Menu])
 	{
@@ -200,6 +215,8 @@ bool Menu::loadSoundMedia()
 	}
 	return success;
 }
+
+//open music at beginning
 bool firstTime = true;
 
 void Menu::handleMenuEvent()
@@ -297,6 +314,7 @@ void Menu::handleOptionsEvent()
 				case SDLK_3:
 					//PNGSurface = OptionSurface[KEY_Show_Bullet_Trajectory];
 					handleShowBullet();
+					PNGSurface = MenuSurface[KEY_Option];
 					break;
 				case SDLK_4:
 					PNGSurface = OptionSurface[KEY_Blood_Regenaration];
@@ -313,7 +331,6 @@ void Menu::handleOptionsEvent()
 		Menu::renderMenu();
 	}
 }
-bool firstTimeAccessShowBullet = true;
 void Menu::handleShowBullet()
 {
 	std::cout << "went into showbullet func" << std::endl;
@@ -437,15 +454,7 @@ void Menu::handleTankSizeEvent()
 	}
 }
 
-void Menu::close()
-{
-	SDL_DestroyWindow(window);
-	SDL_FreeSurface(PNGSurface);
-	IMG_Quit();
-	SDL_Quit();
-	TTF_Quit();
-	std::cout << "Menu closed! " << std::endl;
-}
+
 
 
 void Menu::handleYN()
@@ -490,39 +499,32 @@ void Menu::renderMenu()
 	SDL_UpdateWindowSurface(window);
 }
 
-void Menu::renderText()
-{
-	//SDL_RenderClear(Game::renderer);
-	std::string a = "change sca0le tank to 0.5";
-	SDL_Color color = { 255,0,255 };
-	TextSurface = TTF_RenderText_Solid(fontMenu, a.c_str(), color);
-	if (!TextSurface) std::cout << "cant load text " << std::endl;
-	TextTexture = SDL_CreateTextureFromSurface(Game::renderer, TextSurface);
-	//std::cout << "???" << std::endl;
-	SDL_Rect textDest = { 100,10,TextSurface->w, TextSurface->h };
-	SDL_RenderCopy(Game::renderer, TextTexture, NULL, &textDest);
-	SDL_RenderPresent(Game::renderer);
-}
 
 
 void Menu::ShowTextWindowWhileSelectingTank(SDL_Event e)
 {
-	text->init("tank size");
-	text->loadMedia();
+	/*text->init("tank size");
+	text->loadMedia(); */
+	textTexture->init("tanksize");
 	if (e.key.keysym.sym == SDLK_1)
 	{
-
-		textTexture[small].Render();
+		//textTexture->loadMedia(e);
+		textTexture[small].loadMedia(e);
+		textTexture[small].Render(e);
+		//textTexture[small][1].Render();
 		return;
 	}
 	else if (e.key.keysym.sym == SDLK_2)
 	{
-		textTexture[medium].Render();
+		textTexture[medium].loadMedia(e);
+		textTexture[medium].Render(e);
 		return;
 	}
 	else if (e.key.keysym.sym == SDLK_3)
 	{
-		textTexture[large].Render();
+		//textTexture->loadMedia(e);
+		textTexture[large].loadMedia(e);
+		textTexture[large].Render(e);
 		return;
 	}
 }
