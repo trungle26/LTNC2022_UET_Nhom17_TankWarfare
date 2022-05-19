@@ -33,6 +33,7 @@ bool exitMenu;
 bool Menu::needToChangeTankSize = false;
 int Menu::newTankWidth = 32;
 int Menu::newTankHeight = 32;
+bool Menu::healingOrNot = true;
 Menu::Menu() {}
 Menu::~Menu() {}
 

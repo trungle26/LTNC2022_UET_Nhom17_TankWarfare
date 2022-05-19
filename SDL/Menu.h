@@ -45,6 +45,7 @@ public:
 	static bool needToChangeTankSize;
 	static int newTankWidth;
 	static int newTankHeight;
+	static bool healingOrNot;
 
 
 protected:

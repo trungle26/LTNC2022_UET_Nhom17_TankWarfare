@@ -168,7 +168,11 @@ void Game::handleEvents()
 		//tank1 shoot function
 			if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_r) states4[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_q)
+			{
+				if(Menu::healingOrNot)states4[2] = true;
+			}
+				
 			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
 		}
 		
@@ -176,7 +180,9 @@ void Game::handleEvents()
 			//tank2 shoot function 
 			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_KP_1) {
+				if (Menu::healingOrNot)states3[2] = true;
+			}
 			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
 			//NOT YET DONE: TWO TANK CHEAT CODES 
 		}
@@ -243,6 +249,7 @@ void Game::update()
 	if (Menu::needToChangeTankSize) {
 		ammoManager->setSizeTank(Menu::newTankWidth, Menu::newTankHeight);
 		Menu::needToChangeTankSize = false;
+		std::cout << "Change tank size successful in ammoManager"<<std::endl;
 	}
 	clock_t currentTimeForShootingPurpose = clock();
 	clock_t currentTimeShootingPlayer2 = clock();
@@ -540,17 +547,17 @@ void Game::render()
 	{
 		p->draw();
 	}
-	std::cout << "render basic complete" << std::endl;
+	//std::cout << "render basic complete" << std::endl;
 	//Render projectiles player1
 	if (Menu::checkShowBullet)
 	{
 		for (int i = 0; i < ammoManager->projectilesPlayer1.size(); i++) {
 			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
-			std::cout << "Get load texture" << std::endl;
+			//std::cout << "Get load texture" << std::endl;
 			SDL_Rect tempToRenderProjectile;
 			tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
 			tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
-			std::cout << "Get SDL_REct x and y" << std::endl;
+			//std::cout << "Get SDL_REct x and y" << std::endl;
 			tempToRenderProjectile.w = 34; //Projectiles size
 			tempToRenderProjectile.h = 10; //Projectiles size
 			SDL_Rect sourceRect;
@@ -562,14 +569,14 @@ void Game::render()
 			SDL_DestroyTexture(loadProjectiles);
 		}
 		//Render projectiles player2
-		std::cout << "Size pP2: " << ammoManager->projectilesPlayer2.size() << std::endl;
+		//std::cout << "Size pP2: " << ammoManager->projectilesPlayer2.size() << std::endl;
 		for (int i = 0; i < ammoManager->projectilesPlayer2.size(); i++) {
 			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
-			std::cout << "Get load texture" << std::endl;
+			//std::cout << "Get load texture" << std::endl;
 			SDL_Rect tempToRenderProjectile;
 			tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
 			tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
-			std::cout << "Get SDL_REct x and y" << std::endl;
+			//std::cout << "Get SDL_REct x and y" << std::endl;
 			tempToRenderProjectile.w = 34; //Projectiles size
 			tempToRenderProjectile.h = 10; //Projectiles size
 			SDL_Rect sourceRect;
@@ -581,7 +588,7 @@ void Game::render()
 			SDL_DestroyTexture(loadProjectiles);
 		}
 	}
-	std::cout << "render projectiles complete" << std::endl;
+	//std::cout << "render projectiles complete" << std::endl;
 	//SCOREBOARD
 	if (ammoManager->needToRerenderScoreBoard()) {
 		SDL_DestroyTexture(text_texture);
@@ -617,7 +624,7 @@ void Game::render()
 		textDest = { 1248/2,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 	}
-	std::cout << "render scoreboard complete" << std::endl;
+	//std::cout << "render scoreboard complete" << std::endl;
 	if(ammoManager->needToRerenderTextStatusPlayer1()){
 		if (!keepTextPlayer1) {
 			textPlayer1 = "Tank 1 is functioning. Please wait...";
@@ -650,7 +657,7 @@ void Game::render()
 		keepTextPlayer1 = false;
 	}
 	
-	std::cout << "render functioning player1 complete" << std::endl;
+	//std::cout << "render functioning player1 complete" << std::endl;
 	if (ammoManager->needToRerenderTextStatusPlayer2()) {
 		if (!keepTextPlayer2) {
 			textPlayer2 = "Tank 2 is functioning. Please wait...";

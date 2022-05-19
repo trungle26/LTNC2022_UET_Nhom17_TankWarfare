@@ -22,14 +22,14 @@ void AmmoManager::addToSDLRect1(float x, float y) {
 	tankRect1.y = (int)y;
 	tankRect1.w = TANK_SIZE_WIDTH;
 	tankRect1.h = TANK_SIZE_HEIGHT;
-	std::cout << "Successful addtoSDLRect1" << std::endl;
+	//std::cout << "Successful addtoSDLRect1" << std::endl;
 }
 void AmmoManager::addToSDLRect2(float x, float y) {
 	tankRect2.x = (int)x;
 	tankRect2.y = (int)y;
 	tankRect2.w = TANK_SIZE_WIDTH;
 	tankRect2.h = TANK_SIZE_HEIGHT;
-	std::cout << "Successful addtoSDLRect2" << std::endl;
+	//std::cout << "Successful addtoSDLRect2" << std::endl;
 }
 void AmmoManager::addTankShootComponent(ShootComponent* tank1_, ShootComponent* tank2_) {
 
@@ -107,7 +107,7 @@ void AmmoManager::checkBulletForPlayer1() {
 			continue;
 		}
 	}
-	std::cout << "finished checking checkBulletForPlayer1" << std::endl;
+	//std::cout << "finished checking checkBulletForPlayer1" << std::endl;
 	tank1->projectiles = projectilesPlayer1; //return back projectiles vector
 	tank1->angles = projectilesAnglesPlayer1;
 	//std::cout << "1 P: " << projectilesPlayer1.size() << " A: " << projectilesAnglesPlayer1.size() << std::endl;
@@ -148,7 +148,7 @@ void AmmoManager::checkBulletForPlayer2() {
 			continue;
 		}
 	}
-	std::cout << "finished checking checkBulletForPlayer2" << std::endl;
+	//std::cout << "finished checking checkBulletForPlayer2" << std::endl;
 	tank2->projectiles = projectilesPlayer2; //return back projectiles vector
 	tank2->angles = projectilesAnglesPlayer2;
 	//std::cout << "2 P: " << projectilesPlayer2.size() << " A: " << projectilesAnglesPlayer2.size() << std::endl;
