@@ -36,27 +36,10 @@ Menu::~Menu() {}
 void Menu::close()
 {
 	MenuTexture::close();
-	SDL_DestroyWindow(window);
-	window = NULL;
-	SDL_FreeSurface(PNGSurface);
-	SDL_FreeSurface(screenSurface);
-	//PNGSurface = NULL;
-	screenSurface = NULL;
-	SDL_DestroyRenderer(renderer);
-	renderer = NULL;
-	Mix_FreeMusic(sound);
-	sound = NULL;
-
-	for (int i = 0; i < 10; i++)
-	{
-		SDL_FreeSurface(MenuSurface[i]);
-		MenuSurface[i] = NULL;
-		SDL_FreeSurface(OptionSurface[i]);
-		OptionSurface[i] = NULL;
-		SDL_FreeSurface(SoundSurface[i]);
-		SoundSurface[i] = NULL;
-	}
+	
 	std::cout << "Menu closed! " << std::endl;
+
+	
 }
 bool Menu::init(const char* title, int x, int y, int width, int height)
 {

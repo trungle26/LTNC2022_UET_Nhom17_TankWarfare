@@ -18,6 +18,7 @@ public:
 	SDL_Rect tankRect1;
 	
 	SDL_Rect tankRect2;
+	Mix_Chunk* explode = NULL;
 	std::vector<Projectile> projectilesPlayer1;
 	std::vector<Projectile> projectilesPlayer2;
 	
@@ -43,6 +44,8 @@ public:
 	bool needToRerenderTextStatusPlayer2();
 	//void getProjectilesVector2(std::vector<Projectile> projectiles);
 	void tankShoot(Vector2D position, double angle, int player);
-	~AmmoManager();
+	~AmmoManager()
+	{
+	};
 };
 

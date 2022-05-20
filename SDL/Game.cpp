@@ -11,6 +11,7 @@ Manager manager;
 auto& player(manager.addEntity());
 auto& player2(manager.addEntity());
 Map* map;
+Mix_Chunk* explode = NULL;
 
 
 AmmoManager* ammoManager = new AmmoManager(); //testing
@@ -53,12 +54,12 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 			std::cout << "renderer initialized!\n";
 		}
 		isRunning = true;
-
+		explode = Mix_LoadWAV("assets/explosion.wav");
 		// ecs
 		map = new Map("assets/terrain.png", 1, 32);// map scale:1, tile size: 32
 		map->LoadMap("assets/map.map", 39, 23);
 
-		player.addComponent<TransformComponent>(90, 90);
+		player.addComponent<TransformComponent>(99,101);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
 
@@ -275,6 +276,7 @@ void Game::update()
 					std::cout << "Detect collision with collider. Position: " << tempToCheck.x << " " << tempToCheck.y << std::endl;
 					ammoManager->projectilesPlayer1.erase(ammoManager->projectilesPlayer1.begin() + iter);
 					ammoManager->projectilesAnglesPlayer1.erase(ammoManager->projectilesAnglesPlayer1.begin() + iter);
+					Mix_PlayChannel(-1, explode, 0);
 				}
 			}
 		}
@@ -292,6 +294,7 @@ void Game::update()
 					std::cout << "Detect collision with collider. Position: " << tempToCheck.x << " " << tempToCheck.y << std::endl;
 					ammoManager->projectilesPlayer2.erase(ammoManager->projectilesPlayer2.begin() + iter);
 					ammoManager->projectilesAnglesPlayer2.erase(ammoManager->projectilesAnglesPlayer2.begin() + iter);
+					Mix_PlayChannel(-1, explode, 0);
 				}
 			}
 		}
@@ -571,7 +574,7 @@ void Game::render()
 			sourceRect.y = 0;
 			sourceRect.w = 89;
 			sourceRect.h = 26;
-			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer1[i]);
+			TextureManager::DrawTank(loadProjectiles, sourceRect, tempToRenderProjectile, ammoManager->projectilesAnglesPlayer2[i]);
 			SDL_DestroyTexture(loadProjectiles);
 		}
 	}
@@ -680,8 +683,11 @@ void Game::render()
 
 void Game::close()
 {
+	Mix_FreeChunk(explode);
+	Mix_CloseAudio();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+
 	SDL_Quit();
 	std::cout << "game closed!\n";
 }

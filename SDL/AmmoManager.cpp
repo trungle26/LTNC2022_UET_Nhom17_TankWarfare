@@ -75,7 +75,8 @@ void AmmoManager::checkBulletForPlayer1() {
 		//BECAUSE I DON'T KNOW HOW TO MAKE BULLET :))))
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect2)) { //if hit
-			
+			explode = Mix_LoadWAV("assets/explosion.wav");
+			Mix_PlayChannel(-1, explode, 0);
 			tank2->currentHealth -= tank1->damagePerShot;
 			projectilesPlayer1.erase(projectilesPlayer1.begin() + i);
 			projectilesAnglesPlayer1.erase(projectilesAnglesPlayer1.begin() + i);
@@ -117,6 +118,8 @@ void AmmoManager::checkBulletForPlayer2() {
 		//IDEAL SIZE OF BULLET: 4X4 PIXEL
 		if (Collision::AABB(tempToCheck, tankRect1)) { //if hit
 			//needToRerenderScoreBoard_ = true;
+			explode = Mix_LoadWAV("assets/explosion.wav");
+			Mix_PlayChannel(-1, explode, 0);
 			projectilesPlayer2.erase(projectilesPlayer2.begin() + i);
 			projectilesAnglesPlayer2.erase(projectilesAnglesPlayer2.begin() + i);
 			tank1->currentHealth -= tank2->damagePerShot;

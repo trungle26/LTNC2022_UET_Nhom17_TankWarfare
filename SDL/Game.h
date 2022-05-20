@@ -4,6 +4,7 @@
 #include <vector>
 #include<SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 class CollisionComponent;
 
 class Game
@@ -19,6 +20,7 @@ public:
 	void close();
 	static SDL_Renderer* renderer;
 	
+
 	bool running() { return isRunning; };
 	static SDL_Event event;
 
