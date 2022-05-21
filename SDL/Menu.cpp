@@ -4,6 +4,7 @@ double Menu::GetScale = 1;
 bool Menu::checkShowBullet = true;
 bool Menu::checkAccessShowBulletFromGame = false;
 bool Menu::checkAccessSoundFromGame = false;
+bool Menu::inGame = false;
 
 enum KeyPressMenuSurfaces
 {
@@ -340,7 +341,12 @@ void Menu::handleOptionsEvent()
 					Menu::handleMenuEvent();
 					break;
 				case SDLK_6:
-					Menu::chooseMap();
+					if (Menu::inGame == false)
+						Menu::chooseMap();
+					else
+					{
+						SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,"Game is still running!","Cannot change map while game is running",window);
+					}
 					break;
 				}
 			}
@@ -366,24 +372,24 @@ void Menu::chooseMap()
 				switch (event.key.keysym.sym)
 				{
 				case SDLK_1:
-					Game::mapPath = "map.map";
+					Game::mapPath = "assets/map.map";
 					PNGSurface = OptionSurface[KEY_Map1];
 					Menu::renderMenu();
-					SDL_Delay(3000);
+					SDL_Delay(1000);
 					chooseMap();
 					return;
 				case SDLK_2:
-					Game::mapPath = "map2.map";
+					Game::mapPath = "assets/map2.map";
 					PNGSurface = OptionSurface[KEY_Map2];
 					Menu::renderMenu();
-					SDL_Delay(3000);
+					SDL_Delay(1000);
 					chooseMap();
 					return;
 				case SDLK_3:
-					Game::mapPath = "map3.map";
+					Game::mapPath = "assets/map3.map";
 					PNGSurface = OptionSurface[KEY_Map3];
 					Menu::renderMenu();
-					SDL_Delay(3000);
+					SDL_Delay(1000);
 					chooseMap();
 					return;
 				case SDLK_4:

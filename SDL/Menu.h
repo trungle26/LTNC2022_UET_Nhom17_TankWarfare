@@ -48,6 +48,7 @@ public:
 	static int newTankWidth;
 	static int newTankHeight;
 	static bool healingOrNot;
+	static bool inGame;
 
 protected:
 	static SDL_Event event;

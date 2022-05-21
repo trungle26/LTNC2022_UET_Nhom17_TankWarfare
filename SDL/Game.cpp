@@ -11,7 +11,7 @@ Manager manager;
 auto& player(manager.addEntity());
 auto& player2(manager.addEntity());
 Map* map;
-std::string mapPath = "map.map";
+std::string mapPath ;
 Mix_Chunk* explode = NULL;
 
 
@@ -35,6 +35,7 @@ Game::~Game()
 
 void Game::init(const char* title, int x, int y, int width, int height, bool fullscreen)
 {
+	Menu::inGame = true;
 	bool flags = false;
 	if (fullscreen) {
 		flags = SDL_WINDOW_FULLSCREEN;
@@ -58,7 +59,8 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		explode = Mix_LoadWAV("assets/explosion.wav");
 		// ecs
 		map = new Map("assets/terrain.png", 1, 32);// map scale:1, tile size: 32
-		map->LoadMap("assets/map.map", 39, 23);
+		if(mapPath == "")mapPath = "assets/map.map";
+		map->LoadMap(mapPath, 39, 23);
 
 		player.addComponent<TransformComponent>(99, 101);
 		player.addComponent<SpriteComponent>("assets/tank.png");
@@ -172,7 +174,13 @@ void Game::handleEvents()
 		//tank1 shoot function
 			if (Game::event.key.keysym.sym == SDLK_SPACE) states4[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_r) states4[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_q)
+			{
+				if (Menu::healingOrNot == true)
+				{
+					states4[2] = true;
+				}
+			}
 			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
 		}
 
@@ -180,7 +188,13 @@ void Game::handleEvents()
 			//tank2 shoot function 
 			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
-			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
+			if (Game::event.key.keysym.sym == SDLK_KP_1)
+			{
+				if (Menu::healingOrNot == true)
+				{
+					states3[2] = true;
+				}
+			}
 			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
 			
 			//NOT YET DONE: TWO TANK CHEAT CODES 
@@ -436,6 +450,7 @@ void Game::update()
 			states4[2] = true;
 		}
 		else {
+			
 			player.getComponent<ShootComponent>().healing();
 			ammoManager->needToRerenderScoreBoard_ = true;
 			lockKeyDownPlayer1 = false;
@@ -818,7 +833,7 @@ void Game::close()
 	Mix_CloseAudio();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-
+	Menu::inGame = false;
 	SDL_Quit();
 	std::cout << "game closed!\n";
 }
