@@ -30,6 +30,7 @@ public:
 	static void handleSoundEvent();
 	static void handleMenuEvent();
 	static void handleTankSizeEvent();
+	static void handleBloodEvent();
 	static void handleShowBullet();
 	static void chooseMap();
 	static void renderMenu();

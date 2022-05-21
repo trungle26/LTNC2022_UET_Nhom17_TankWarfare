@@ -14,10 +14,14 @@ enum KeyPressMenuSurfaces
 	KEY_Sound_Without_Option,
 	KEY_Tank_Size,
 	KEY_Show_Bullet_Trajectory,
-	KEY_Blood_Regenaration,
 	KEY_Menu,
 	KEY_Yes_No,
-	KEY_Check_Show_Bullet
+	KEY_Check_Show_Bullet,
+	KEY_Map1,
+	KEY_Map2,
+	KEY_Map3,
+	KEY_Blood_YN,
+	KEY_Choose_Map
 };
 
 SDL_Event Menu::event;
@@ -25,9 +29,9 @@ SDL_Surface* Menu::screenSurface = NULL;
 SDL_Surface* Menu::PNGSurface = NULL;
 SDL_Window* Menu::window = NULL;
 SDL_Renderer* Menu::renderer = NULL;
-SDL_Surface* MenuSurface[11];
-SDL_Surface* OptionSurface[11];
-SDL_Surface* SoundSurface[11];
+SDL_Surface* MenuSurface[20];
+SDL_Surface* OptionSurface[20];
+SDL_Surface* SoundSurface[20];
 Mix_Music* Menu::sound = NULL; // tắt'
 bool Menu::needToChangeTankSize = true;
 int Menu::newTankWidth = 32;
@@ -161,12 +165,6 @@ bool Menu::handleOptionsMedia()
 		std::cout << "Failed to load TankSize image" << std::endl;
 		success = false;
 	}
-	OptionSurface[KEY_Blood_Regenaration] = loadSurface("assets/BloodRegenaration.png");
-	if (!OptionSurface[KEY_Blood_Regenaration])
-	{
-		std::cout << "Failed to load BloodRegenaration image" << std::endl;
-		success = false;
-	}
 	OptionSurface[KEY_Show_Bullet_Trajectory] = loadSurface("assets/checkShowBullet.png");
 	if (!OptionSurface[KEY_Show_Bullet_Trajectory])
 	{
@@ -183,6 +181,36 @@ bool Menu::handleOptionsMedia()
 	if (!OptionSurface[KEY_Yes_No])
 	{
 		std::cout << "Failed to load YESorNO.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Map1] = loadSurface("assets/Map1.png");
+	if (!OptionSurface[KEY_Map1])
+	{
+		std::cout << "Failed to load Map1.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Map2] = loadSurface("assets/Map2.png");
+	if (!OptionSurface[KEY_Map2])
+	{
+		std::cout << "Failed to load Map2.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Map3] = loadSurface("assets/Map3.png");
+	if (!OptionSurface[KEY_Map3])
+	{
+		std::cout << "Failed to load Map3.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Blood_YN] = loadSurface("assets/Blood_YN.png");
+	if (!OptionSurface[KEY_Blood_YN])
+	{
+		std::cout << "Failed to loadBlood_YN.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Choose_Map] = loadSurface("assets/chooseMap.png");
+	if (!OptionSurface[KEY_Choose_Map])
+	{
+		std::cout << "Failed to load chooseMap.png" << std::endl;
 		success = false;
 	}
 	return success;
@@ -304,8 +332,8 @@ void Menu::handleOptionsEvent()
 					PNGSurface = MenuSurface[KEY_Option];
 					break;
 				case SDLK_4:
-					PNGSurface = OptionSurface[KEY_Blood_Regenaration];
-					//handleBloodRegenaration();
+				
+					handleBloodEvent();
 					break;
 
 				case SDLK_5:
@@ -324,7 +352,7 @@ void Menu::handleOptionsEvent()
 void Menu::chooseMap()
 {
 	std::cout << "went into showbullet func" << std::endl;
-	//PNGSurface = OptionSurface[KEY_Show_Bullet_Trajectory];
+	PNGSurface = OptionSurface[KEY_Choose_Map];
 	bool quit = false;
 	while (!quit) {
 		while (SDL_PollEvent(&Menu::event) != 0)
@@ -339,12 +367,28 @@ void Menu::chooseMap()
 				{
 				case SDLK_1:
 					Game::mapPath = "map.map";
+					PNGSurface = OptionSurface[KEY_Map1];
+					Menu::renderMenu();
+					SDL_Delay(3000);
+					chooseMap();
 					return;
 				case SDLK_2:
 					Game::mapPath = "map2.map";
+					PNGSurface = OptionSurface[KEY_Map2];
+					Menu::renderMenu();
+					SDL_Delay(3000);
+					chooseMap();
 					return;
 				case SDLK_3:
 					Game::mapPath = "map3.map";
+					PNGSurface = OptionSurface[KEY_Map3];
+					Menu::renderMenu();
+					SDL_Delay(3000);
+					chooseMap();
+					return;
+				case SDLK_4:
+
+					Menu::handleOptionsEvent();
 					return;
 				}
 			}
@@ -481,6 +525,38 @@ void Menu::handleTankSizeEvent()
 			}
 		}
 		GetScale = scale;
+		Menu::renderMenu();
+	}
+}
+
+void Menu::handleBloodEvent()
+{
+	PNGSurface = OptionSurface[KEY_Blood_YN];
+	bool quit = false;
+	while (!quit)
+	{
+		while (SDL_PollEvent(&Menu::event) != 0)
+		{
+			if (Menu::event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+			else if (Menu::event.type == SDL_KEYDOWN)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_1:
+					healingOrNot = true;
+					handleOptionsEvent();
+					return;
+				case SDLK_2:
+					healingOrNot = false;
+					handleOptionsEvent();
+					return;
+				}
+				std::cout << "still running" << std::endl;
+			}
+		}
 		Menu::renderMenu();
 	}
 }

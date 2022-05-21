@@ -27,7 +27,7 @@ public:
 	static SDL_Event event;
 
 	bool isRunning;
-
+	
 	enum groupLabels : std::size_t
 	{
 		groupMap,
