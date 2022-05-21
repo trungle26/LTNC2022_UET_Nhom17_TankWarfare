@@ -57,8 +57,8 @@ void ShootComponent::shoot() {
 		this->currentBullet--;
 		projectileInit(positionProjectile, 25);
 	}
-	
 }
+
 void ShootComponent::delay(int number_of_seconds)
 {
 	// Converting time into milli_seconds
@@ -165,4 +165,16 @@ bool ShootComponent::needUpdateScoreBoard() {
 	}
 }
 
+void ShootComponent::resetTankStatus(int scale) {
+	this->maxBullet*= scale;
+	this->maxHealth*=scale;
+	this->currentBullet = maxBullet;
+	this->godMode = false;
+	this->currentHealth = maxHealth;
+	this->damagePerShot*=scale;
+	this->amountPerHealing*=scale;
+	this->projectiles.clear();
+	this->angles.clear();
+	//this->delayBetweenProjectiles = delayBetweenProjectiles;
+}
 //Add Ammo Information -> projectileInit (ALREADY IN TANKSTATUS COMPONENT) -> shoot function -> AmmoManager file.

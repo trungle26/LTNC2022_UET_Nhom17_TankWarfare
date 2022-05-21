@@ -15,7 +15,7 @@ public:
 	double scale = 1;
 	double angle = 90;// don vi la do, dung de quay xe tang
 
-	double speed ;
+	double speed = 4;
 
 	bool blocked = false;
 
@@ -57,14 +57,14 @@ public:
 
 	void rePhai()
 	{
-		angle += 2;
+		angle += 3;
 		std::cout << angle<<std::endl;
 		//if (angle < 0) angle = 360;
 	}
 
 	void reTrai()
 	{
-		angle -= 2;
+		angle -= 3;
 		std::cout << angle << std::endl;
 		//if (angle > 359) angle = 0;
 	}

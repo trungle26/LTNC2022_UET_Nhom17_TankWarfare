@@ -70,7 +70,7 @@ void MenuTexture::init(const char* title)
 bool MenuTexture::loadFromFile(std::string path)
 {
 	//Get rid of preexisting texture
-	free();
+	/*free();*/
 
 	//The final texture
 	SDL_Texture* newTexture = NULL;
@@ -166,7 +166,6 @@ void MenuTexture::close()
 	TTF_CloseFont(MenuFont);
 	MenuFont = NULL;
 	window = NULL;
-	renderer = NULL;
 }
 
 void MenuTexture::SetColor(int type) {

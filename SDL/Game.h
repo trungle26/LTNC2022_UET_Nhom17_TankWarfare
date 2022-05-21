@@ -5,6 +5,8 @@
 #include<SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include <string>
+
 class CollisionComponent;
 
 class Game
@@ -19,22 +21,22 @@ public:
 	void render();
 	void close();
 	static SDL_Renderer* renderer;
-	
+	static std::string mapPath;
 
 	bool running() { return isRunning; };
 	static SDL_Event event;
 
 	bool isRunning;
-	
+
 	enum groupLabels : std::size_t
 	{
 		groupMap,
 		groupPlayers,
 		groupColliders
 	};
-	
+
 private:
-	
+
 	SDL_Window* window;
 
 };

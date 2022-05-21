@@ -11,6 +11,7 @@ Manager manager;
 auto& player(manager.addEntity());
 auto& player2(manager.addEntity());
 Map* map;
+std::string mapPath = "map.map";
 Mix_Chunk* explode = NULL;
 
 
@@ -59,7 +60,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		map = new Map("assets/terrain.png", 1, 32);// map scale:1, tile size: 32
 		map->LoadMap("assets/map.map", 39, 23);
 
-		player.addComponent<TransformComponent>(99,101);
+		player.addComponent<TransformComponent>(99, 101);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
 
@@ -76,7 +77,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		ammoManager->addTankShootComponent(test1, test2);
 		player.addGroup(groupPlayers);
 		player2.addGroup(groupPlayers);
-		
+
 	}
 	else {
 		isRunning = false;
@@ -85,7 +86,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
 	}
 	//things to reload and healing AND ALLAH MODE
-	player1Functions.push_back(clock()); 
+	player1Functions.push_back(clock());
 	player1Functions.push_back(clock());
 	player2Functions.push_back(clock());
 	player2Functions.push_back(clock());
@@ -110,12 +111,12 @@ bool states1[] = { false, false , false, false };//tank 1
 bool states2[] = { false, false, false ,false };//tank 2
 bool states3[] = { false,false,false,false };//shoot, reload, healing, allahMode for player of tank 2 
 bool states4[] = { false, false, false, false };//tank 1
-
+bool replayStates[] = { false, false }; //normal replay and reborn replay 
 
 clock_t prevTimeForShootingPurpose = clock();
 clock_t prevTimeShootingPlayer2 = clock();
 
-
+clock_t replayingStart ;
 //for render scoreboard
 bool needRerenderScoreBoard = false;
 
@@ -129,13 +130,15 @@ SDL_Surface* surfaceTextPlayer1;
 SDL_Surface* surfaceTextPlayer2;
 SDL_Texture* textureTextPlayer1;
 SDL_Texture* textureTextPlayer2;
+SDL_Texture* backgroundScoreboard;
+SDL_Texture* tankDeadNoti;
 std::string textPlayer1;
 std::string textPlayer2;
 TTF_Font* font;
 bool keepTextPlayer1 = false;
 bool keepTextPlayer2 = false;
- //white color
-
+//white color
+bool reseting = false;
 //for lock keydown events
 bool lockKeyDownPlayer1 = false;
 bool lockKeyDownPlayer2 = false;
@@ -157,7 +160,7 @@ void Game::handleEvents()
 			if (Game::event.key.keysym.sym == SDLK_UP) states2[up] = true;
 			if (Game::event.key.keysym.sym == SDLK_DOWN) states2[down] = true;
 		}
-		
+
 
 		//player1
 		if (!lockKeyDownPlayer1) {
@@ -172,14 +175,22 @@ void Game::handleEvents()
 			if (Game::event.key.keysym.sym == SDLK_q) states4[2] = true;
 			if (Game::event.key.keysym.sym == SDLK_TAB) states4[3] = true;
 		}
-		
+
 		if (!lockKeyDownPlayer2) {
 			//tank2 shoot function 
 			if (Game::event.key.keysym.sym == SDLK_KP_0) states3[0] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_PERIOD) states3[1] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_1) states3[2] = true;
 			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = true;
+			
 			//NOT YET DONE: TWO TANK CHEAT CODES 
+		}
+		if (!lockKeyDownPlayer1 || !lockKeyDownPlayer2) {
+			if (ammoManager->tankIsDead) {
+				if (Game::event.key.keysym.sym == SDLK_n)replayStates[0] = true;
+				if (Game::event.key.keysym.sym == SDLK_m)replayStates[1] = true;
+			}
+			
 		}
 
 
@@ -208,7 +219,7 @@ void Game::handleEvents()
 		}
 		break;
 	case SDL_KEYUP:
-		
+
 		if (!lockKeyDownPlayer1) {
 			if (Game::event.key.keysym.sym == SDLK_a) states1[left] = false;
 			if (Game::event.key.keysym.sym == SDLK_d) states1[right] = false;
@@ -232,6 +243,10 @@ void Game::handleEvents()
 			if (Game::event.key.keysym.sym == SDLK_KP_2) states3[3] = false;
 			//NOT YET DONE: TWO TANK CHEAT CODES (FOR TESTING PURPOSES)
 		}
+		if (!lockKeyDownPlayer1 || !lockKeyDownPlayer2) {
+			if (Game::event.key.keysym.sym == SDLK_n)replayStates[0] = false;
+			if (Game::event.key.keysym.sym == SDLK_m)replayStates[1] = false;
+		}
 
 		break;
 	}
@@ -241,6 +256,12 @@ void Game::handleEvents()
 
 void Game::update()
 {
+
+	if (Menu::needToChangeTankSize) {
+		ammoManager->setSizeTank(Menu::newTankWidth, Menu::newTankHeight);
+		Menu::needToChangeTankSize = false;
+		std::cout << "Change tank size successful in ammoManager" << std::endl;
+	}
 	clock_t currentTimeForShootingPurpose = clock();
 	clock_t currentTimeShootingPlayer2 = clock();
 	SDL_Rect playerCol = player.getComponent<CollisionComponent>().collider;
@@ -256,7 +277,7 @@ void Game::update()
 		if (Collision::AABB(playerCol, cCol))
 		{
 			player.getComponent<TransformComponent>().diThang(player.getComponent<TransformComponent>().speed * -2);
-			
+
 		}
 
 		if (Collision::AABB(player2Col, cCol))
@@ -280,7 +301,7 @@ void Game::update()
 				}
 			}
 		}
-		
+
 		// CHECK COLLISION OF PROJECTILES WITH COLLIDER tank 2
 		//remember: Allah mode allow projectile to bypass colliders
 		if (!player2.getComponent<ShootComponent>().allahMode) {
@@ -298,8 +319,8 @@ void Game::update()
 				}
 			}
 		}
-		
-		
+
+
 
 	}
 
@@ -313,31 +334,31 @@ void Game::update()
 	}
 	if (states1[down])
 	{
-		
+
 		player.getComponent<TransformComponent>().speed = -2;
 		player.getComponent<TransformComponent>().diThang();
-		
+
 	}
 	if (states2[right]) player2.getComponent<TransformComponent>().rePhai();
 	if (states2[left]) player2.getComponent<TransformComponent>().reTrai();
 	if (states2[up])
 	{
-		
+
 		player2.getComponent<TransformComponent>().speed = 2;
 		player2.getComponent<TransformComponent>().diThang();
-		
+
 	}
 	if (states2[down])
 	{
-		
+
 		player2.getComponent<TransformComponent>().speed = -2;
 		player2.getComponent<TransformComponent>().diThang();
-		
+
 	}
 	//bo sung: Neu tank di tran man hinh
 	//tank1 tran man hinh
 	if (player.getComponent<TransformComponent>().position.x < 0 ||
-		player.getComponent<TransformComponent>().position.x > 1248 - player.getComponent<TransformComponent>().width*player.getComponent<TransformComponent>().scale ||
+		player.getComponent<TransformComponent>().position.x > 1248 - player.getComponent<TransformComponent>().width * player.getComponent<TransformComponent>().scale ||
 		player.getComponent<TransformComponent>().position.y > 736 - player.getComponent<TransformComponent>().height * player.getComponent<TransformComponent>().scale ||
 		player.getComponent<TransformComponent>().position.y < 0
 		) {
@@ -363,7 +384,7 @@ void Game::update()
 	//tank 1 shooting
 	if (states4[0]) {
 		if (currentTimeForShootingPurpose - prevTimeForShootingPurpose > player.getComponent<ShootComponent>().delayBetweenProjectiles
-			&&player.getComponent<ShootComponent>().currentBullet>0){//HAVE TO MODIFIED
+			&& player.getComponent<ShootComponent>().currentBullet > 0) {//HAVE TO MODIFIED
 			ammoManager->tankShoot(player.getComponent<TransformComponent>().position, player.getComponent<TransformComponent>().angle, 1);
 			prevTimeForShootingPurpose = currentTimeForShootingPurpose;
 		}
@@ -382,7 +403,7 @@ void Game::update()
 		states1[left] = false;
 		states1[right] = false;
 		//player.getComponent<TransformComponent>().dungDotNgot();
-		if (compareClock - player1Functions[0] <= player.getComponent<ShootComponent>().delayTimeReload*1000) {
+		if (compareClock - player1Functions[0] <= player.getComponent<ShootComponent>().delayTimeReload * 1000) {
 			//std::cout << "Please waiting! Time 1" <<clock()<<" Time 2 "<<player1Functions[0]<< std::endl;
 			states4[1] = true;
 		}
@@ -393,8 +414,8 @@ void Game::update()
 			states4[1] = false;
 			ammoManager->renderTextStatusPlayer1 = false;
 		}
-		
-	//	std::cout << "Current bullet after reloading: " << player.getComponent<ShootComponent>().currentBullet << std::endl;
+
+		//	std::cout << "Current bullet after reloading: " << player.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
 	// When healing
 	if (states4[2]) {
@@ -421,7 +442,7 @@ void Game::update()
 			states4[2] = false;
 			ammoManager->renderTextStatusPlayer1 = false;
 		}
-	//	std::cout << "Current health after healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
+		//	std::cout << "Current health after healing: " << player.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 
 	//When tank enable allahMode
@@ -463,7 +484,7 @@ void Game::update()
 			states3[1] = false;
 			ammoManager->renderTextStatusPlayer2 = false;
 		}
-	//	std::cout << "Current bullet after reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
+		//	std::cout << "Current bullet after reloading: " << player2.getComponent<ShootComponent>().currentBullet << std::endl;
 	}
 	if (states3[2]) {
 		if (!lockKeyDownPlayer2) {
@@ -489,7 +510,7 @@ void Game::update()
 			states3[2] = false;
 			ammoManager->renderTextStatusPlayer2 = false;
 		}
-	//	std::cout << "Current health after healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
+		//	std::cout << "Current health after healing: " << player2.getComponent<ShootComponent>().currentHealth << std::endl;
 	}
 	if (states3[3]) {
 		player2.getComponent<ShootComponent>().allahStyle();
@@ -497,8 +518,53 @@ void Game::update()
 		ammoManager->needToRerenderScoreBoard_ = true;
 	}
 	//----------end added functions
-
-
+	//when dead and want to replay
+	if (replayStates[0]) {
+		player.getComponent<ShootComponent>().resetTankStatus(1);
+		player2.getComponent<ShootComponent>().resetTankStatus(1);
+		ammoManager->tankDead = 0;
+		ammoManager->tankIsDead = false;
+		reseting = true;
+		replayStates[0] = false;
+		replayingStart = clock();
+		std::cout << "replaying..." << std::endl;
+	}
+	else if (replayStates[1]) {
+		if (ammoManager->tankDead == 1) {
+			player.getComponent<ShootComponent>().resetTankStatus(2);
+			player2.getComponent<ShootComponent>().resetTankStatus(1);
+		}
+		else {
+			player.getComponent<ShootComponent>().resetTankStatus(1);
+			player2.getComponent<ShootComponent>().resetTankStatus(2);
+		}
+		ammoManager->tankDead = 0;
+		ammoManager->tankIsDead = false;
+		reseting = true;
+		replayStates[1] = false;
+		replayingStart = clock();
+		std::cout << "replaying..." << std::endl;
+	}
+	if (clock() - replayingStart > 3000 && reseting) {
+		reseting = false;
+		ammoManager->needToRerenderScoreBoard_ = true;
+		player.getComponent<TransformComponent>().position.x = 90;
+		player.getComponent<TransformComponent>().position.y = 90;
+		states1[up] = false;
+		states1[down] = false;
+		states1[left] = false;
+		states1[right] = false;
+		player2.getComponent<TransformComponent>().position.x = 1000;
+		player2.getComponent<TransformComponent>().position.y = 90;
+		states2[up] = false;
+		states2[down] = false;
+		states2[left] = false;
+		states2[right] = false;
+		player.getComponent<ShootComponent>().allahMode = false;
+		player.getComponent<ShootComponent>().allahMode = false;
+		player.getComponent<ShootComponent>().resetTankStatus(1);
+		player2.getComponent<ShootComponent>().resetTankStatus(1);
+	}
 	//THINGS HAVE TO CHECK EVERY FRAME
 	//ADD TANK RECT
 	ammoManager->addToSDLRect1(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y);
@@ -512,7 +578,7 @@ void Game::update()
 		if (player.getComponent<ShootComponent>().needUpdateScoreBoard()) {
 			ammoManager->needToRerenderScoreBoard_ = true;
 		}
-		
+
 	}
 	//CHECK MINUSHEALTH OF PLAYER 2 IN ALLAH MODE
 	if (player2.getComponent<ShootComponent>().allahMode) {
@@ -520,6 +586,31 @@ void Game::update()
 		if (player2.getComponent<ShootComponent>().needUpdateScoreBoard()) {
 			ammoManager->needToRerenderScoreBoard_ = true;
 		}
+	}
+	//New: What happen if tank out of screen already?
+	if (player.getComponent<TransformComponent>().position.x < 0 ||
+		player.getComponent<TransformComponent>().position.x > 1248 - player.getComponent<TransformComponent>().width * player.getComponent<TransformComponent>().scale ||
+		player.getComponent<TransformComponent>().position.y > 736 - player.getComponent<TransformComponent>().height * player.getComponent<TransformComponent>().scale ||
+		player.getComponent<TransformComponent>().position.y < 0
+		) {
+		player.getComponent<TransformComponent>().position.x = 90;
+		player.getComponent<TransformComponent>().position.y = 90;
+		states1[up] = false;
+		states1[down] = false;
+		states1[left] = false;
+		states1[right] = false;
+	}
+	if (player2.getComponent<TransformComponent>().position.x < 0 ||
+		player2.getComponent<TransformComponent>().position.x > 1248 - player2.getComponent<TransformComponent>().width * player2.getComponent<TransformComponent>().scale ||
+		player2.getComponent<TransformComponent>().position.y > 736 - player2.getComponent<TransformComponent>().height * player2.getComponent<TransformComponent>().scale ||
+		player2.getComponent<TransformComponent>().position.y < 0
+		) {
+		player2.getComponent<TransformComponent>().position.x = 1000;
+		player2.getComponent<TransformComponent>().position.y = 90;
+		states2[up] = false;
+		states2[down] = false;
+		states2[left] = false;
+		states2[right] = false;
 	}
 }
 void Game::render()
@@ -534,7 +625,7 @@ void Game::render()
 	for (auto& c : colliders)
 	{
 		c->draw();
-  }
+	}
 	for (auto& p : players)
 	{
 		p->draw();
@@ -546,8 +637,14 @@ void Game::render()
 			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
 			std::cout << "Get load texture" << std::endl;
 			SDL_Rect tempToRenderProjectile;
+			/*double angle1 = player.getComponent<TransformComponent>().angle;
+			double TANK_SIZE_WIDTH = player.getComponent<TransformComponent>().width;
+			double TANK_SIZE_HEIGHT = player.getComponent<TransformComponent>().height;
+			double offsetx = cos(0.01745329252 * (angle1)) * (TANK_SIZE_WIDTH / 2);
+			double offsety = sin(0.01745329252 * (angle1)) * (TANK_SIZE_HEIGHT / 2);*/
+
 			tempToRenderProjectile.x = ammoManager->projectilesPlayer1[i].x;
-			tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y;
+			tempToRenderProjectile.y = ammoManager->projectilesPlayer1[i].y ;
 			std::cout << "Get SDL_REct x and y" << std::endl;
 			tempToRenderProjectile.w = 34; //Projectiles size
 			tempToRenderProjectile.h = 10; //Projectiles size
@@ -564,6 +661,12 @@ void Game::render()
 			SDL_Texture* loadProjectiles = TextureManager::LoadTexture("assets/ammo.png");
 			std::cout << "Get load texture" << std::endl;
 			SDL_Rect tempToRenderProjectile;
+			/*double angle2 = player2.getComponent<TransformComponent>().angle;
+			double TANK_SIZE_WIDTH = player2.getComponent<TransformComponent>().width;
+			double TANK_SIZE_HEIGHT = player2.getComponent<TransformComponent>().height;
+			double offsetx = cos(0.01745329252 * (angle2)) * (TANK_SIZE_WIDTH / 2);
+			double offsety = sin(0.01745329252 * (angle2)) * (TANK_SIZE_HEIGHT / 2);*/
+
 			tempToRenderProjectile.x = ammoManager->projectilesPlayer2[i].x;
 			tempToRenderProjectile.y = ammoManager->projectilesPlayer2[i].y;
 			std::cout << "Get SDL_REct x and y" << std::endl;
@@ -578,6 +681,14 @@ void Game::render()
 			SDL_DestroyTexture(loadProjectiles);
 		}
 	}
+	
+	//bo comment phan duoi nay
+	backgroundScoreboard = TextureManager::LoadTexture("assets/backgroundScoreboard.png");
+	SDL_Rect sourceBS = { 0,0,1248,30 };
+	SDL_Rect destBS = { 0,0,1248,30 };
+	TextureManager::Draw(backgroundScoreboard, sourceBS, destBS);
+	SDL_DestroyTexture(backgroundScoreboard);
+
 	//SCOREBOARD
 	if (ammoManager->needToRerenderScoreBoard()) {
 		SDL_DestroyTexture(text_texture);
@@ -592,15 +703,15 @@ void Game::render()
 		//initalize font
 		font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 		if (!font)std::cout << "Can't load font" << std::endl;
-		SDL_Color color = {255,255,255};
-		
-		text = TTF_RenderText_Solid(font, scoreBoard.c_str(), color);
+		SDL_Color color = { 255,255,255 };
+
+		text = TTF_RenderText_Blended(font, scoreBoard.c_str(), color);
 		if (!text)std::cout << "Can't load text" << std::endl;
 		text_texture = SDL_CreateTextureFromSurface(renderer, text);
 		SDL_Rect textDest = { 0,0,text->w,text->h };
 		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
 		//player2 part
-		text2 = TTF_RenderText_Solid(font, scoreBoardPlayer2.c_str(), color);
+		text2 = TTF_RenderText_Blended(font, scoreBoardPlayer2.c_str(), color);
 		text_texture2 = SDL_CreateTextureFromSurface(renderer, text2);
 		textDest = { 1248 / 2 ,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
@@ -610,33 +721,32 @@ void Game::render()
 	else {
 		SDL_Rect textDest = { 0,0,text->w,text->h };
 		SDL_RenderCopy(renderer, text_texture, NULL, &textDest);
-		textDest = { 1248/2,0,text2->w,text2->h };
+		textDest = { 1248 / 2,0,text2->w,text2->h };
 		SDL_RenderCopy(renderer, text_texture2, NULL, &textDest);
 	}
-	
-	if(ammoManager->needToRerenderTextStatusPlayer1()){
+	if (ammoManager->needToRerenderTextStatusPlayer1()) {
 		if (!keepTextPlayer1) {
 			textPlayer1 = "Tank 1 is functioning. Please wait...";
 			//initalize font
-	
+
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };
-			surfaceTextPlayer1 = TTF_RenderText_Solid(font, textPlayer1.c_str(), color);
+			surfaceTextPlayer1 = TTF_RenderText_Blended(font, textPlayer1.c_str(), color);
 			if (!surfaceTextPlayer1)std::cout << "Can't load text" << std::endl;
 			textureTextPlayer1 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer1);
 			SDL_Rect testDest = { 0,700, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
 			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
 			keepTextPlayer1 = true;
 			std::cout << "First time render success" << std::endl;
-			
+
 		}
 		else {
 			SDL_Rect testDest = { 0,700, surfaceTextPlayer1->w, surfaceTextPlayer1->h };
 			SDL_RenderCopy(renderer, textureTextPlayer1, NULL, &testDest);
 			std::cout << "NExt time render success" << std::endl;
 		}
-		
+
 	}
 	else {
 		if (keepTextPlayer1) {
@@ -645,7 +755,7 @@ void Game::render()
 		}
 		keepTextPlayer1 = false;
 	}
-	
+
 
 	if (ammoManager->needToRerenderTextStatusPlayer2()) {
 		if (!keepTextPlayer2) {
@@ -654,16 +764,16 @@ void Game::render()
 			font = TTF_OpenFont("assets/OpenSans-ExtraBold.ttf", 24);
 			if (!font)std::cout << "Can't load font" << std::endl;
 			SDL_Color color = { 255,255,255 };//white
-			surfaceTextPlayer2 = TTF_RenderText_Solid(font, textPlayer2.c_str(), color);
+			surfaceTextPlayer2 = TTF_RenderText_Blended(font, textPlayer2.c_str(), color);
 			if (!surfaceTextPlayer2)std::cout << "Can't load text" << std::endl;
 			textureTextPlayer2 = SDL_CreateTextureFromSurface(renderer, surfaceTextPlayer2);
-			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
+			SDL_Rect testDest = { 1248 / 2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
 			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
 			keepTextPlayer2 = true;
-			
+
 		}
 		else {
-			SDL_Rect testDest = { 1248/2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
+			SDL_Rect testDest = { 1248 / 2,700, surfaceTextPlayer2->w, surfaceTextPlayer2->h };
 			SDL_RenderCopy(renderer, textureTextPlayer2, NULL, &testDest);
 		}
 	}
@@ -673,10 +783,31 @@ void Game::render()
 			SDL_FreeSurface(surfaceTextPlayer2);
 		}
 		keepTextPlayer2 = false;
-		
+
 	}
-	
-	
+	//khi ammoManager->istankDead{
+	if (ammoManager->tankIsDead) {
+		if (ammoManager->tankDead == 1) {
+			tankDeadNoti = TextureManager::LoadTexture("assets/player2win.png");
+		}
+		else {
+			tankDeadNoti = TextureManager::LoadTexture("assets/player1win.png");
+		}
+		SDL_Rect sourceTDN = { 0,0,700,500 };
+		SDL_Rect destTDN = { (1248 - 700) / 2,(736 - 500) / 2,700,500 };
+		TextureManager::Draw(tankDeadNoti, sourceTDN, destTDN);
+		SDL_DestroyTexture(tankDeadNoti);
+	}
+	if (reseting) {
+		tankDeadNoti = TextureManager::LoadTexture("assets/reseting.png");
+		SDL_Rect sourceTDN = { 0,0,1461,1044 };
+		SDL_Rect destTDN = { (1248 - 700) / 2,(736 - 500) / 2,700,500 };
+		TextureManager::Draw(tankDeadNoti, sourceTDN, destTDN);
+		SDL_DestroyTexture(tankDeadNoti);
+	}
+//load anh
+
+
 	SDL_RenderPresent(renderer);
 	//SDL_DestroyTexture(text_texture);
 }

@@ -28,18 +28,24 @@ SDL_Renderer* Menu::renderer = NULL;
 SDL_Surface* MenuSurface[11];
 SDL_Surface* OptionSurface[11];
 SDL_Surface* SoundSurface[11];
-Mix_Music* Menu::sound = NULL; // tắt
+Mix_Music* Menu::sound = NULL; // tắt'
+bool Menu::needToChangeTankSize = true;
+int Menu::newTankWidth = 32;
+int Menu::newTankHeight = 32;
+bool Menu::healingOrNot = true;
 bool exitMenu;
+std::string Game::mapPath;
+
 Menu::Menu() {}
 Menu::~Menu() {}
 
 void Menu::close()
 {
 	MenuTexture::close();
-	
+
 	std::cout << "Menu closed! " << std::endl;
 
-	
+
 }
 bool Menu::init(const char* title, int x, int y, int width, int height)
 {
@@ -305,13 +311,48 @@ void Menu::handleOptionsEvent()
 				case SDLK_5:
 					Menu::handleMenuEvent();
 					break;
-
+				case SDLK_6:
+					Menu::chooseMap();
+					break;
 				}
 			}
 		}
 		Menu::renderMenu();
 	}
 }
+
+void Menu::chooseMap()
+{
+	std::cout << "went into showbullet func" << std::endl;
+	//PNGSurface = OptionSurface[KEY_Show_Bullet_Trajectory];
+	bool quit = false;
+	while (!quit) {
+		while (SDL_PollEvent(&Menu::event) != 0)
+		{
+			if (Menu::event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+			else if (event.type == SDL_KEYDOWN)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_1:
+					Game::mapPath = "map.map";
+					return;
+				case SDLK_2:
+					Game::mapPath = "map2.map";
+					return;
+				case SDLK_3:
+					Game::mapPath = "map3.map";
+					return;
+				}
+			}
+		}
+		Menu::renderMenu();
+	}
+}
+
 void Menu::handleShowBullet()
 {
 	std::cout << "went into showbullet func" << std::endl;
@@ -497,12 +538,18 @@ void Menu::ShowTextWindowWhileSelectingTank(SDL_Event e)
 	{
 		textTexture[small].loadMedia(e);
 		textTexture[small].Render(e);
+		needToChangeTankSize = true;
+		newTankWidth = 20;
+		newTankHeight = 18;
 		return;
 	}
 	else if (e.key.keysym.sym == SDLK_2)
 	{
 		textTexture[medium].loadMedia(e);
 		textTexture[medium].Render(e);
+		needToChangeTankSize = true;
+		newTankWidth = 40;
+		newTankHeight = 36;
 		return;
 	}
 	else if (e.key.keysym.sym == SDLK_3)
@@ -510,6 +557,9 @@ void Menu::ShowTextWindowWhileSelectingTank(SDL_Event e)
 		//textTexture->loadMedia(e);
 		textTexture[large].loadMedia(e);
 		textTexture[large].Render(e);
+		needToChangeTankSize = true;
+		newTankWidth = 80;
+		newTankHeight = 72;
 		return;
 	}
 }

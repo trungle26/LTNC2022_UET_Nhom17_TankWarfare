@@ -5,7 +5,7 @@
 
 Game* game = NULL;
 Menu* menu = NULL;
-int main(int argc,  char* argv[]) {
+int main(int argc, char* argv[]) {
 	const int FPS = 60;
 	const int frameDelay = 1000 / 60;
 	Uint32 frameStart;

@@ -31,6 +31,7 @@ public:
 	static void handleMenuEvent();
 	static void handleTankSizeEvent();
 	static void handleShowBullet();
+	static void chooseMap();
 	static void renderMenu();
 	static void ShowTextWindowWhileSelectingTank(SDL_Event event);
 	void close();
@@ -42,7 +43,10 @@ public:
 	static SDL_Window* window;//???
 	static Mix_Music* sound;
 	static SDL_Renderer* renderer;
-
+	static bool needToChangeTankSize;
+	static int newTankWidth;
+	static int newTankHeight;
+	static bool healingOrNot;
 
 protected:
 	static SDL_Event event;
