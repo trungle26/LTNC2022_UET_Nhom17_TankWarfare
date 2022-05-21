@@ -1,4 +1,4 @@
-﻿  AmmoManager.cpp
+﻿  Game.cpp
 C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(76,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(77,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\TransformComponent.h(83,17): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
@@ -11,8 +11,24 @@ C:\Users\hoang\Documents\CurrentBigProject\SDL\SpriteComponent.h(42,32): warning
 C:\Users\hoang\Documents\CurrentBigProject\SDL\SpriteComponent.h(43,33): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\CollisionComponent.h(50,34): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 C:\Users\hoang\Documents\CurrentBigProject\SDL\CollisionComponent.h(52,35): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\AmmoManager.cpp(77,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\AmmoManager.cpp(78,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\AmmoManager.cpp(121,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\hoang\Documents\CurrentBigProject\SDL\AmmoManager.cpp(122,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(293,102): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(299,104): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(306,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(307,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(324,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(325,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(672,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(673,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(696,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(697,65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\hoang\Documents\CurrentBigProject\SDL\ECS.h(93,33): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\hoang\Documents\CurrentBigProject\SDL\Game.cpp(65): message : see reference to function template instantiation 'T &Entity::addComponent<TransformComponent,int,int>(int &&,int &&)' being compiled
+          with
+          [
+              T=TransformComponent
+          ]
   SDL.vcxproj -> C:\Users\hoang\Documents\CurrentBigProject\x64\Debug\SDL.exe

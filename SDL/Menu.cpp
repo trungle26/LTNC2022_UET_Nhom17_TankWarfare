@@ -4,6 +4,7 @@ double Menu::GetScale = 1;
 bool Menu::checkShowBullet = true;
 bool Menu::checkAccessShowBulletFromGame = false;
 bool Menu::checkAccessSoundFromGame = false;
+bool Menu::inGame = false;
 
 enum KeyPressMenuSurfaces
 {
@@ -14,10 +15,14 @@ enum KeyPressMenuSurfaces
 	KEY_Sound_Without_Option,
 	KEY_Tank_Size,
 	KEY_Show_Bullet_Trajectory,
-	KEY_Blood_Regenaration,
 	KEY_Menu,
 	KEY_Yes_No,
-	KEY_Check_Show_Bullet
+	KEY_Check_Show_Bullet,
+	KEY_Map1,
+	KEY_Map2,
+	KEY_Map3,
+	KEY_Blood_YN,
+	KEY_Choose_Map
 };
 
 SDL_Event Menu::event;
@@ -25,42 +30,27 @@ SDL_Surface* Menu::screenSurface = NULL;
 SDL_Surface* Menu::PNGSurface = NULL;
 SDL_Window* Menu::window = NULL;
 SDL_Renderer* Menu::renderer = NULL;
-SDL_Surface* MenuSurface[11];
-SDL_Surface* OptionSurface[11];
-SDL_Surface* SoundSurface[11];
-Mix_Music* Menu::sound = NULL; // tắt
-bool exitMenu;
-bool Menu::needToChangeTankSize = false;
+SDL_Surface* MenuSurface[20];
+SDL_Surface* OptionSurface[20];
+SDL_Surface* SoundSurface[20];
+Mix_Music* Menu::sound = NULL; // tắt'
+bool Menu::needToChangeTankSize = true;
 int Menu::newTankWidth = 32;
 int Menu::newTankHeight = 32;
 bool Menu::healingOrNot = true;
+bool exitMenu;
+std::string Game::mapPath;
+
 Menu::Menu() {}
 Menu::~Menu() {}
 
 void Menu::close()
 {
 	MenuTexture::close();
-	SDL_DestroyWindow(window);
-	//window = NULL;
-	SDL_FreeSurface(PNGSurface);
-	SDL_FreeSurface(screenSurface);
-	//PNGSurface = NULL;
 
-	//SDL_DestroyRenderer(renderer);
-	
-	Mix_FreeMusic(sound);
-
-
-	for (int i = 0; i < 10; i++)
-	{
-		SDL_FreeSurface(MenuSurface[i]);
-		//MenuSurface[i] = NULL;
-		SDL_FreeSurface(OptionSurface[i]);
-		//OptionSurface[i] = NULL;
-		SDL_FreeSurface(SoundSurface[i]);
-		//SoundSurface[i] = NULL;
-	}
 	std::cout << "Menu closed! " << std::endl;
+
+
 }
 bool Menu::init(const char* title, int x, int y, int width, int height)
 {
@@ -176,12 +166,6 @@ bool Menu::handleOptionsMedia()
 		std::cout << "Failed to load TankSize image" << std::endl;
 		success = false;
 	}
-	OptionSurface[KEY_Blood_Regenaration] = loadSurface("assets/BloodRegenaration.png");
-	if (!OptionSurface[KEY_Blood_Regenaration])
-	{
-		std::cout << "Failed to load BloodRegenaration image" << std::endl;
-		success = false;
-	}
 	OptionSurface[KEY_Show_Bullet_Trajectory] = loadSurface("assets/checkShowBullet.png");
 	if (!OptionSurface[KEY_Show_Bullet_Trajectory])
 	{
@@ -198,6 +182,36 @@ bool Menu::handleOptionsMedia()
 	if (!OptionSurface[KEY_Yes_No])
 	{
 		std::cout << "Failed to load YESorNO.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Map1] = loadSurface("assets/Map1.png");
+	if (!OptionSurface[KEY_Map1])
+	{
+		std::cout << "Failed to load Map1.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Map2] = loadSurface("assets/Map2.png");
+	if (!OptionSurface[KEY_Map2])
+	{
+		std::cout << "Failed to load Map2.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Map3] = loadSurface("assets/Map3.png");
+	if (!OptionSurface[KEY_Map3])
+	{
+		std::cout << "Failed to load Map3.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Blood_YN] = loadSurface("assets/Blood_YN.png");
+	if (!OptionSurface[KEY_Blood_YN])
+	{
+		std::cout << "Failed to loadBlood_YN.png" << std::endl;
+		success = false;
+	}
+	OptionSurface[KEY_Choose_Map] = loadSurface("assets/chooseMap.png");
+	if (!OptionSurface[KEY_Choose_Map])
+	{
+		std::cout << "Failed to load chooseMap.png" << std::endl;
 		success = false;
 	}
 	return success;
@@ -319,20 +333,76 @@ void Menu::handleOptionsEvent()
 					PNGSurface = MenuSurface[KEY_Option];
 					break;
 				case SDLK_4:
-					PNGSurface = OptionSurface[KEY_Blood_Regenaration];
-					//handleBloodRegenaration();
+				
+					handleBloodEvent();
 					break;
 
 				case SDLK_5:
 					Menu::handleMenuEvent();
 					break;
-
+				case SDLK_6:
+					if (Menu::inGame == false)
+						Menu::chooseMap();
+					else
+					{
+						SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,"Game is still running!","Cannot change map while game is running",window);
+					}
+					break;
 				}
 			}
 		}
 		Menu::renderMenu();
 	}
 }
+
+void Menu::chooseMap()
+{
+	std::cout << "went into showbullet func" << std::endl;
+	PNGSurface = OptionSurface[KEY_Choose_Map];
+	bool quit = false;
+	while (!quit) {
+		while (SDL_PollEvent(&Menu::event) != 0)
+		{
+			if (Menu::event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+			else if (event.type == SDL_KEYDOWN)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_1:
+					Game::mapPath = "assets/map.map";
+					PNGSurface = OptionSurface[KEY_Map1];
+					Menu::renderMenu();
+					SDL_Delay(1000);
+					chooseMap();
+					return;
+				case SDLK_2:
+					Game::mapPath = "assets/map2.map";
+					PNGSurface = OptionSurface[KEY_Map2];
+					Menu::renderMenu();
+					SDL_Delay(1000);
+					chooseMap();
+					return;
+				case SDLK_3:
+					Game::mapPath = "assets/map3.map";
+					PNGSurface = OptionSurface[KEY_Map3];
+					Menu::renderMenu();
+					SDL_Delay(1000);
+					chooseMap();
+					return;
+				case SDLK_4:
+
+					Menu::handleOptionsEvent();
+					return;
+				}
+			}
+		}
+		Menu::renderMenu();
+	}
+}
+
 void Menu::handleShowBullet()
 {
 	std::cout << "went into showbullet func" << std::endl;
@@ -461,6 +531,38 @@ void Menu::handleTankSizeEvent()
 			}
 		}
 		GetScale = scale;
+		Menu::renderMenu();
+	}
+}
+
+void Menu::handleBloodEvent()
+{
+	PNGSurface = OptionSurface[KEY_Blood_YN];
+	bool quit = false;
+	while (!quit)
+	{
+		while (SDL_PollEvent(&Menu::event) != 0)
+		{
+			if (Menu::event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+			else if (Menu::event.type == SDL_KEYDOWN)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_1:
+					healingOrNot = true;
+					handleOptionsEvent();
+					return;
+				case SDLK_2:
+					healingOrNot = false;
+					handleOptionsEvent();
+					return;
+				}
+				std::cout << "still running" << std::endl;
+			}
+		}
 		Menu::renderMenu();
 	}
 }

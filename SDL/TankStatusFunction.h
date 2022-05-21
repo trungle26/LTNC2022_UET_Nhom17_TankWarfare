@@ -44,7 +44,7 @@ public:
 	std::vector<Projectile> projectiles;
 	std::vector<double>angles;
 	clock_t prevTime = clock();
-	int delayBetweenProjectiles = 1000; //by miliseconds
+	int delayBetweenProjectiles = 500; //by miliseconds
 	int delayHealing = 200;
 	int delayReloading = 200;
 	clock_t prevHealing = clock();
@@ -76,6 +76,7 @@ public:
 	void addAngleOfThisShoot(double angle_);
 	void autoMinusHealthOfAllahStyle();
 	bool needUpdateScoreBoard();
+	void resetTankStatus(int scale);
 	~ShootComponent();
 	
 

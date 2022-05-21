@@ -1,6 +1,5 @@
 #pragma once
-#ifndef MENU_H_
-#define MENU_H_
+
 
 //#include "Game.h"
 #include <SDL.h>
@@ -30,7 +29,9 @@ public:
 	static void handleSoundEvent();
 	static void handleMenuEvent();
 	static void handleTankSizeEvent();
+	static void handleBloodEvent();
 	static void handleShowBullet();
+	static void chooseMap();
 	static void renderMenu();
 	static void ShowTextWindowWhileSelectingTank(SDL_Event event);
 	void close();
@@ -46,14 +47,12 @@ public:
 	static int newTankWidth;
 	static int newTankHeight;
 	static bool healingOrNot;
-
+	static bool inGame;
 
 protected:
 	static SDL_Event event;
 	static SDL_Surface* PNGSurface;// source surface
 	static SDL_Surface* screenSurface; // dest surface
-	
 };
 extern bool exitMenu;
 //extern bool showBullet;
-#endif
