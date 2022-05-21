@@ -56,6 +56,7 @@ public:
 	void setSizeProjectiles(int width, int height);
 	//void getProjectilesVector2(std::vector<Projectile> projectiles);
 	void tankShoot(Vector2D position, double angle, int player);
+	void checkHealth();
 	~AmmoManager()
 	{
 		Mix_FreeChunk(explode);

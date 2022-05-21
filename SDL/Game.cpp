@@ -602,6 +602,8 @@ void Game::update()
 			ammoManager->needToRerenderScoreBoard_ = true;
 		}
 	}
+	//check health of both tanks
+	ammoManager->checkHealth();
 	//New: What happen if tank out of screen already?
 	if (player.getComponent<TransformComponent>().position.x < 0 ||
 		player.getComponent<TransformComponent>().position.x > 1248 - player.getComponent<TransformComponent>().width * player.getComponent<TransformComponent>().scale ||

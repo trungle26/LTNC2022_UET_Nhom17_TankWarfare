@@ -100,10 +100,7 @@ void AmmoManager::checkBulletForPlayer1() {
 			std::cout << "Damage per shot of tank 1: " << tank1->damagePerShot << std::endl;
 			needToRerenderScoreBoard_ = true;
 			if (tank2->currentHealth <= 0) {
-				if (tankDead == 0 && !tankIsDead) {
-					tankDead = 2;
-					tankIsDead = true;
-				}
+				
 				std::cout << "tank 2 dead." << std::endl;
 				//UI part goes here
 			}
@@ -149,10 +146,7 @@ void AmmoManager::checkBulletForPlayer2() {
 			needToRerenderScoreBoard_ = true;
 			if (tank1->currentHealth <= 0) {
 				std::cout << "tank 1 dead." << std::endl;
-				if (tankDead == 0 && !tankIsDead) {
-					tankDead = 1;
-					tankIsDead = true;
-				}
+				
 				//UI part goes here
 			}
 		}
@@ -191,32 +185,38 @@ bool AmmoManager::needToRerenderTextStatusPlayer2() {
 void AmmoManager::tankShoot(Vector2D position, double angle, int player) {
 	if (player == 1) {
 		std::cout << "DirectionInstate4 created" << std::endl;
-		//Modified position of projectile
-		//double offsetx = sin(0.01745329252 * (angle)) * (TANK_SIZE_WIDTH )/2;
-		//double offsety = sin(0.01745329252 * (angle)) * (TANK_SIZE_HEIGHT )/2;
-		//position.x += offsetx/2;
-		//position.y += offsety/2;
 		position.y += TANK_SIZE_HEIGHT / 2;
-		//untested
 		tank1->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;
 		tank1->shoot();
 		getProjectilesVector1();
 		addAngleOfProjectile(angle, 1);
+		
 	}
 	else {
 		std::cout << "DirectionInstate4 created" << std::endl;
-		//Modified position of projectile
-		//double offsetx = cos(0.01745329252 * (angle)) * (TANK_SIZE_WIDTH );
-		//double offsety = cos(0.01745329252 * (angle)) * (TANK_SIZE_HEIGHT );
-		//position.x += offsetx;
-		//position.y += offsety;
 		position.y += TANK_SIZE_HEIGHT / 2;
-		//untested
 		tank2->addAmmoInformation(position);
 		std::cout << "addAmmoIn4 finished" << std::endl;
 		tank2->shoot();
 		getProjectilesVector2();
 		addAngleOfProjectile(angle, 2);
 	}
+
 }
+void AmmoManager::checkHealth() {
+	if (tank1->currentHealth <= 0 && tankDead == 0 && !tankIsDead) {
+		tankDead = 1;
+		tankIsDead = true;
+	}
+	else if (tank2->currentHealth <= 0 && tankDead == 0 && !tankIsDead) {
+		tankDead = 2;
+		tankIsDead = true;
+	}
+	else return;
+}
+/*
+if (tankDead == 0 && !tankIsDead) {
+					tankDead = 2;
+					tankIsDead = true;
+				}*/
