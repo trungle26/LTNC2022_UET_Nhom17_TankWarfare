@@ -62,13 +62,13 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 		if(mapPath == "")mapPath = "assets/map.map";
 		map->LoadMap(mapPath, 39, 23);
 
-		player.addComponent<TransformComponent>(99, 101);
+		player.addComponent<TransformComponent>(400, 300);
 		player.addComponent<SpriteComponent>("assets/tank.png");
 		player.addComponent<CollisionComponent>("player1");
 
 		player.addComponent<ShootComponent>(); //default option
 
-		player2.addComponent<TransformComponent>(1000, 90);
+		player2.addComponent<TransformComponent>(1000, 400);
 		player2.addComponent<SpriteComponent>("assets/tank2.png");
 		player2.addComponent<CollisionComponent>("player2");
 		player2.addComponent<ShootComponent>(); //default option
@@ -201,8 +201,8 @@ void Game::handleEvents()
 		}
 		if (!lockKeyDownPlayer1 || !lockKeyDownPlayer2) {
 			if (ammoManager->tankIsDead) {
-				if (Game::event.key.keysym.sym == SDLK_n)replayStates[0] = true;
-				if (Game::event.key.keysym.sym == SDLK_m)replayStates[1] = true;
+				if (Game::event.key.keysym.sym == SDLK_MINUS)replayStates[0] = true;
+				if (Game::event.key.keysym.sym == SDLK_EQUALS)replayStates[1] = true;
 			}
 			
 		}
@@ -575,8 +575,19 @@ void Game::update()
 		states2[down] = false;
 		states2[left] = false;
 		states2[right] = false;
-		player.getComponent<ShootComponent>().allahMode = false;
-		player.getComponent<ShootComponent>().allahMode = false;
+		if (player.getComponent<ShootComponent>().allahMode) {
+			//return like before allah mode
+			player.getComponent<ShootComponent>().damagePerShot /= 2;
+			player.getComponent<ShootComponent>().delayTimeReload *= 2;
+			player.getComponent<ShootComponent>().allahMode = false;
+		}
+		if (player2.getComponent<ShootComponent>().allahMode) {
+			//return like before allah mode
+			player2.getComponent<ShootComponent>().damagePerShot /= 2;
+			player2.getComponent<ShootComponent>().delayTimeReload *= 2;
+			player2.getComponent<ShootComponent>().allahMode = false;
+		}
+		//just to make sure that everything will be ok
 		player.getComponent<ShootComponent>().resetTankStatus(1);
 		player2.getComponent<ShootComponent>().resetTankStatus(1);
 	}
