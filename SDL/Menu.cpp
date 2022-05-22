@@ -48,8 +48,13 @@ void Menu::close()
 {
 	MenuTexture::close();
 
-	std::cout << "Menu closed! " << std::endl;
-
+	
+	SDL_FreeSurface(PNGSurface);
+	Mix_FreeMusic(sound);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	PNGSurface = NULL; sound = NULL; renderer = NULL; window = NULL;
+std::cout << "Menu closed! " << std::endl;
 
 }
 bool Menu::init(const char* title, int x, int y, int width, int height)
@@ -264,6 +269,7 @@ void Menu::handleMenuEvent()
 
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (event.type == SDL_KEYDOWN)
@@ -316,6 +322,7 @@ void Menu::handleOptionsEvent()
 		{
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (event.type == SDL_KEYDOWN)
@@ -365,6 +372,7 @@ void Menu::chooseMap()
 		{
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (event.type == SDL_KEYDOWN)
@@ -413,6 +421,7 @@ void Menu::handleShowBullet()
 		{
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (event.type == SDL_KEYDOWN)
@@ -450,6 +459,7 @@ void Menu::handleSoundEvent()
 		{
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (event.type == SDL_KEYDOWN)
@@ -498,6 +508,7 @@ void Menu::handleTankSizeEvent()
 		{
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (Menu::event.type == SDL_KEYDOWN)
@@ -545,6 +556,7 @@ void Menu::handleBloodEvent()
 		{
 			if (Menu::event.type == SDL_QUIT)
 			{
+				exitMenu = true;
 				quit = true;
 			}
 			else if (Menu::event.type == SDL_KEYDOWN)

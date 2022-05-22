@@ -843,10 +843,15 @@ void Game::render()
 void Game::close()
 {
 	Mix_FreeChunk(explode);
-	Mix_CloseAudio();
-	SDL_DestroyWindow(window);
+	explode = NULL;
 	SDL_DestroyRenderer(renderer);
-	Menu::inGame = false;
+	SDL_DestroyWindow(window);
+	renderer = NULL;
+	window = NULL;
+	Mix_CloseAudio();
+
+	IMG_Quit();
+	Mix_Quit();
 	SDL_Quit();
 	std::cout << "game closed!\n";
 }

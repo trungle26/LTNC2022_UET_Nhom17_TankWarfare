@@ -165,7 +165,11 @@ void MenuTexture::close()
 	}
 	TTF_CloseFont(MenuFont);
 	MenuFont = NULL;
+	SDL_DestroyRenderer(renderer);
+
+	SDL_DestroyWindow(window);
 	window = NULL;
+	renderer = NULL;
 }
 
 void MenuTexture::SetColor(int type) {
