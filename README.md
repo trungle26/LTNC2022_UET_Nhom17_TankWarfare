@@ -32,5 +32,5 @@ This project is named "LTNC2022_UET_Nhom17_TankWarfare" as part of class INT2215
 
 -Contributors:
 	+Le Duc Trung: early game structure, tank functions, map drawing and rendering, tank collision, game graphics
-	+Doan Vu Quang Phu:menu making, sound and music handling, linking menu fuctions with game, create makefile file
+	+Doan Vu Quang Phu: menu making, sound and music handling, linking menu fuctions with game, create makefile file
 	+Tran Ba Hoang: game modes, ammo and health structure, tank functions,projectiles functions, bullet collision

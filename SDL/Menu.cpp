@@ -71,11 +71,6 @@ bool Menu::init(const char* title, int x, int y, int width, int height)
 		std::cout << "create window failed " << std::endl;
 		success = false;
 	}
-	SDL_Renderer* renderer = Game::renderer;
-	if (renderer != NULL)
-	{
-		std::cout << "menu renderer using game renderer" << std::endl;
-	}
 	//Initialize PNG loading
 	int imgFlags = IMG_INIT_PNG;
 	if (!IMG_Init(imgFlags) & imgFlags)
