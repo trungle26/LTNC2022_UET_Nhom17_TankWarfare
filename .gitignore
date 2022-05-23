@@ -1,7 +1,7 @@
 backup
 x64
 *.sln
-
+!run_from_cmd/
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db
