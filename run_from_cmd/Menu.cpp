@@ -1,11 +1,20 @@
 ﻿#include "Menu.h"
 
+const int TEXTURE_H = 1200;
+const int TEXTURE_W = 1500;
+Menu* HTPtexture = NULL;
+//Screen dimension constants
+const int SCREEN_W = 1248;
+const int SCREEN_H = 736;
+int Menu::mWidth;
+int Menu::mHeight;
 double Menu::GetScale = 1;
 bool Menu::checkShowBullet = true;
 bool Menu::checkAccessShowBulletFromGame = false;
 bool Menu::checkAccessSoundFromGame = false;
 bool Menu::inGame = false;
-
+SDL_Renderer* renderer = NULL;
+SDL_Texture* texture = NULL;
 enum KeyPressMenuSurfaces
 {
 	KEY_Exit,
@@ -29,7 +38,8 @@ SDL_Event Menu::event;
 SDL_Surface* Menu::screenSurface = NULL;
 SDL_Surface* Menu::PNGSurface = NULL;
 SDL_Window* Menu::window = NULL;
-SDL_Renderer* Menu::renderer = NULL;
+//SDL_Renderer* Menu::renderer = NULL;
+//SDL_Texture* Menu::texture = NULL;
 SDL_Surface* MenuSurface[20];
 SDL_Surface* OptionSurface[20];
 SDL_Surface* SoundSurface[20];
@@ -71,7 +81,9 @@ bool Menu::init(const char* title, int x, int y, int width, int height)
 		std::cout << "create window failed " << std::endl;
 		success = false;
 	}
-	SDL_Renderer* renderer = Game::renderer;
+	//SDL_Renderer* renderer = Game::renderer;
+	//renderer = Game::renderer;
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (renderer != NULL)
 	{
 		std::cout << "menu renderer using game renderer" << std::endl;
@@ -96,6 +108,7 @@ bool Menu::init(const char* title, int x, int y, int width, int height)
 		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 		//success = false;
 	}
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBX8888, SDL_TEXTUREACCESS_TARGET, TEXTURE_W, TEXTURE_H);
 	return success;
 }
 SDL_Surface* Menu::loadSurface(std::string path)
@@ -140,10 +153,16 @@ bool Menu::loadMenuMedia()
 		std::cout << "Failed to load Option image" << std::endl;
 		success = false;
 	}
-	MenuSurface[KEY_How_To_Play] = loadSurface("assets/How_To_Play.png");//da co
+	//MenuSurface[KEY_How_To_Play] = loadSurface("assets/How_To_Play.png");//da co
+	//if (!MenuSurface[KEY_How_To_Play])
+	//{
+	//	std::cout << "Failed to load How_To_Play image" << std::endl;
+	//	success = false;
+	//}
+	MenuSurface[KEY_How_To_Play] = loadSurface("assets/HTP.png");//da co
 	if (!MenuSurface[KEY_How_To_Play])
 	{
-		std::cout << "Failed to load How_To_Play image" << std::endl;
+		std::cout << "Failed to load HTP image" << std::endl;
 		success = false;
 	}
 	MenuSurface[KEY_Yes_No] = loadSurface("assets/YESorNO.png");
@@ -243,6 +262,10 @@ bool Menu::loadSoundMedia()
 	return success;
 }
 
+
+SDL_Rect source{ 0,0, SCREEN_W ,SCREEN_H };
+SDL_Rect dest{ 50, 10,SCREEN_W - 100 , SCREEN_H - 20 };
+
 //open music at beginning
 bool firstTime = true;
 
@@ -290,13 +313,127 @@ void Menu::handleMenuEvent()
 					Menu::handleOptionsEvent();
 					break;
 				case SDLK_3:
-					PNGSurface = MenuSurface[KEY_How_To_Play];
+					Menu::handleHTP();
 					break;
 				}
 			}
 		}
 		Menu::renderMenu();
 	}
+}
+
+void Menu::handleHTP()
+{
+	
+	//Main loop flag
+	bool quit = false;
+
+	//Event handler
+	SDL_Event e;
+
+	//The camera area
+
+	//While application is running
+	while (!quit)
+	{
+		if (HTPtexture->loadFromFile("assets/HTP.png") != NULL)
+		{
+			while (SDL_PollEvent(&e) != 0)
+			{
+				SDL_Rect renderQuad = { 0, 0, mWidth, mHeight };
+
+				//Set clip rendering dimensions
+				//if (clip != NULL)
+				//{
+				//	renderQuad.w = clip->w;
+				//	renderQuad.h = clip->h;
+				//}
+
+				//Render to screen
+				SDL_RenderCopyEx(renderer, texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
+				//User requests quit
+				if (e.type == SDL_QUIT)
+				{
+					quit = true;
+				}
+				if (e.type == SDL_KEYDOWN)
+				{//std::cout << source.x << ' ' << source.y << std::endl;
+					switch (e.key.keysym.sym)
+					{
+					case SDLK_UP: source.y -= 10; break;
+					case SDLK_DOWN: source.y += 10; break;
+					case SDLK_1: source.w *= 2; source.h *= 2; break;
+					case SDLK_2: source.w /= 2; source.h /= 2; break;
+					}
+				}
+				if (e.type == SDL_MOUSEWHEEL)
+				{
+					if (e.wheel.y > 0) // scroll up
+					{
+						source.y -= 50; break;
+					}
+					else if (e.wheel.y < 0) // scroll down
+					{
+						source.y += 50; break;
+					}
+				}
+
+			}
+			if (source.y <= 0) source.y = 0;
+			if (source.y >= 465) source.y = 465;
+				//Set rendering space and render to screen
+		
+			SDL_SetRenderTarget(renderer, NULL);
+			SDL_RenderClear(renderer);
+			SDL_RenderCopy(renderer, texture, &source, &dest);
+			SDL_RenderPresent(renderer);
+		}
+		//PNGSurface = MenuSurface[KEY_How_To_Play];
+		//Handle events on queue
+	}
+}
+
+bool Menu::loadFromFile(std::string path)
+{
+
+		//Get rid of preexisting texture
+		//free();
+
+		//The final texture
+		SDL_Texture* newTexture = NULL;
+
+		//Load image at specified path
+		SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+		if (loadedSurface == NULL)
+		{
+			printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		}
+		else
+		{
+			//Color key image
+			SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+
+			//Create texture from surface pixels
+			newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+			if (newTexture == NULL)
+			{
+				printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+			}
+			else
+			{
+				//Get image dimensions
+				mWidth = loadedSurface->w;
+				mHeight = loadedSurface->h;
+			}
+
+			//Get rid of old loaded surface
+			SDL_FreeSurface(loadedSurface);
+		}
+
+		//Return success
+		texture = newTexture;
+		return texture != NULL;
+	
 }
 
 enum TankSize
@@ -657,3 +794,4 @@ void Menu::ShowTextWindowWhileSelectingTank(SDL_Event e)
 		return;
 	}
 }
+
