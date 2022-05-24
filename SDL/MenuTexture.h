@@ -1,9 +1,8 @@
+#pragma once
 
-#ifndef MenuTexture_H_
-#define MenuTexture_H_
 #include "Game.h"
 #include "Menu.h"
-#include < vector>
+#include <vector>
 
 class MenuTexture
 {
@@ -54,6 +53,5 @@ private:
 
 	SDL_Color text_color;
 };
-MenuTexture textTexture[];
-MenuTexture tankTexture[];
-#endif
+extern MenuTexture textTexture[];
+extern MenuTexture tankTexture[];

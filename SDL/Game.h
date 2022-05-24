@@ -2,11 +2,11 @@
 #include <SDL.h>
 #include <iostream>
 #include <vector>
-#include<SDL_image.h>
+#include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include <string>
-
+#include <cmath>
 class CollisionComponent;
 
 class Game

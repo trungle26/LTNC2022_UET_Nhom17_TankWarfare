@@ -19,32 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="background.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AmmoManager.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionComponent.h" />
-    <ClInclude Include="Components.h" />
-    <ClInclude Include="ECS.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="MenuTexture.h" />
-    <ClInclude Include="RenderText.h" />
-    <ClInclude Include="TankStatusFunction.h" />
-    <ClInclude Include="TileComponent.h" />
-    <ClInclude Include="TransformComponent.h" />
-    <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Vector2D.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="AmmoManager.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -55,7 +34,24 @@
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="TankCharacters.txt" />
+    <ClInclude Include="AmmoManager.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="ECS.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuTexture.h" />
+    <ClInclude Include="RenderText.h" />
+    <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="TankStatusFunction.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TileComponent.h" />
+    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

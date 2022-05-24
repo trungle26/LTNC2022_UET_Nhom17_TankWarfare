@@ -3,7 +3,7 @@
 #pragma once
 #include "Components.h"
 #include "Vector2D.h"
-
+#include <cmath>
 class TransformComponent : public Component
 {
 public:

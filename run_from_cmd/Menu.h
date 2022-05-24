@@ -1,6 +1,4 @@
 #pragma once
-#ifndef MENU_H_
-#define MENU_H_
 
 //#include "Game.h"
 #include <SDL.h>
@@ -35,18 +33,15 @@ public:
 	static void chooseMap();
 	static void renderMenu();
 	static void ShowTextWindowWhileSelectingTank(SDL_Event event);
-	static void handleHTP();//
-	static bool loadFromFile(std::string path);//
 	void close();
 
 	static double GetScale;
 	static bool checkShowBullet;
 	static bool checkAccessShowBulletFromGame;
 	static bool checkAccessSoundFromGame;
-	static SDL_Window* window;
+	static SDL_Window* window;//???
 	static Mix_Music* sound;
-	//static SDL_Renderer* renderer;
-	//static SDL_Texture* texture;//
+	static SDL_Renderer* renderer;
 	static bool needToChangeTankSize;
 	static int newTankWidth;
 	static int newTankHeight;
@@ -57,9 +52,6 @@ protected:
 	static SDL_Event event;
 	static SDL_Surface* PNGSurface;// source surface
 	static SDL_Surface* screenSurface; // dest surface
-	static int mWidth;
-	static int mHeight;
 };
 extern bool exitMenu;
 //extern bool showBullet;
-#endif
