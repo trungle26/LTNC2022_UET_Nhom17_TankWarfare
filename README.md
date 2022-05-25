@@ -22,12 +22,17 @@
 
 This project is named "LTNC2022_UET_Nhom17_TankWarfare" as part of class INT2215 22.
 
-
--How to run this project:
-	+ Go to "run_from_cmd" folder inside the project folder.
-	+ Right-click -> Open in Terminal
-	+ Enter these 2 lines: 
-	 	g++ -Isrc/Include -Lsrc/lib -o main *.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+- How to run this project
+	+ Create new folder in computer
+	+ Open Command Prompt or PowerShell in this folder
+	+ Enter these lines
+		git init
+		git clone https://github.com/trungle26/LTNC2022_UET_Nhom17_TankWarfare.git
+	+ If you use Command Prompt: open Command Prompt in run_from_cmd folder, enter these 2 lines
+		g++ -Isrc/Include -Lsrc/lib -o main *.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer 
+		main
+	+ If you use PowerShell: open PowerShell in run_from_cmd folder, enter these 2 lines
+		g++ -Isrc/Include -Lsrc/lib -o main *.cpp -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer 
 		./main.exe
 
 -Contributors:
